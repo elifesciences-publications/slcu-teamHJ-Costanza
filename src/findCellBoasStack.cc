@@ -7,7 +7,7 @@
  * Author(s)    : Henrik Jonsson (henrik@caltech.edu)
  * Organization : California Institute of Technology
  * Created      : January 2003
- * Revision     : $id$
+ * Revision     : $Id$
  *
  * Copyright 2003, California Institute of Technology.
  * ALL RIGHTS RESERVED.  U.S. Government Sponsorship acknowledged.
