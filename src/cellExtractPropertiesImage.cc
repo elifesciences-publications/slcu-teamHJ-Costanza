@@ -1,5 +1,5 @@
 /**
- * Filename     : cellExtractProperties.cc
+ * Filename     : cellExtractPropertiesImage.cc
  * Description  : Finds cells in a wall image and use the basin of attraction 
                 : to define neighbors and walls
  * Author(s)    : Henrik Jonsson (henrik@thep.lu.se)
