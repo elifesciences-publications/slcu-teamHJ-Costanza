@@ -989,11 +989,11 @@ int Stack::findMaximaByLocalSearch(std::vector< std::vector<int> > &hijMax,
 	  tmpFlag[h][i][j]=1;
 	}
 	//Recursivly add plateau
-	if( !flag[h][i][j] ) {
+	//if( !flag[h][i][j] ) {
 	  //std::cerr << "SaddPlat " << pix(h,i,j) << " " << h << " " << i 
 	  //    << " " << j << "\n";
-	  addPlateauNeighborRecursive(pix(h,i,j),h,i,j,tmpFlag,walkTmp);
-	}
+	  //addPlateauNeighborRecursive(pix(h,i,j),h,i,j,tmpFlag,walkTmp);
+	//}
 	//Collect the path data and add one visit for the maximum
 	if( !flag[h][i][j] ) { //new maximum
 	  tmp[0]=h;tmp[1]=i;tmp[2]=j;tmp[3]=1;
