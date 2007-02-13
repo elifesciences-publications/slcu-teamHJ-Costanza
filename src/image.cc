@@ -1068,29 +1068,29 @@ int Image::findMaximaByGradientDescent(std::vector< std::vector<int> > &ijMax,
 	  int newI=i,newJ=j;
 	  //Check all pixels around a given pixel
 	  for(int ii=i-1 ; ii<=i+1 ; ii++ )
-	    for(int jj=j-1 ; jj<=j+1 ; jj++ )
-	      if( ii>=0 && jj>=0 && ii<H() && jj<W() )
-		if( pix(ii,jj)>newValue ) {
-		  newValue=pix(ii,jj);
-		  newI=ii;
-		  newJ=jj;
-		}
+			for(int jj=j-1 ; jj<=j+1 ; jj++ )
+				if( ii>=0 && jj>=0 && ii<H() && jj<W() )
+					if( pix(ii,jj)>newValue ) {
+						newValue=pix(ii,jj);
+						newI=ii;
+						newJ=jj;
+					}
 	  
 	  //Check only nearest neighbors
-//   	  for(int a=-1 ; a<=1 ; a+=2 ) {
-//   	    int ii = i+a;
-//   	    if( ii>=0 && ii<H() && pix(ii,j)>newValue ) {
-//   	      newValue=pix(ii,j);
-//   	      newI=ii;
-//   	      newJ=j;
-//   	    }
-//   	    int jj = j+a;  
-//   	    if( jj>=0 && jj<W() && pix(i,jj)>newValue ) {
-//   	      newValue=pix(i,jj);
-//   	      newI=i;
-//   	      newJ=jj;
-//   	    }
-//	}
+//  	  for(int a=-1 ; a<=1 ; a+=2 ) {
+//  	    int ii = i+a;
+//  	    if( ii>=0 && ii<H() && pix(ii,j)>newValue ) {
+//  	      newValue=pix(ii,j);
+//  	      newI=ii;
+//  	      newJ=j;
+//  	    }
+//  	    int jj = j+a;  
+//  	    if( jj>=0 && jj<W() && pix(i,jj)>newValue ) {
+//  	      newValue=pix(i,jj);
+//  	      newI=i;
+//  	      newJ=jj;
+//  	    }
+// 		}
 	  i=newI;
 	  j=newJ;	
 	  std::vector<int> tmpPos(2);

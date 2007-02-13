@@ -1,15 +1,17 @@
 /**
- * Filename     : cellExtractPropertiesImage.cc
+ * Filename     : cellExtractPropertiesVertex.cc
  * Description  : Finds cells in a wall image and use the basin of attraction 
-                : to define neighbors and walls
+                : to define neighbors, walls, and vertices
  * Author(s)    : Henrik Jonsson (henrik@thep.lu.se)
- * Created      : January 2005
- * Revision     : $Id$
+ * Created      : September 2006
+ * Revision     : $Id:$
  */
-#include"image.h"
-#include<iostream>
-#include<fstream>
-#include<cmath>
+#include "image.h"
+#include <assert.h>
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <set>
 
 int removeDuplicateCells( std::vector< std::vector<int> > &dataIn,
 			  std::vector< std::vector<int> > &dataOut, 
@@ -29,6 +31,10 @@ void createWallsFromBOAs(int H,int W,
 			 std::vector< std::vector<int> > &neigh,
 			 std::vector< std::vector<double> > &compartment, 
 			 double radius=1.1);
+void createVerticesFromBOAs(int H,int W,
+														std::vector< std::vector< std::vector<int> > > 
+														&boa,
+														std::vector< std::vector<int> > &vertex );
 void createNeighborsFromBOAs(int H,int W,
 			     std::vector< std::vector< std::vector<int> > > 
 			     &boa,
@@ -159,6 +165,15 @@ int main( int argc,char* argv[] ) {
   //std::cout << cellCenterFinal[i][0] << " " << cellCenterFinal[i][1] << "\n";
   //exit(0);
   
+	//Extract vertex information for a cell-wall-vertex template
+	//////////////////////////////////////////////////////////////////////
+	std::vector< std::vector<int> > vertices;
+	createVerticesFromBOAs(I.H(),I.W(),boaFinal,vertices);
+
+	std::cerr << "PLotting found vertex positions in /tmp/vertexTmp.tif"
+						<< std::endl;
+	IOri.writeImageTiffWithRedPixels("/tmp/vertexTmp.tif",vertices);
+	//exit(0);
   
   //Extract compartmental information for a simulation template
   //////////////////////////////////////////////////////////////////////
@@ -695,6 +710,400 @@ void createWallsFromBOAs(int H,int W,
     os << "\n";
   }
   os.close();
+}
+
+
+
+//!Takes a list of pixel lists and checks which are connected as vertices
+/*! H,W is the number of rows,cols in the image. boa is a list of
+  pixel positions for all the cells, vertices are where lists of pixels
+  for the vertices will be stored, wallPixelCell saves the cell number
+  for wall pixels, neigh stores the neighborhood relationships.  It is
+  using the pixels marked in boa and walls and allows for an overlap,
+  where it removes the pixels from the cells. It extracts the center
+  of mass positions, the volumes, and marks if the compartment is a
+  cell or wall.*/
+void createVerticesFromBOAs(int H,int W,
+														std::vector< std::vector< std::vector<int> > > 
+														&boa,
+														std::vector< std::vector<int> > &vertexPos ) 
+{
+	int N = boa.size();
+  // Find neighbors to each cell
+  //////////////////////////////////////////////////////////////////////
+  std::vector< std::vector<int> > latticeCell( H ),wallMarker( H );
+  for( int i=0 ; i<H ; i++ ) {
+    latticeCell[i].resize( W, -1 );
+    wallMarker[i].resize( W, -2 );
+  }
+  //Group lattice points from basins of attraction
+  for( int c=0 ; c<N ; c++ )
+    for( int k=0 ; k<boa[c].size() ; k++ ) {
+      int x=boa[c][k][0];
+      int y=boa[c][k][1];
+      if( latticeCell[x][y]>-1 ) {
+				std::cerr << "Warning : lattice["<<x<<"]["<<y<<"] = "
+									<<latticeCell[x][y]
+									<<" AND " << c << " !!!\n"; 
+      }
+      latticeCell[x][y]=c;
+    }
+
+	//Smooth out the latticeCell such that a pixel always belongs to
+  //the cell it is most neighbor to... 
+	int updateFlag=1;
+	while( updateFlag ) {
+		updateFlag=0;
+		for( int i=1 ; i<H-1 ; i++ ) {
+			for( int j=1 ; j<W-1 ; j++ ) {
+				int thisCell=latticeCell[i][j];
+				std::vector<int> cellNeighbors(1);
+				std::vector<int> numCellNeighbors(1);
+				cellNeighbors[0]=thisCell;
+				numCellNeighbors[0]=0;
+				for( int ii=-1 ; ii<=1 ; ++ii ) {
+					for( int jj=-1 ; jj<=1 ; ++jj ) {
+						if( ii!=0 || jj!=0 ) {
+							int tmpCell = latticeCell[i+ii][j+jj];
+							int newCellFlag=1;
+							for( size_t k=0 ; k<cellNeighbors.size() ; ++k ) {
+								if( tmpCell==cellNeighbors[k] ) {
+									newCellFlag=0;
+									++numCellNeighbors[k];
+									break;
+								}
+							}
+							if( newCellFlag ) {
+								cellNeighbors.push_back( tmpCell );
+								numCellNeighbors.push_back(1);
+							}
+						}
+					}
+				}
+				//Swap value if more neighbors belong to other cell
+				size_t maxIndex=0;
+				int max = numCellNeighbors[0];
+				int totalNeighbors=numCellNeighbors[0];
+				for( size_t k=1 ; k<cellNeighbors.size() ; ++k ) {
+					totalNeighbors += numCellNeighbors[k];
+					if( numCellNeighbors[k]>max ) {
+						max = numCellNeighbors[k];
+						maxIndex = k;
+					}
+				}
+				assert( totalNeighbors == 8 );
+				if( maxIndex != 0 ) {
+					++updateFlag;
+					latticeCell[i][j] = cellNeighbors[maxIndex];
+				}
+			}
+		}
+		std::cerr << updateFlag << " lattice points swapped identity" << std::endl;
+	}
+	//Also update the BOAs
+	for( size_t i=0 ; i<boa.size() ; ++i )
+		boa[i].resize(0);
+	for( int i=0 ; i<H ; i++ ) {
+		for( int j=0 ; j<W ; j++ ) {
+			if( latticeCell[i][j]>-1 ) {
+				std::vector<int> tmpPos(2);
+				tmpPos[0]=i;
+				tmpPos[1]=j;
+				boa[latticeCell[i][j]].push_back(tmpPos);
+			}
+		}
+	}
+	
+	//Define cell vertices from pixel neighbors in lattice
+	int num3Vertex=0,num4Vertex=0;
+	std::vector< std::set<int> > vertexCell,cellVertex(boa.size());
+  for( int i=1 ; i<H ; i++ ) {
+    for( int j=1 ; j<W ; j++ ) {
+			std::set<int> cellList;
+      cellList.insert(latticeCell[i][j]);
+      cellList.insert(latticeCell[i][j-1]);
+      cellList.insert(latticeCell[i-1][j]);
+      cellList.insert(latticeCell[i-1][j-1]);
+			
+			if( cellList.size() == 3 || cellList.size() == 4 ) {
+				//Check if already defined
+				int updateFlag=1;
+				for( size_t k=0 ; k<vertexCell.size() ; ++k ) {
+					if( cellList == vertexCell[k] ) {
+						updateFlag=0;
+						break;
+						//std::cerr << "Vertex " << k << " defined multiple times ";
+						//for( std::set<int>::iterator kk=cellList.begin() ; 
+						//	 kk != cellList.end() ; ++kk )
+						//std::cerr << *kk << " ";
+						//std::cerr << " " << std::sqrt((vertexPos[k][0]-i)*
+						//														(vertexPos[k][0]-i)+
+						//														(vertexPos[k][1]-j)*
+						//														(vertexPos[k][1]-j));
+						//std::cerr << std::endl;						
+					}
+				}
+				if( updateFlag ) {
+					std::vector<int> tmpVertex(2);
+					tmpVertex[0]=i;
+					tmpVertex[1]=j;
+					vertexPos.push_back( tmpVertex );
+					if( cellList.size() == 3 ) {
+						++num3Vertex;
+						std::cerr << "3-vertex introduced at " << i << " " << j 
+											<< " with cells ";
+					}
+					else if( cellList.size() == 4 ) {
+						++num4Vertex;
+						std::cerr << "4-vertex introduced at " << i << " " << j 
+											<< " with cells ";
+					}			
+					vertexCell.push_back( cellList );
+					for( std::set<int>::iterator k=cellList.begin() ; 
+							 k != cellList.end() ; ++k ) {
+						if( *k != -1 )
+							cellVertex[*k].insert(vertexCell.size()-1);
+						std::cerr << *k << " ";
+					}
+					std::cerr << std::endl;										
+				}
+			}
+		}
+	}
+
+	//Remove cells with less than three vertices
+	int removeFlag=1;
+	while( removeFlag ) {
+		removeFlag=0;
+		for( size_t cellI=0 ; cellI<cellVertex.size() ; ++cellI ) {
+			if( cellVertex[cellI].size()<3 ) {
+				removeFlag++;
+				std::cerr << "Cell " << cellI << " has " << cellVertex[cellI].size()
+									<< " vertices." << std::endl;
+				std::vector<int> removeVertex;
+				for( std::set<int>::iterator vertexI=cellVertex[cellI].begin() ;
+						 vertexI != cellVertex[cellI].end() ; ++vertexI ) {
+					if( vertexCell[*vertexI].size() == 3 ) {
+						removeVertex.push_back(*vertexI);
+						//Remove vertexIndex from all cellVertex including vertexIndex
+						for( std::set<int>::iterator cellIt=vertexCell[*vertexI].begin() ;
+								 cellIt != vertexCell[*vertexI].end() ; ++cellIt ) {
+							if( *cellIt != cellI && *cellIt != -1 ) {
+								if( cellVertex[*cellIt].erase(*vertexI) != 1 ) {
+									std::cerr << "Vertex " << *vertexI 
+														<< " NOT removed for cell " << *cellIt 
+														<< std::endl;
+								}
+							}
+						}
+					}
+					else if( vertexCell[*vertexI].size() == 4 ) {
+						//Remove cell from vertex
+						std::cerr << "WARNING: VERTEX " << *vertexI << " NOT REMOVED\7\n";
+					}	
+					else {
+						std::cerr << "Wrong vertex number (3 or 4 allowed)" << std::endl;
+						exit(-1);
+					}
+				}
+				//Remove vertex
+				for( std::vector<int>::iterator vertexI=removeVertex.begin() ;
+						 vertexI != removeVertex.end() ; ++vertexI ) {
+
+					vertexCell[*vertexI] = vertexCell[vertexCell.size()-1];
+					//Move vertexIndex (N-1)->*vertexI from all cellVertex
+					for( std::set<int>::iterator cellIt=vertexCell[*vertexI].begin() ;
+							 cellIt != vertexCell[*vertexI].end() ; ++cellIt ) {
+						if( *cellIt != cellI && *cellIt != -1 ) {
+							std::set<int>::iterator vertexIt =
+								cellVertex[*cellIt].find(vertexCell.size()-1);
+							if( vertexIt != cellVertex[*cellIt].end() ) {
+								cellVertex[*cellIt].erase(vertexIt);
+								cellVertex[*cellIt].insert(*vertexI);
+							}								
+						}
+					}
+					vertexCell.pop_back();
+					vertexPos[*vertexI] = vertexPos[vertexPos.size()-1];
+					vertexPos.pop_back();					
+					--num3Vertex;
+					std::cerr << "Vertex " << *vertexI << " removed" << std::endl;
+				}
+				//Remove cell
+				std::cerr << cellI << " " << cellVertex[cellI].size() << "\t"
+									<< cellVertex.size()-1 << " " << cellVertex[cellVertex.size()-1].size() << "\n";
+				cellVertex[cellI] = cellVertex[cellVertex.size()-1];
+				std::cerr << cellI << " " << cellVertex[cellI].size() << "\t"
+									<< cellVertex.size()-1 << " " << cellVertex[cellVertex.size()-1].size() << "\n";
+				//Move cellIndex (N-1)->cellI from all vertexCell
+				for( std::set<int>::iterator vertexIt=cellVertex[cellI].begin() ;
+						 vertexIt != cellVertex[cellI].end() ; ++vertexIt ) {
+					if( *vertexIt != -1 ) {
+						std::set<int>::iterator cellIt =
+							vertexCell[*vertexIt].find(cellVertex.size()-1);
+						if( cellIt != vertexCell[*vertexIt].end() ) {
+							vertexCell[*vertexIt].erase(cellIt);
+							vertexCell[*vertexIt].insert(cellI);
+						}								
+					}
+				}				
+				std::cerr << cellI << " " << cellVertex[cellI].size() << "\t"
+									<< cellVertex.size()-1 << " " << cellVertex[cellVertex.size()-1].size() << "\n";
+				cellVertex.pop_back();
+				std::cerr << cellI << " " << cellVertex[cellI].size() << "\t"
+									<< cellVertex.size()-1 << " " << cellVertex[cellVertex.size()-1].size() << "\n";
+
+				std::cerr << "Cell " << cellI << " removed" << std::endl;
+				--cellI;
+				std::cerr << cellI << " " << cellVertex[cellI].size() << "\t"
+									<< cellVertex.size()-1 << " " << cellVertex[cellVertex.size()-1].size() << "\n";
+			}
+		}
+	}
+	std::cerr << num3Vertex << " 3-vertices and " << num4Vertex 
+						<< " 4-vertices found in image." << std::endl; 
+	std::cerr << cellVertex.size() << " cells extracted." << std::endl;
+	
+	// Extract walls from cellVertex and vertexCell data
+	//////////////////////////////////////////////////////////////////////
+	
+	//Find walls towards background and remove bg-marker in vertexCell
+	std::vector< std::pair<int,int> > wallCell,wallVertex;
+	std::vector< std::vector<int> > cellWall( cellVertex.size() ),
+		vertexWall( vertexCell.size() );
+	for( size_t cellI=0 ; cellI<cellVertex.size() ; ++cellI ) {
+		int numBGVertex=0;
+		std::pair<int,int> bgVertex;
+		for( std::set<int>::iterator vertexI=cellVertex[cellI].begin() ;
+				 vertexI != cellVertex[cellI].end() ; ++vertexI ) {
+			std::set<int>::iterator bgI = vertexCell[*vertexI].find(-1);
+			if( bgI != vertexCell[*vertexI].end() ) {
+				if( numBGVertex==0 )
+					bgVertex.first = *vertexI;
+				else if( numBGVertex==1 )
+					bgVertex.second = *vertexI;
+				else {
+					std::cerr << "Cell " << cellI 
+										<< " has more than two vertices connected "
+										<< "to background" << std::endl << bgVertex.first << " "
+										<< bgVertex.second << " " << *vertexI << std::endl;
+				}
+				++numBGVertex;
+			}
+		}		
+		//Add cell and background to wallCell, and two vertices to wallVertex
+		if( numBGVertex==2 ) {
+			std::pair<int,int> tmpCell;
+			tmpCell.first=cellI;
+			tmpCell.second=-1;
+			cellWall[cellI].push_back(wallCell.size());
+			vertexWall[bgVertex.first].push_back(wallVertex.size());
+			vertexWall[bgVertex.second].push_back(wallVertex.size());
+			wallCell.push_back( tmpCell );
+			wallVertex.push_back( bgVertex );
+		}
+		else if( numBGVertex>2 ) {
+			std::cerr << "Cell " << cellI 
+								<< " has wrong number of vertices connected "
+								<< "to background (" << numBGVertex << ")" << std::endl;
+			exit(-1);
+		}		
+	}	
+	//Remove all vertexCell pointers to background
+	for( size_t k=0 ; k<vertexCell.size() ; ++k )
+		vertexCell[k].erase(-1);
+
+	//Find walls between cell pairs
+ 	for( size_t k1=0 ; k1<cellVertex.size() ; ++k1 ) {
+ 		for( size_t k2=k1+1 ; k2<cellVertex.size() ; ++k2 ) {
+			int numEqualVertex=0;
+			std::pair<int,int> tmpVertex;
+ 			for( std::set<int>::iterator vertexIt1 = cellVertex[k1].begin() ;
+ 					 vertexIt1 != cellVertex[k1].end() ; ++vertexIt1 ) {
+				std::set<int>::iterator vertexIt2 = 
+					cellVertex[k2].find(*vertexIt1);
+				if( vertexIt2 != cellVertex[k2].end() ) {
+					assert( *vertexIt1 == *vertexIt2 );
+					if( numEqualVertex==0 )
+						tmpVertex.first = *vertexIt1;
+					else if( numEqualVertex==1 )
+						tmpVertex.second = *vertexIt1;					
+					++numEqualVertex;
+				}
+			}
+
+			if( numEqualVertex==2 ) {
+				std::pair<int,int> tmpCell;
+				tmpCell.first=k1;
+				tmpCell.second=k2;
+				cellWall[k1].push_back(wallCell.size());
+				cellWall[k2].push_back(wallCell.size());
+				vertexWall[tmpVertex.first].push_back(wallVertex.size());
+				vertexWall[tmpVertex.second].push_back(wallVertex.size());
+				wallCell.push_back( tmpCell );
+				wallVertex.push_back( tmpVertex );
+			}
+			else if( numEqualVertex>2 ) {
+				std::cerr << "Cell " << k1 
+									<< " has wrong number of vertices connected "
+									<< "to cell " << k2 << " (" << numEqualVertex << ") " 
+									<< tmpVertex.first << " (" 
+									<< vertexPos[tmpVertex.first][0] << ","
+									<< vertexPos[tmpVertex.first][1] << ") " 
+									<< tmpVertex.second << " (" 
+									<< vertexPos[tmpVertex.second][0] << ","
+									<< vertexPos[tmpVertex.second][1] << ") " 
+									<< " +..."
+									<< std::endl;
+				//exit(-1);
+			}		
+		}
+	}
+	
+	// Print walls for gnuplot
+	std::ofstream OF("tmp.wdata");
+	for( size_t k=0 ; k<wallVertex.size() ; ++k ) {
+		int v1=wallVertex[k].first;
+		int v2=wallVertex[k].second;
+		OF << vertexCell[v1].size()+vertexCell[v2].size() << " " 
+			 << vertexPos[v1][0] << " " << vertexPos[v1][1] << std::endl;
+		OF << vertexCell[v1].size()+vertexCell[v2].size() << " " 
+			 << vertexPos[v2][0] << " " << vertexPos[v2][1] << std::endl
+			 << std::endl << std::endl;
+	}
+	OF.close();
+	// Print tissue init to stdout
+	//////////////////////////////////////////////////////////////////////
+	assert( cellWall.size() == cellVertex.size() );
+	assert( wallCell.size() == wallVertex.size() );
+	assert( vertexCell.size() == vertexWall.size() );
+	
+	std::cout << cellVertex.size() << " " << wallCell.size() << " "
+						<< vertexCell.size() << std::endl;
+	for( size_t k=0 ; k<wallCell.size() ; ++k ) 
+		std::cout << k << " " << static_cast<size_t>(wallCell[k].first) 
+							<< " " << static_cast<size_t>(wallCell[k].second)
+							<< " " << wallVertex[k].first << " " << wallVertex[k].second
+							<< std::endl;
+	
+	std::cout << std::endl << vertexCell.size() << " 2" << std::endl;
+	for( size_t k=0 ; k<vertexPos.size() ; ++k ) {
+		assert( vertexPos[k].size() == 2 );
+		std::cout << vertexPos[k][0] << " " << vertexPos[k][1] << std::endl;
+	}
+	
+	std::cout << std::endl << wallCell.size() << " 1 0" << std::endl;
+	for( size_t k=0 ; k<wallVertex.size() ; ++k ) {
+		size_t v1=wallVertex[k].first;
+		size_t v2=wallVertex[k].second;
+		double length=std::sqrt( (vertexPos[v1][0]-vertexPos[v2][0])*
+														 (vertexPos[v1][0]-vertexPos[v2][0])+
+														 (vertexPos[v1][1]-vertexPos[v2][1])*
+														 (vertexPos[v1][1]-vertexPos[v2][1]) );
+		std::cout << length << std::endl;
+	}
+	
+	std::cout << std::endl << cellWall.size() << " 0" << std::endl;	
 }
 
 void writeCompartmentPixels(char* file,
