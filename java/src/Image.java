@@ -5,6 +5,4 @@ public class Image {
 	public int height;
 
 	public int width;
-
-	public Stack myStack;
 }
