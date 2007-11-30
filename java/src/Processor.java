@@ -21,7 +21,5 @@ public abstract class Processor {
 	 * @param case the Case the the Processor will work on.
 	 * @return the processed Case.
 	 */
-	public abstract Case process(Case case){
-		return case;
-	}
+	public abstract Case process(Case c);
 }
