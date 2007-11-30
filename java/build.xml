@@ -1,6 +1,6 @@
 <project name="Costanza" default="dist" basedir=".">
     <description>
-        This builds the LunarGoldman program.
+        This builds the Costanza program.
     </description>
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
