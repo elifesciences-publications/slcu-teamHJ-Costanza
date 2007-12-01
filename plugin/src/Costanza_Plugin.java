@@ -36,10 +36,13 @@ public class Costanza_Plugin implements PlugInFilter {
             int width = imageProcessor.getWidth();
             int height = imageProcessor.getHeight();
             
+            IJ.showMessage("Costanza", "width = " + width + " : height = " + height + "");
+            
             Image image = new Image(width, height);
             for (int x = 0; x < width; ++x) {
                 for (int y = 0; y < height; ++y) {
                     float value = sliceProcessor.getf(x, y);
+                    java.lang.System.err.println(x + " " + y + " " + value);
                     image.setIntensity(x, y, value);
                 }
             }
@@ -50,22 +53,24 @@ public class Costanza_Plugin implements PlugInFilter {
             }
         }
         
+        
         IJ.showMessage("Costanza", "Queue");
         
-        
+        IJ.showMessage("Costanza", "Slices = " + stack.getDepth() + "");
         Case IJCase = new Case(stack);
-        Queue jobs = new Queue();
-        try {
-            jobs.addJob(new Job("invert", new Options()));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        
+//        Queue jobs = new Queue();
+//        try {
+//            jobs.addJob(new Job("invert", new Options()));
+//        } catch (Exception exception) {
+//            exception.printStackTrace();
+//        }
         
         IJ.showMessage("Costanza", "Predriver");
         
-        Driver driver = new Driver(jobs, IJCase, factory);
+//        Driver driver = new Driver(jobs, IJCase, factory);
         
-        driver.run();
+        //       driver.run();
         IJ.showMessage("Costanza", "Finished!");
     }
     
