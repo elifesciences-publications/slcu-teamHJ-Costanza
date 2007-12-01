@@ -45,25 +45,42 @@ public class Image {
         this.height = height;
     }
  
-    /** Gets the intensity for pixel at position (x, y) */
+    /** Returns the intensity for pixel at position (x, y). */
     public float getIntensity(int x, int y) {
         Float element = pixels.elementAt(x + y * width);
         return element.floatValue();
     }
     
-    /** Sets the intensity for pixel at position (x, y) */
+    /** Sets the intensity for pixel at position (x, y). */
     public void setIntensity(int x, int y, float value) {
         pixels.setElementAt(new Float(value), x + y * width);
     }
     
+    /** Returns the maximum intensity of the image. */
     public float getMaxIntensity() {
-        // TODO
-        return 0.0f;
+        float max = Float.NEGATIVE_INFINITY;
+        int e = pixels.size();
+        for (int i = 0; i < e; ++i) {
+            Float element = pixels.elementAt(i);
+            float value = element.floatValue();
+            if (value > max) {
+                max = value;
+            }
+        }
+        return max;
     }
     
+    /** Returns the minimum intensity of the image. */
     public float getMinIntensity() {
-        // TODO
-        return 0.0f;
+        float min = Float.POSITIVE_INFINITY;
+        int e = pixels.size();
+        for (int i = 0; i < e; ++i) {
+            Float element = pixels.elementAt(i);
+            float value = element.floatValue();
+            if (value < min) {
+                min = value;
+            }
+        }
+        return min;
     }
-    
 }
