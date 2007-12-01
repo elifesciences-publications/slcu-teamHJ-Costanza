@@ -4,7 +4,7 @@ import java.lang.Exception;
 import java.util.Vector;
 
 public class Queue {
-    /** Queue containing the job queue. */ 
+    /** Queue containing the job queue. */
     private java.util.Queue<Job> jobs;
     
     /** Processor factory. */
@@ -23,22 +23,26 @@ public class Queue {
     public void addJob(Job job) throws Exception {
         if (!jobs.offer(job)) {
             throw new Exception("Job queue unable to insert new job.");
-        }    
+        }
     }
     
     /** Process queue.
      *
      * This member function steps through the queue and calls process() in all processors.
      */
-    public void run() {
+    public void run() throws Exception {
         while (true) {
             Job job = jobs.poll();
             if (job == null) {
                 return;
             }
             Processor processor;
-            processor = factory.createProcessor(job.getProcessorId(), job.getOptions());
-            processor.process(currentCase);
+            try {
+                processor = factory.createProcessor(job.getProcessorId());
+            } catch (Exception exception) {
+                throw exception;
+            }
+            processor.process(currentCase, job.getOptions());
         }
     }
 }
