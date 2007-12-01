@@ -32,16 +32,17 @@ public class PeakMerger extends Processor{
     public Case process(Case c, Options o) throws Exception {
         float R = (Float) o.getOptionValue("radius");
         float [] scale = c.getStack().getScale();
-        Collection tmp = c.getData().getData("SomeData");
-        Vector<CellCenter> cellCenters =
-                (Vector<CellCenter>)c.getData().getData("SomeData");
-        Iterator<CellCenter> it = cellCenters.iterator();
-        int numCenter = cellCenters.size();
-        for (int i=0; i < numCenter; ++i) {
-            CellCenter cc = cellCenters.get(i);
-            while (it.hasNext())
-                if (getDistance(cc,it.next(), scale) < R)
-                    sendForMerging(cc, it.next());
+        Vector cellCenters = (Vector) (c.getData().getData(DataId.cellCenters));
+        Iterator it1 = cellCenters.iterator();
+        while (it1.hasNext() ) {
+            CellCenter cc1 = (CellCenter) it1.next();
+            Iterator it2 = cellCenters.iterator();
+            while (it2.hasNext()) {
+                CellCenter cc2 = (CellCenter) it2.next();
+                if ( !cc1.toString().equals(cc2.toString())
+                && getDistance(cc1,cc2, scale) < R)
+                    sendForMerging(cc1, cc2);
+            }
         }
         return c;
     }
@@ -50,8 +51,8 @@ public class PeakMerger extends Processor{
         
     }
     
-    /** 
-     * Calculates the distance between two CellCenters taking the 
+    /**
+     * Calculates the distance between two CellCenters taking the
      * scale int account.
      * @param two CellCenter and a float []
      * @return the distance between the CellCenters
@@ -63,9 +64,9 @@ public class PeakMerger extends Processor{
         float x2 = cc2.getX();
         float y2 = cc2.getY();
         float z2 = cc2.getZ();
-        return (float)Math.sqrt( 
-                (x1-x2)*(x1-x2)*scale[0]*scale[0] + 
-                (y1-y2)*(y1-y2)*scale[1]*scale[1] + 
+        return (float)Math.sqrt(
+                (x1-x2)*(x1-x2)*scale[0]*scale[0] +
+                (y1-y2)*(y1-y2)*scale[1]*scale[1] +
                 (z1-z2)*(z1-z2)*scale[2]*scale[2] );
     }
 }
