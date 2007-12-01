@@ -111,6 +111,13 @@ public class Stack {
     }
     
     /**
+     * Gets the scale vector.
+     * @return a 3D float array
+     */
+    public float[] getScale() {
+        return scale;
+    }
+    /**
      * Gets the maximum intensity.
      * @return the intensity maximum
      */
