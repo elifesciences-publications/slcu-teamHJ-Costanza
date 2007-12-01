@@ -21,7 +21,7 @@ public class Stack {
     private int width;
     
     /** Contains scale of image in x,y z direction.*/
-    private float[] scale;
+    private float[] scale = {1.0f, 1.0f, 1.0f};
     
     /** Internal representation of the stack.*/
     private Vector<Image> myImage;
@@ -37,10 +37,6 @@ public class Stack {
     
     public Stack() {
         myImage = new Vector<Image>();
-        scale = new float[3];
-        scale[0] = 1.0f;
-        scale[1] = 1.0f;
-        scale[2] = 1.0f;
     }
     
     public Object clone() { 
