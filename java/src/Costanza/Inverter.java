@@ -12,11 +12,15 @@ public class Inverter extends Processor {
         
         float max=c.getStack().getMaxIntensityLimit();
         
-        for (int zI=0; zI<c.getStack().getDepth(); ++zI) {
-            for (int yI=0; yI<c.getStack().getHeight(); ++yI) {
-                for (int xI=0; xI<c.getStack().getWidth(); ++xI) {
+				int depth = c.getStack().getDepth();
+				int height = c.getStack().getHeight();
+				int width = c.getStack().getWidth();
+
+        for (int zI=0; zI<depth; ++zI) {
+            for (int yI=0; yI<c.height; ++yI) {
+                for (int xI=0; xI<c.width; ++xI) {
                     c.getStack().setIntensity(xI,yI,zI,max-
-                            c.getStack().getIntensity(xI,yI,zI));
+																							c.getStack().getIntensity(xI,yI,zI));
                 }
             }
         }
