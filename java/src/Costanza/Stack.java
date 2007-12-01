@@ -39,7 +39,7 @@ public class Stack {
         myImage = new Vector<Image>();
     }
     
-    public Object clone() { 
+    public Object clone() {
         Stack tmp = new Stack();
         tmp.setHeight(height);
         tmp.setWidth(width);
@@ -50,10 +50,8 @@ public class Stack {
         Vector<Image> copy = new Vector<Image>();
         int numInStack = myImage.size();
         copy.setSize(numInStack);
-        Iterator<Image> it = myImage.iterator();
-        int i=0;
-        while (it.hasNext())
-            copy.add(i++, (Image)it.next().clone());
+        for (int i=0; i < numInStack; ++i)
+            copy.add(i, (Image) myImage.get(i).clone());
         tmp.setImageVector(copy);
         return tmp;
     }
@@ -186,23 +184,23 @@ public class Stack {
         myImage.elementAt(z).setIntensity(x,y,value);
     }
     
-    /** 
+    /**
      * Sets x-scale of Stack.
      * @param new scale value.
      */
     public void setXScale(float s) {
         scale[0]=s;
-    } 
-
-    /** 
+    }
+    
+    /**
      * Sets y-scale of Stack.
      * @param new scale value.
      */
     public void setYScale(float s) {
         scale[1]=s;
-    } 
+    }
     
-    /** 
+    /**
      * Sets z-scale of Stack.
      * @param new scale value.
      */
@@ -210,7 +208,7 @@ public class Stack {
         scale[2]=s;
     }
     
-    /** 
+    /**
      * Sets height of stack.
      * @param new height h.
      */
@@ -218,7 +216,7 @@ public class Stack {
         height = h;
     }
     
-    /** 
+    /**
      * Sets width of stack.
      * @param new width w.
      */
@@ -226,7 +224,7 @@ public class Stack {
         width = w;
     }
     
-    /** 
+    /**
      * Sets depth of stack.
      * @param new depth d.
      */
