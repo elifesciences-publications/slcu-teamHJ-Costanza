@@ -31,40 +31,54 @@ public class GradientDescent extends Processor {
      */
     public Case process(Case c, Options o) throws Exception{
 				
-				Vector<BasinofAttractor> boa();
-				Vector<Pixel> max();
+// 				Vector<BasinofAttractor> boa();
+// 				Vector<Pixel> max();
   
-				Vector<Pixel> walkTmp;//positions for one walk (start point)
-				// Marker for which pixels that have been visited
-				std::vector< std::vector< std::vector<int> > > flag( W() );
-				for( int i=0 ; i<flag.size() ; ++i ) {
-						flag[i].resize( H() );
-						for( int j=0 ; j<flag[i].size() ; ++j ) {
-								flag[i][j].resize( D() );
-						}
-				}
+// 				Vector<Pixel> walkTmp;//positions for one walk (start point)
+// 				// Marker for which pixels that have been visited
+// 				std::vector< std::vector< std::vector<int> > > flag( W() );
+// 				for( int i=0 ; i<flag.size() ; ++i ) {
+// 						flag[i].resize( H() );
+// 						for( int j=0 ; j<flag[i].size() ; ++j ) {
+// 								flag[i][j].resize( D() );
+// 						}
+// 				}
 				
-				//Set flag for background pixels to -1
-				for( int i=0 ; i<bg.size() ; i++ )
-						if( bg[i][0]>=0 && bg[i][0]<H() && bg[i][1]>=0 && bg[i][1]<W() )
-								flag[ bg[i][0] ][ bg[i][1] ]=-1;
+// 				//Set flag for background pixels to -1
+// 				Vector<Pixel> bg();
+// 				bg = c.getBackground();
+// 				int bgSize = bg.size();
+// 				for (int i=0; i<bgSize; ++i ) {
+// 						flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getX() ]
+// 								[ bg.elementAt(i).getX() ]=-1;
+// 				}
 				
-//   int count=1;
-//   //Find the maxima from each pixel
-//   for( int iStart=0 ; iStart<H() ; iStart++ )
-//     for( int jStart=0 ; jStart<W() ; jStart++ ) {
-//       int i=iStart;
-//       int j=jStart;
-//       double value,newValue;
-//       walkTmp.resize(1);
-//       walkTmp[0].resize(2);
-//       walkTmp[0][0]=i;walkTmp[0][1]=j;
-      
-//       //find the max by walking uphill (greedy)
-//       if( !flag[i][j] ) {
-// 	do {
-// 	  newValue=value=pix(i,j);
-// 	  int newI=i,newJ=j;
+// 				int count=1;
+// 				//Find the maxima from each pixel
+// 				int depth=c.getStack().getDepth();
+// 				int height=c.getStack().getHeighth();
+// 				int width=c.getStack().getWidth();
+// 				for (int zStart=0; zStart<depth; ++zStart) {
+// 						for (int yStart=0; yStart<height; ++yStart) {
+// 								for (int xStart=0; xStart<width; ++xStart) {
+// 										int x = xStart;
+// 										int y = yStart;
+// 										int z = zStart;
+// 										walkTmp.resize(1);
+// 										walkTmp[0].resize(3);
+// 										walkTmp[0][0]=x;walkTmp[0][1]=y;walkTmp[0][2]=z;
+										
+// 										if (i==0 && j==0) {
+// 												System.out.println("New stack.");
+// 										}
+// 										//find the max by walking uphill (greedy)
+// 										double value,newValue;
+// 										if( !flag[h][i][j] ) {
+// 												do {
+// 														tmpFlag[h][i][j]=1;
+// 														newValue=value=pix(h,i,j);
+// 														int xNew=x, yNew=y, zNew=z;
+// 														//XXX
 // 	  //Check all pixels around a given pixel
 // 	  for(int ii=i-1 ; ii<=i+1 ; ii++ )
 // 			for(int jj=j-1 ; jj<=j+1 ; jj++ )
