@@ -21,12 +21,12 @@ import Costanza.Case;
 public class TextGUI {
     
     /** Creates a new instance of TextGUI */
-    public TextGUI() {
+    public TextGUI() throws Exception {
         Image image = new Image(10, 10);
         for(int i=0; i<image.getWidth(); ++i){
             for(int j=0; j<image.getHeight(); ++j){
                 image.setIntensity(i, j, (i == j) ? 1 : 0);
-                System.out.print("");
+                System.out.print(image.getIntensity(i,j) + " ");
             }
             System.out.println();
         }
@@ -38,6 +38,10 @@ public class TextGUI {
     }
     
     public static void main(String[] argv){
-        new TextGUI();
+        try{
+            new TextGUI();
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }
