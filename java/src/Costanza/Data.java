@@ -30,7 +30,7 @@ public class Data {
     /**Attaches all the data Objects contained in the Collection to the dataId
      *@param String id, Collection c
      */
-    public void attachData( String id, Collection c ){
+    public void attachData( String id, Collection<Object> c ){
         if(mMap.containsKey(id))
         {
             mMap.get(id).addAll(c);
