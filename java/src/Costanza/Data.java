@@ -41,10 +41,18 @@ public class Data {
         }
     }
     
+    /**Remove data object o from Data set with DataId id
+     *@param DataId id, Object o
+     */
+    public void removeData( DataId id, Object o ){
+        if(mMap.containsKey(id)) {
+            mMap.get(id).remove(o);
+        }
+    }
     /**Retrives data Collection associated with dataId
      *@return Collection
      */
-    public Collection<Object> getData( DataId id ){
+    public Collection<?> getData( DataId id ){
         return mMap.get( id );
     }
 }

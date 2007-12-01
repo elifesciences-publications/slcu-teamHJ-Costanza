@@ -2,8 +2,7 @@
 package Costanza;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Iterator;
 
 public class CellDataManipulator {
     
@@ -14,17 +13,40 @@ public class CellDataManipulator {
         this.data = d;
     }
     
-    public void merge(DataId id, String c1Id, String c2Id){ 
-        Set centers = new HashSet<Object>( data.getData(DataId.cellCenters) );
+    public void merge(DataId id, String c1Id, String c2Id){
+        Collection centers = data.getData(DataId.cellCenters);
         if( centers == null ){
             System.out.println("Data id: " + id + " not found in Data.");
             return;
         }
         
         switch(id){
-            case cellCenters:
-                    
-            
+            case cellCenters:{
+                Iterator iter = centers.iterator();
+                CellCenter c1 = null, c2 = null;
+                int breaker = 0;
+                while(iter.hasNext() || breaker < 2){
+                    CellCenter center = (CellCenter)iter.next();
+                    if(center.getId() == c1Id){
+                        c1 = center;
+                        ++breaker;
+                    } else if(center.getId() == c2Id){
+                        c2 = center;
+                        ++breaker;
+                    }
+                }
+                if( c1 == null || c2 == null ){
+                    System.out.println("Cell id: " + c1 + " or " + c2 + " not found in cellCenters Data.");
+                    return;
+                }
+                
+                int x = (c2.getX() + c1.getX())/2;
+                int y = (c2.getY() + c1.getY())/2;
+                int z = (c2.getZ() + c1.getZ())/2;
+                
+                CellCenter midC = new CellCenter("someUniqueID", x, y, z);
+                
+            }
         }
         
     }
