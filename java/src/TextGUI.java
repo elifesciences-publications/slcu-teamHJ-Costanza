@@ -42,6 +42,10 @@ public class TextGUI {
         printImage(myCase.getStack().getImage(0));
     }
     
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param image the image to set
+     */
     private void setTheImage(Image image){
         System.out.println("Image: " + image);
         for(int i=0; i<image.getWidth(); ++i){
@@ -52,7 +56,10 @@ public class TextGUI {
             }
         }
     }
-    
+    /**
+     * Print an Image to the terminal.
+     * @param image the image to print
+     */
     private void printImage(Image image){
         System.out.println("Image: " + image);
         for(int i=0; i<image.getWidth(); ++i){
