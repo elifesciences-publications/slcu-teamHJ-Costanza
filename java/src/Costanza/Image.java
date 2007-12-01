@@ -53,8 +53,7 @@ public class Image {
     
     /** Sets the intensity for pixel at position (x, y) */
     public void setIntensity(int x, int y, float value) {
-        Float element(value);
-        pixels.elementAt(x + y * width) = element;
+        pixels.setElementAt(new Float(value), x + y * width);
     }
     
     public float getMaxIntensity() {
