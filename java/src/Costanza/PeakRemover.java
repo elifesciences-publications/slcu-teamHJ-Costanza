@@ -10,7 +10,7 @@
 package Costanza;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.Collection;
 
 /**
  *
@@ -31,7 +31,7 @@ public class PeakRemover extends Processor {
     public Case process(Case c, Options o) throws Exception {
         float sizeThreshold = (Float) o.getOptionValue("size");
         float intensityThreshold = (Float) o.getOptionValue("intensity");
-        Vector centers = (Vector) (c.getData().getData(DataId.cellCenters));
+        Collection centers = c.getData().getData(DataId.cellCenters);
         
         Iterator it = centers.iterator();
         while (it.hasNext()) {
@@ -43,7 +43,7 @@ public class PeakRemover extends Processor {
                 removePeak(cc);
         }
         
-        Vector boas = (Vector) (c.getData().getData(DataId.cellBasinsOfAtraction));
+        Collection boas = c.getData().getData(DataId.cellBasinsOfAtraction);
         it = boas.iterator();
         
         while (it.hasNext()) {

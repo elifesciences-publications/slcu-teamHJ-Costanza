@@ -10,7 +10,6 @@
 package Costanza;
 
 import java.util.Collection;
-import java.util.Vector;
 import java.util.Iterator;
 
 /**
@@ -32,7 +31,7 @@ public class PeakMerger extends Processor{
     public Case process(Case c, Options o) throws Exception {
         float R = (Float) o.getOptionValue("radius");
         float [] scale = c.getStack().getScale();
-        Vector cellCenters = (Vector) (c.getData().getData(DataId.cellCenters));
+        Collection cellCenters = c.getData().getData(DataId.cellCenters);
         Iterator it1 = cellCenters.iterator();
         while (it1.hasNext() ) {
             CellCenter cc1 = (CellCenter) it1.next();
