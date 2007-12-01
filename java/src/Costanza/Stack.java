@@ -54,7 +54,7 @@ public class Stack {
         int i=0;
         while (it.hasNext())
             copy.add(i++,it.next());
-        tmp.setStack(copy);
+        tmp.setImageVector(copy);
         return tmp;
     }
     
@@ -178,30 +178,6 @@ public class Stack {
         depth= myImage.size();
     }
     
-    /** 
-     * Sets height of stack.
-     * @param new height h.
-     */
-    public void setHeight(int h) {
-        height = h;
-    }
-    
-    /** 
-     * Sets width of stack.
-     * @param new width w.
-     */
-    public void setWidth(int w) {
-        width = w;
-    }
-    
-    /** 
-     * Sets depth of stack.
-     * @param new depth d.
-     */
-    public void setDepth(int d) {
-        depth = d;
-    }
-    
     /**
      * Sets the intensity at point (x,y,z) in pixel space.
      * @param a point (x,y,z) in pixel space and a floating point value.
@@ -234,7 +210,35 @@ public class Stack {
         scale[2]=s;
     }
     
-    public void setStack(Vector<Image> stack) {
+    /** 
+     * Sets height of stack.
+     * @param new height h.
+     */
+    private void setHeight(int h) {
+        height = h;
+    }
+    
+    /** 
+     * Sets width of stack.
+     * @param new width w.
+     */
+    private void setWidth(int w) {
+        width = w;
+    }
+    
+    /** 
+     * Sets depth of stack.
+     * @param new depth d.
+     */
+    private void setDepth(int d) {
+        depth = d;
+    }
+    
+    /**
+     * Sets the Vector of images.
+     * @param a Vector<Image>
+     */
+    private void setImageVector(Vector<Image> stack) {
         myImage = stack;
     }
 }
