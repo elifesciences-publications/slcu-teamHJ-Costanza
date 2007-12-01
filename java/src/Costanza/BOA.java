@@ -6,28 +6,25 @@ import java.util.TreeSet;
 
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
  */
-public class BOA {
+public class BOA extends CellId{
     
     /**Collection of pixels definig BOA.*/
     private Set<Pixel> pixels;
-    /**Id of the BOA*/
-    private String id;
     
-    /**retrives id of the BOA.
-     *@return String
+    /**Constructs empty BOA with id.
+     *@param String id
      */
     public BOA( String id ){
-        this.id = id;
+        super(id);
         pixels = new TreeSet<Pixel>();
     }
     
+    /**Constructs BOA including Pixels in Collection c with id.
+     *@param String id
+     */
     public BOA( String id, Collection<Pixel> c ) {
-        this.id = id;
+        super(id);
         pixels = new TreeSet<Pixel>(c);
-    }
-    
-    public String getId(){
-        return id;
     }
     
     /**adds Pixel to the BOA.
