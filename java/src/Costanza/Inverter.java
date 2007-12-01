@@ -8,19 +8,26 @@ package Costanza;
  */
 public class Inverter extends Processor {
     
-    public Case process(Case c) {
-        
-        float max=c.getStack().getMaxIntensityLimit();
-        
-        int depth = c.getStack().getDepth();
-        int height = c.getStack().getHeight();
-        int width = c.getStack().getWidth();
+    public Case process(Case c) throws Exception {
+        System.out.println("Inside process");
+        Stack stack = c.getStack();
+        if(stack == null){
+            throw new Exception("No working stack initialised in case");
+        }
+        float max=stack.getMaxIntensityLimit();
+        System.out.println("Inside process 2");
+        int depth = stack.getDepth();
+        System.out.println("Inside process3");
+        int height = stack.getHeight();
+        System.out.println("Inside process4");
+        int width = stack.getWidth();
+        System.out.println("Inside process5");
         
         for (int zI=0; zI<depth; ++zI) {
             for (int yI=0; yI<height; ++yI) {
                 for (int xI=0; xI<width; ++xI) {
-                    c.getStack().setIntensity(xI,yI,zI,max-
-                            c.getStack().getIntensity(xI,yI,zI));
+                    stack.setIntensity(xI,yI,zI,max-
+                            stack.getIntensity(xI,yI,zI));
                 }
             }
         }
