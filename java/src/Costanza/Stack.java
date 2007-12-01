@@ -50,8 +50,10 @@ public class Stack {
         Vector<Image> copy = new Vector<Image>();
         int numInStack = myImage.size();
         copy.setSize(numInStack);
-        for (int i = 0; i < numInStack; ++i)
-            copy.set(i,myImage.elementAt(i));
+        Iterator<Image> it = myImage.iterator();
+        int i=0;
+        while (it.hasNext())
+            copy.add(i++,it.next());
         tmp.setStack(copy);
         return tmp;
     }
