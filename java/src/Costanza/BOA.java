@@ -47,5 +47,10 @@ public class BOA extends CellId{
     public boolean hasPixel( Pixel p ){
         return pixels.contains( p );
     }
-    
+    /**Provides collection of Pixels in the BOA
+     *@return Collection<Pixels>
+     */
+    public Collection<Pixel> getPixels(){
+        return pixels;
+    }
 }
