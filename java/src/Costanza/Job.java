@@ -1,8 +1,20 @@
 package Costanza;
+
 public class Job {
+    private String processorId;
+    private Options options;
 
-  public String processorId;
+    /** Constructor for Job class. */
+    public Job(String processorId, Options options) {
+        this.processorId = processorId;
+        this.options = options;
+    }
+    
+    public String getProcessorId() {
+        return processorId;
+    }
 
-    public Options myOptions;
-    public Que myQue;
+    public Options getOptions() {
+        return options;
+    }
 }
