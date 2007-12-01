@@ -41,7 +41,7 @@
 		  excludes="**Test.class">
 		  <manifest>
 			  <attribute name="Built-By" value="Michael Green"/>
-			  <attribute name="Main-Class" value="Costanza"/>
+			  <attribute name="Main-Class" value="TextGUI"/>
 		  </manifest>
 	  </jar>
   </target>
