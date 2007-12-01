@@ -19,6 +19,7 @@ public class Case {
      */
     public Case( Stack s ){
         mOriginalStack = s;
+        mStack = s.clone();
     }
     
     /**
