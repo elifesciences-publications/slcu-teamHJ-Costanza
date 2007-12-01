@@ -47,6 +47,7 @@ public class TextGUI {
     }
     
     private void printImage(Image image){
+        System.out.println("Image: " + image);
         for(int i=0; i<image.getWidth(); ++i){
             //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
