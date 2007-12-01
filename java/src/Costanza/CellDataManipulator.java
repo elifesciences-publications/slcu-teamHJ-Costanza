@@ -15,7 +15,7 @@ public class CellDataManipulator {
     }
     
     public void merge(DataId id, String c1Id, String c2Id){ 
-        Set centers = new HashSet( data.getData(DataId.cellCenters) );
+        Set centers = new HashSet<Object>( data.getData(DataId.cellCenters) );
         if( centers == null ){
             System.out.println("Data id: " + id + " not found in Data.");
             return;
