@@ -5,15 +5,6 @@ import Costanza.Case;
 import Costanza.Options;
 import Costanza.MeanFilter;
 
-/*
- * TextGUI.java
- *
- * Created on December 1, 2007, 12:50 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 /**
  * The Text version of our GUI.
  * @author michael
