@@ -121,7 +121,7 @@ public class Stack {
      * Adds an image to the stack. If the stack is empty it sets the
      * height and width fields, otherwise it checks so that the image
      * has correct dimension and sets the minimum and maximum intensities.
-     *@param Image
+     * @param An Image to add to the stsck.
      */
     public void addImage(Image I) throws Exception {
         if (myImage.isEmpty()) {
@@ -143,14 +143,18 @@ public class Stack {
         myImage.add(I);
     }
     
-    
-    
-    
-    /** Sets depth*/
+    /** 
+     * Sets depth of stack.
+     * @param new depth d.
+     */
     public void setDepth(int d) {
         depth = d;
     }
     
+    /**
+     * Sets the intensity at point (x,y,z) in pixel space.
+     * @param a point (x,y,z) in pixel space and a floating point value.
+     */
     public void setIntensity(int x, int y, int z, float value) {
         myImage.elementAt(z).setIntensity(x,y,value);
     }
