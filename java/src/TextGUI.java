@@ -31,11 +31,15 @@ public class TextGUI {
             }
             System.out.println();
         }
-        
+        System.out.println("Creating a Stack");
         Stack stack = new Stack();
+        System.out.println("Adding an Image to the Stack");
         stack.addImage(image);
+        System.out.println("Creating a Case");
         Case myCase = new Case(stack);
+        System.out.println("Creating an Inverter");
         Inverter inverter = new Inverter();
+        System.out.println("Inverting the Case");
         myCase = inverter.process(myCase);
         
     }

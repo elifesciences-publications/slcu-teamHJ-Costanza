@@ -1,6 +1,6 @@
 package Costanza;
 public class Driver {
 
-    public Que myQue;
+    public Queue myQueue;
     public Case myCase;
 }
