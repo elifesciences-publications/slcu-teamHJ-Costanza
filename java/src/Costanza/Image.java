@@ -31,6 +31,7 @@ public class Image {
         Image tmp = new Image(width, height);
         Iterator<Float> it = pixels.iterator();
         Vector<Float> copy = new Vector<Float>();
+        copy.setSize(pixels.size());
         int i=0;
         while (it.hasNext())
             copy.add(i++,it.next());
@@ -66,8 +67,7 @@ public class Image {
     
     /** Sets the intensity for pixel at position (x, y). */
     public void setIntensity(int x, int y, float value) {
-        pixels.setElementAt(new Float(value), x + y * width);
-        
+        pixels.setElementAt(new Float(value), x + y * width);    
     }
     
     
