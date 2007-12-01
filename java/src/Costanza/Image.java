@@ -2,6 +2,7 @@ package Costanza;
 
 import java.lang.Float;
 import java.util.Vector;
+import java.util.Iterator;
 
 /** Container class for pixel information */
 public class Image {
@@ -24,6 +25,17 @@ public class Image {
         this.height = height;
         pixels = new Vector<Float>();
         pixels.setSize(width * height);
+    }
+    
+    public Object clone() {
+        Image tmp = new Image(width, height);
+        Iterator<Float> it = pixels.iterator();
+        Vector<Float> copy = new Vector<Float>();
+        int i=0;
+        while (it.hasNext())
+            copy.add(i++,it.next());
+        tmp.setPixelVector(copy);
+        return tmp;
     }
     
     /** Returns the width of the image. */
@@ -56,6 +68,15 @@ public class Image {
     public void setIntensity(int x, int y, float value) {
         pixels.setElementAt(new Float(value), x + y * width);
         
+    }
+    
+    
+    /**
+     * Sets the Vector of pixels.
+     * @param a Vector<Float>
+     */
+    private void setPixelVector(Vector<Float> f) {
+        pixels=f;
     }
     
     /** Returns the maximum intensity of the image. */
