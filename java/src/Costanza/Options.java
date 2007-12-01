@@ -1,5 +1,6 @@
 package Costanza;
 
+import java.lang.Exception;
 import java.util.Map;
 
 public class Options {
@@ -12,19 +13,19 @@ public class Options {
     }
 
     /** Returns option value. */
-    public Object getOptionValue(String key) {
+    public Object getOptionValue(String key) throws Exception {
         if (!options.containsKey(key)) {
-            throw Exception("Option key not available.");
+            throw new Exception("Option key not available.");
         }
         return options.get(key);
     }
     
     /** Add option. */
-    public void addOption(String key, Object value) {
+    public void addOption(String key, Object value) throws Exception {
         if (!options.containsKey(key)) {
             options.put(key, value);
         } else {
-            throw Exception("Option key already exists.");
+            throw new Exception("Option key already exists.");
         }
     }
 }
