@@ -3,8 +3,11 @@
 
 public class Case {
     
+    /**Data contained in the Case.*/
     private Data mData;
+    /**Image stack contained in the Case*/
     private Stack mStack;
+    /**Original image stack contained in the Case*/
     private Stack mOriginalStack;
     
     /**Case constructor.
@@ -15,18 +18,21 @@ public class Case {
     }
     
     /**Accessor for a working copy of Stack.
+     *@return Stack
      */
     public Stack getStack(){
         return mStack;
     }
     
     /**Accessor for the original Stack.
+     *@return Stack
      */
     public final Stack getOriginalStack(){
         return mOriginalStack;
     }
     
     /**Accessor for Data.
+     *@return Data
      */
     public Data getData(){
         return mData;
