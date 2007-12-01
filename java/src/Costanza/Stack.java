@@ -38,10 +38,11 @@ public class Stack {
     public Stack() {
         myImage = new Vector<Image>();
         scale = new float[3];
-        scale[0] =1.0f;
+        scale[0] = 1.0f;
         scale[1] = 1.0f;
         scale[2] = 1.0f;
     }
+    
     public Object clone() { 
         Stack tmp = new Stack();
         tmp.setHeight(height);
@@ -52,6 +53,7 @@ public class Stack {
         tmp.setZScale(scale[2]);
         Vector<Image> copy = new Vector<Image>();
         int numInStack = myImage.size();
+        copy.setSize(numInStack);
         for (int i = 0; i < numInStack; ++i)
             copy.set(i,myImage.elementAt(i));
         tmp.setStack(copy);
