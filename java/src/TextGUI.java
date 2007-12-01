@@ -42,6 +42,7 @@ public class TextGUI {
         Inverter inverter = new Inverter();
         System.out.println("Inverting the Case");
         myCase = inverter.process(myCase, new Options());
+        for(int i=0; i<myCase.getStack())
         
     }
     
@@ -49,7 +50,7 @@ public class TextGUI {
         try{
             new TextGUI();
         }catch(Exception e){
-            System.out.println("Oops something messed up: ");
+            System.out.print("Error: ");
             System.out.println(e.getMessage());
         }
     }
