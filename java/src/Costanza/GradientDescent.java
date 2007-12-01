@@ -10,7 +10,7 @@
 package Costanza;
 
 /**
- *
+ * Class for finding minima/maxima by a local gradient descent/ascent search.
  * @author pontus
  */
 public class GradientDescent extends Processor {
@@ -26,7 +26,7 @@ public class GradientDescent extends Processor {
      *  @param a Case to work on.
      *  @return a modified Case.
      */
-    public Case process(Case c) {
+    public Case process(Case c, Options o) throws Exception{
         return c;
     }
     
