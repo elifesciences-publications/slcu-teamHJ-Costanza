@@ -24,11 +24,14 @@ public class TextGUI {
     public TextGUI() throws Exception {
         Image image = new Image(10, 10);
         System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
+        setTheImage(image);
         printImage(image);
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
         System.out.println("Adding an Image to the Stack");
         stack.addImage(image);
+        stack.setIntensity(3,0,0,1.0f);
+        printImage(image);
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
         System.out.println("Creating an Inverter");
@@ -46,13 +49,23 @@ public class TextGUI {
         printImage(workedImage);
     }
     
-    private void printImage(Image image){
+    private void setTheImage(Image image){
         System.out.println("Image: " + image);
         for(int i=0; i<image.getWidth(); ++i){
             //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
                 //System.out.println("Inside second loop");
                 image.setIntensity(i, j, (i == j) ? 1 : 0);
+            }
+        }
+    }
+    
+    private void printImage(Image image){
+        System.out.println("Image: " + image);
+        for(int i=0; i<image.getWidth(); ++i){
+            //System.out.println("Inside first loop");
+            for(int j=0; j<image.getHeight(); ++j){
+                //System.out.println("Inside second loop");
                 System.out.print(image.getIntensity(i,j) + " ");
             }
             System.out.println();
