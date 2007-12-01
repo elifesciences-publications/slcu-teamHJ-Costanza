@@ -26,9 +26,9 @@ public class TextGUI {
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
         System.out.println("Filling images");
-        for(int i=0; i<myCase.getStack().getDepth(); ++i){
-            myCase.getStack().setIntensity(4,i+4,i,(i == 1) ? 1.0f : 0.0f);
-        }
+//         for(int i=0; i<myCase.getStack().getDepth(); ++i){
+//             myCase.getStack().setIntensity(4,i+4,i,(i == 1) ? 1.0f : 0.0f);
+//         }
         System.out.println("Creating options");
         //System.out.println("Text: Original Stack 2: " + myCase.getStack().getDepth());
         Options options = new Options();
@@ -38,6 +38,7 @@ public class TextGUI {
         //System.out.println("Text: Original Stack 3: " + myCase.getStack().getDepth());
         //MeanFilter meanFilter = new MeanFilter();
         //myCase = meanFilter.process(myCase, options);
+        System.out.println("Creating a GradientDescent");				
         GradientDescent gd = new GradientDescent();
         myCase = gd.process(myCase, options);
         //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
