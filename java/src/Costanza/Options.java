@@ -3,6 +3,7 @@ package Costanza;
 import java.util.Map;
 
 public class Options {
+    /** Container with options. */
     private Map<String, Object> options;
 
     /** Empty constructor. */
