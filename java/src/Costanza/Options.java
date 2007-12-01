@@ -12,19 +12,19 @@ public class Options {
     }
 
     /** Returns option value. */
-    Object getOptionValue(String key) {
+    public Object getOptionValue(String key) {
         if (!options.containsKey(key)) {
-            java.lang.System.exit(1);
+            throw Exception("Option key not available.");
         }
         return options.get(key);
     }
     
     /** Add option. */
-    void addOption(String key, Object value) {
+    public void addOption(String key, Object value) {
         if (!options.containsKey(key)) {
             options.put(key, value);
         } else {
-            java.lang.System.exit(1);
+            throw Exception("Option key already exists.");
         }
     }
 }
