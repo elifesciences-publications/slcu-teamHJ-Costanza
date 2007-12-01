@@ -8,12 +8,12 @@ public class Image {
     /** Greyscale channel */
     private Vector<Float> pixels;
     
-    /** Width of image */
+    /** Width of image. */
     private int width;
     
-    /** Height of image */
+    /** Height of image. */
     private int height;
-    
+       
     /** Constructor for class Image.
      *
      * This is the constructor that should be used to create a new Image object. It sets the width and height of the image.
@@ -44,14 +44,17 @@ public class Image {
     public void setHeight(int height) {
         this.height = height;
     }
-    
+ 
+    /** Gets the intensity for pixel at position (x, y) */
     public float getIntensity(int x, int y) {
-        // TODO
-        return 0.0f;
+        Float element = pixels.elementAt(x + y * width);
+        return element.floatValue();
     }
     
+    /** Sets the intensity for pixel at position (x, y) */
     public void setIntensity(int x, int y, float value) {
-        // TODO
+        Float element(value);
+        pixels.elementAt(x + y * width) = element;
     }
     
     public float getMaxIntensity() {
