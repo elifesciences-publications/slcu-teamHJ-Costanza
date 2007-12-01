@@ -22,29 +22,33 @@ public class TextGUI {
     
     /** Creates a new instance of TextGUI */
     public TextGUI() throws Exception {
-        Image image = new Image(10, 10);
-        System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
-        setTheImage(image);
-        printImage(image);
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
-        System.out.println("Adding an Image to the Stack");
-        stack.addImage(image);
+        stack.addImage(new Image(10, 10)); //System.out.println("Size 1");
+        stack.addImage(new Image(10, 10)); //System.out.println("Size 2");
+        stack.addImage(new Image(10, 10)); //System.out.println("Size 3");
+        stack.addImage(new Image(10, 10));
+        //System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
         //System.out.println("Text: Original Stack 1: " + stack.getDepth());
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
+        System.out.println("Filling images");
+        for(int i=0; i<myCase.getStack().getDepth(); ++i){
+            myCase.getStack().setIntensity(4,i+4,i,(i == 1) ? 1.0f : 0.0f);
+        }
+        System.out.println("Creating options");
         //System.out.println("Text: Original Stack 2: " + myCase.getStack().getDepth());
         Options options = new Options();
         options.addOption("radius", new Float(1));
-        Inverter inverter = new Inverter();
+        //Inverter inverter = new Inverter();
         //myCase = inverter.process(myCase, options);
-        printImage(myCase.getStack().getImage(0));
         //System.out.println("Text: Original Stack 3: " + myCase.getStack().getDepth());
         MeanFilter meanFilter = new MeanFilter();
-        //System.out.println("Text: Original Stack 4: " + myCase.getStack().getDepth());
         myCase = meanFilter.process(myCase, options);
         //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
-        printImage(myCase.getStack().getImage(0));
+        for(int i=0; i<myCase.getStack().getDepth(); ++i){
+            printImage(myCase.getStack().getImage(i));
+        }
     }
     
     /**
@@ -69,7 +73,7 @@ public class TextGUI {
         System.out.println("Image: " + image);
         for(int i=0; i<image.getHeight(); ++i){
             for(int j=0; j<image.getWidth(); ++j){
-                System.out.print(image.getIntensity(i,j) + " ");
+                System.out.print(image.getIntensity(j,i) + " ");
             }
             System.out.println();
         }
