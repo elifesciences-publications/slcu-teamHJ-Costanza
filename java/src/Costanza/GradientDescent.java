@@ -30,23 +30,25 @@ public class GradientDescent extends Processor {
      *  @return a modified Case.
      */
     public Case process(Case c, Options o) throws Exception{
-
-//   std::vector<int> tmp(3);
-//   if( ijMax.size() )
-//     ijMax.resize(0);
-//   std::vector< std::vector<int> > ijTmp;//To store the values before threshold check
+				
+				Vector<BasinofAttractor> boa();
+				Vector<Pixel> max();
   
-//   std::vector< std::vector<int> > walkTmp;//positions for one walk (start point)
-//   // Marker for which pixels that have been visited
-//   std::vector< std::vector<int> > flag( H() );
-//   for( int i=0 ; i<flag.size() ; i++ )
-//     flag[i].resize( W() );
-  
-//   //Set flag for background pixels to -1
-//   for( int i=0 ; i<bg.size() ; i++ )
-//     if( bg[i][0]>=0 && bg[i][0]<H() && bg[i][1]>=0 && bg[i][1]<W() )
-//       flag[ bg[i][0] ][ bg[i][1] ]=-1;
-  
+				Vector<Pixel> walkTmp;//positions for one walk (start point)
+				// Marker for which pixels that have been visited
+				std::vector< std::vector< std::vector<int> > > flag( W() );
+				for( int i=0 ; i<flag.size() ; ++i ) {
+						flag[i].resize( H() );
+						for( int j=0 ; j<flag[i].size() ; ++j ) {
+								flag[i][j].resize( D() );
+						}
+				}
+				
+				//Set flag for background pixels to -1
+				for( int i=0 ; i<bg.size() ; i++ )
+						if( bg[i][0]>=0 && bg[i][0]<H() && bg[i][1]>=0 && bg[i][1]<W() )
+								flag[ bg[i][0] ][ bg[i][1] ]=-1;
+				
 //   int count=1;
 //   //Find the maxima from each pixel
 //   for( int iStart=0 ; iStart<H() ; iStart++ )
