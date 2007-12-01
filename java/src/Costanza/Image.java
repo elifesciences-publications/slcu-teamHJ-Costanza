@@ -24,7 +24,7 @@ public class Image {
         this.width = width;
         this.height = height;
         pixels = new Vector<Float>();
-        pixels.setSize(width * height);
+        for(int i=0; i<width*height; ++i) pixels.add(new Float(0.0f));
     }
     
     public Object clone() {
