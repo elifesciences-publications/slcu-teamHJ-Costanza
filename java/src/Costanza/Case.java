@@ -14,12 +14,15 @@ public class Case {
     
     /**
      * Case constructor.
-     * 
+     *
      * @param Stack s
      */
     public Case( Stack s ){
+        //System.out.println("Case: Original Stack 1: " + s.getDepth());
         mOriginalStack = s;
         mStack = (Stack) s.clone();
+        //System.out.println("Case: New Stack 1: " + mStack.getDepth());
+        //System.out.println("Case: Original Stack 2: " + s.getDepth());
         if(mStack == null) {
             System.out.println("Clone is empty!");
         }
@@ -27,7 +30,7 @@ public class Case {
     
     /**
      * Accessor for a working copy of Stack.
-     * 
+     *
      * @return Stack
      */
     public Stack getStack(){
@@ -36,7 +39,7 @@ public class Case {
     
     /**
      * Accessor for the original Stack.
-     * 
+     *
      * @return Stack
      */
     public final Stack getOriginalStack(){
@@ -52,7 +55,7 @@ public class Case {
     
     /**
      * Set method for working copy of the Stack.
-     * 
+     *
      * @param Stack s
      */
     public void setStack( Stack s ){
@@ -60,7 +63,7 @@ public class Case {
     }
     
     /**Set method for Data member variable.
-     *@param Data d 
+     *@param Data d
      */
     public void setData( Data d ){
         mData = d;

@@ -1,7 +1,7 @@
 package Costanza;
 import java.util.Vector;
 /**
- * A meqn intesnsity filter for smothening the stack.
+ * A mean intensity filter for smoothening the stack.
  *
  * This is a naive implementation, that just restarts calculating the
  * filter contribution from scratch. It uses a radial parameter to
@@ -12,7 +12,7 @@ import java.util.Vector;
 public class MeanFilter extends Processor {
     
     public Case process(Case c, Options options) throws Exception {
-        
+        //System.out.println("Mean: Original Stack: " + c.getStack().getDepth());
         float radius = (Float) (options.getOptionValue("radius"));
         float radius2 = radius*radius;
         int zSize=c.getStack().getDepth();
@@ -24,9 +24,10 @@ public class MeanFilter extends Processor {
             throw new Exception("No working stack initialised in case");
         }
         Stack localStack;
+        //System.out.println("Original Stack: " + c.getStack().getDepth());
         localStack = (Stack) c.getStack().clone();
-        //System.out.println("Local Stack: " + localStack);
-        //System.out.println("Original Stack: " + c.getStack());
+        //System.out.println("Local Stack: " + localStack.getDepth());
+        
         // To save some multiplications
         double zScale2 = c.getStack().getZScale()*c.getStack().getZScale();
         double xScale2 = c.getStack().getXScale()*c.getStack().getXScale();
@@ -70,7 +71,7 @@ public class MeanFilter extends Processor {
                         }
                     }
                     if (norm>0) {
-                       localStack.setIntensity(xI,yI,zI,value/norm);
+                        localStack.setIntensity(xI,yI,zI,value/norm);
                     }
                 }
             }

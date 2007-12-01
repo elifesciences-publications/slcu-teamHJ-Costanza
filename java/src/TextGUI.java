@@ -30,15 +30,20 @@ public class TextGUI {
         Stack stack = new Stack();
         System.out.println("Adding an Image to the Stack");
         stack.addImage(image);
+        //System.out.println("Text: Original Stack 1: " + stack.getDepth());
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
+        //System.out.println("Text: Original Stack 2: " + myCase.getStack().getDepth());
         Options options = new Options();
         options.addOption("radius", new Float(1));
         Inverter inverter = new Inverter();
         //myCase = inverter.process(myCase, options);
         printImage(myCase.getStack().getImage(0));
+        //System.out.println("Text: Original Stack 3: " + myCase.getStack().getDepth());
         MeanFilter meanFilter = new MeanFilter();
+        //System.out.println("Text: Original Stack 4: " + myCase.getStack().getDepth());
         myCase = meanFilter.process(myCase, options);
+        //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
         printImage(myCase.getStack().getImage(0));
     }
     

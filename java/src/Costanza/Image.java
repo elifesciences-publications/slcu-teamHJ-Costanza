@@ -31,10 +31,9 @@ public class Image {
         Image tmp = new Image(width, height);
         Iterator<Float> it = pixels.iterator();
         Vector<Float> copy = new Vector<Float>();
-        int numPixel = pixels.size();
-        copy.setSize(numPixel);
-        for (int i=0; i < numPixel; ++i)
-            copy.add(i, pixels.get(i));
+        //copy.setSize(numPixel);
+        for (int i=0; i < pixels.size(); ++i)
+            copy.add(pixels.get(i));
         tmp.setPixelVector(copy);
         return tmp;
     }

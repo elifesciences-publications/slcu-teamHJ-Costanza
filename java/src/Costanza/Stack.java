@@ -37,9 +37,12 @@ public class Stack {
     
     public Stack() {
         myImage = new Vector<Image>();
+        myImage.setSize(0);
+        depth = 0;
     }
     
     public Object clone() {
+        //System.out.println("clone: myImage.size: " + myImage.size());
         Stack tmp = new Stack();
         tmp.setHeight(height);
         tmp.setWidth(width);
@@ -48,10 +51,11 @@ public class Stack {
         tmp.setYScale(scale[1]);
         tmp.setZScale(scale[2]);
         Vector<Image> copy = new Vector<Image>();
-        int numInStack = myImage.size();
-        copy.setSize(numInStack);
-        for (int i=0; i < numInStack; ++i)
-            copy.add(i, (Image) myImage.get(i).clone());
+        //System.out.println("NumInStack: " + tmp.getDepth());
+        //System.out.println("NumInStack: " + myImage.size());
+        //copy.setSize(myImage.size());
+        for (int i=0; i < myImage.size(); ++i)
+            copy.add((Image) myImage.get(i).clone());
         tmp.setImageVector(copy);
         return tmp;
     }
@@ -65,7 +69,7 @@ public class Stack {
      * @return depth of stack
      */
     public int getDepth() {
-        return depth;
+        return myImage.size(); //depth;
     }
     
     /**
@@ -172,8 +176,10 @@ public class Stack {
         if (maxIntensity > 1.0f && minIntensity < 0.0f) {
             throw new Exception("Intensity is out of range");
         }
+        //System.out.println("Size: " + myImage.size());
         myImage.addElement(I);
-        depth= myImage.size();
+        //System.out.println("Size: " + myImage.size());
+        depth = myImage.size();
     }
     
     /**
