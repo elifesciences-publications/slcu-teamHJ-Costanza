@@ -53,7 +53,7 @@ public class Stack {
         Iterator<Image> it = myImage.iterator();
         int i=0;
         while (it.hasNext())
-            copy.add(i++,it.next());
+            copy.add(i++, (Image)it.next().clone());
         tmp.setImageVector(copy);
         return tmp;
     }
