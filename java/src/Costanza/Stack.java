@@ -103,7 +103,7 @@ public class Stack {
      * @return scale factor in the z-direction
      */
     public float getZScale() {
-        return scale[3];
+        return scale[2];
     }
     
     /**
