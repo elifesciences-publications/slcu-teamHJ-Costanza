@@ -1,6 +1,6 @@
 package Costanza;
 
-import java.lang.Number;
+import java.lang.Float;
 import java.util.Vector;
 
 /** Container class for pixel information */
@@ -22,6 +22,7 @@ public class Image {
     public Image(int width, int height) {
         this.width = width;
         this.height = height;
+        pixels = new Vector<Float>(width * height);
     }
     
     /** Returns the width of the image. */
@@ -46,7 +47,7 @@ public class Image {
     
     public float getIntensity(int x, int y) {
         // TODO
-        return 0.0;
+        return 0.0f;
     }
     
     public void setIntensity(int x, int y, float value) {
@@ -55,12 +56,12 @@ public class Image {
     
     public float getMaxIntensity() {
         // TODO
-        return 0.0;
+        return 0.0f;
     }
     
     public float getMinIntensity() {
         // TODO
-        return 0.0;
+        return 0.0f;
     }
     
 }
