@@ -87,6 +87,10 @@ public class Stack {
      return maxIntensityLimit;   
     }
     
+    float getIntensity(int x, int y, int z) {
+        return myImage.elementAt(z).getIntensity(x,y);
+    }
+    
     
     
     /** Adds an image to the stack. If the stack is empty it sets the height and width fields,
@@ -98,7 +102,7 @@ public class Stack {
             height = I.getHeight();
             width = I.getWidth();
             maxIntensity = I.getMaxIntensity();
-            minIntensity = I.minIntensity();
+            minIntensity = I.getMinIntensity();
         } 
         else if (I.getHeight() != height && I.getWidth() != width){
             System.out.println("image height and width must be the same for each image in the stack.");
