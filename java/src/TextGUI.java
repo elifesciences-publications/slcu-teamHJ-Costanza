@@ -35,7 +35,7 @@ public class TextGUI {
         Options options = new Options();
         options.addOption("radius", new Float(1));
         Inverter inverter = new Inverter();
-        myCase = inverter.process(myCase, options);
+        //myCase = inverter.process(myCase, options);
         printImage(myCase.getStack().getImage(0));
         MeanFilter meanFilter = new MeanFilter();
         myCase = meanFilter.process(myCase, options);
@@ -62,8 +62,8 @@ public class TextGUI {
      */
     private void printImage(Image image){
         System.out.println("Image: " + image);
-        for(int i=0; i<image.getWidth(); ++i){
-            for(int j=0; j<image.getHeight(); ++j){
+        for(int i=0; i<image.getHeight(); ++i){
+            for(int j=0; j<image.getWidth(); ++j){
                 System.out.print(image.getIntensity(i,j) + " ");
             }
             System.out.println();
