@@ -1,17 +1,8 @@
 package Costanza;
+
 import java.util.Vector;
 
-public class Que {
-
-    /**
-   * 
-   * @element-type Job
-   */
-  public Vector  myJob;
-    public Factory myFactory;
-    /**
-   * 
-   * @element-type Driver
-   */
-  public Vector  myDriver;
+public class Queue {
+    private Vector<Job> jobs;
+    private Factory factory;
 }
