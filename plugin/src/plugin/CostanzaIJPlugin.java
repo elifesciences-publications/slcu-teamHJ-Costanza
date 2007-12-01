@@ -1,22 +1,22 @@
-/*
- * CostanzaIJPlugin.java
- *
- * Created on December 1, 2007, 4:57 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package plugin;
 
-/**
- *
- * @author patrik
- */
-public class CostanzaIJPlugin {
-    
-    /** Creates a new instance of CostanzaIJPlugin */
-    public CostanzaIJPlugin() {
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.filter.PlugInFilter;
+import ij.process.ImageProcessor;
+        
+public class Costanza_Plugin implements PlugInFilter {
+    public void run(String arg) {
+       
     }
-    
+
+    public int setup(String arg, ImagePlus imagePlus) {
+        if (arg.equals("about")) {
+            IJ.showMessage("Costanza", "Hello World!");
+        }
+        return DOES_ALL;
+    }
+
+    public void run(ImageProcessor imageProcessor) {
+    }
 }
