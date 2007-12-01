@@ -150,28 +150,21 @@ public class Stack {
      * @param An Image to add to the stsck.
      */
     public void addImage(Image I) throws Exception {
-        System.out.println("FUCKIT");
         if (myImage.isEmpty()) {
-            System.out.println("A");
             height = I.getHeight();
             width = I.getWidth();
             maxIntensity = I.getMaxIntensity();
             minIntensity = I.getMinIntensity();
         } else if (I.getHeight() != height && I.getWidth() != width){
-            System.out.println("B");
             throw new Exception("image height and width must be the same for each image in the stack.");
         } else if ( I.getMaxIntensity() > maxIntensity ) {
-            System.out.println("C");
             maxIntensity= I.getMaxIntensity();
         } else if ( I.getMinIntensity() > minIntensity ) {
-            System.out.println("D");
             minIntensity= I.getMinIntensity();
         }
-        System.out.println("E");
         if (maxIntensity > 1.0f && minIntensity < 0.0f) {
             throw new Exception("Intensity is out of range");
         }
-        System.out.println("F");
         myImage.addElement(I);
     }
     
