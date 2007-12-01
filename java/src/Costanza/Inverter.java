@@ -17,8 +17,8 @@ public class Inverter extends Processor {
 				int width = c.getStack().getWidth();
 
         for (int zI=0; zI<depth; ++zI) {
-            for (int yI=0; yI<c.height; ++yI) {
-                for (int xI=0; xI<c.width; ++xI) {
+            for (int yI=0; yI<height; ++yI) {
+                for (int xI=0; xI<width; ++xI) {
                     c.getStack().setIntensity(xI,yI,zI,max-
 																							c.getStack().getIntensity(xI,yI,zI));
                 }
