@@ -3,6 +3,7 @@ import Costanza.Stack;
 import Costanza.Inverter;
 import Costanza.Case;
 import Costanza.Options;
+import Costanza.MeanFilter;
 
 /*
  * TextGUI.java
@@ -23,6 +24,26 @@ public class TextGUI {
     public TextGUI() throws Exception {
         Image image = new Image(10, 10);
         System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
+        printImage(image);
+        System.out.println("Creating a Stack");
+        Stack stack = new Stack();
+        System.out.println("Adding an Image to the Stack");
+        stack.addImage(image);
+        System.out.println("Creating a Case");
+        Case myCase = new Case(stack);
+        System.out.println("Creating an Inverter");
+        Inverter inverter = new Inverter();
+        MeanFilter meanFilter = new MeanFilter();
+        System.out.println("Inverting the Case");
+        Options options = new Options();
+        options.addOption("radius", 2);
+        myCase = meanFilter.process(myCase, options);
+        Stack workerStack = myCase.getStack();
+        Image workedImage = workerStack.getImage(0);
+        printImage(workedImage);
+    }
+    
+    private void printImage(Image image){
         for(int i=0; i<image.getWidth(); ++i){
             //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
@@ -32,19 +53,6 @@ public class TextGUI {
             }
             System.out.println();
         }
-        System.out.println("Creating a Stack");
-        Stack stack = new Stack();
-        System.out.println("Adding an Image to the Stack");
-        stack.addImage(image);
-        System.out.println("Creating a Case");
-        Case myCase = new Case(stack);
-        System.out.println("Creating an Inverter");
-        Inverter inverter = new Inverter();
-        System.out.println("Inverting the Case");
-        myCase = inverter.process(myCase, new Options());
-        Stack workerStack = myCase.getStack();
-        //for(int i=0; i<workerStack.getStack(); ++i){
-        //}
     }
     
     public static void main(String[] argv){
