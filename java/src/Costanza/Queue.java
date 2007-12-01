@@ -5,7 +5,12 @@ import java.util.Vector;
 
 public class Queue {
     /** Queue containing the job queue. */
-    private java.util.Queue<Job> jobs;
+    private java.util.LinkedList<Job> jobs;
+    
+    /** Constructor for Queue. */
+    public Queue() {
+        jobs = new java.util.LinkedList<Job>();
+    }
     
     /** Add job to queue. */
     public void addJob(Job job) throws Exception {
