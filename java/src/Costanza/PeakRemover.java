@@ -9,6 +9,9 @@
 
 package Costanza;
 
+import java.util.Iterator;
+import java.util.Vector;
+
 /**
  *
  * @author pontus
@@ -26,6 +29,37 @@ public class PeakRemover extends Processor {
      * @see Processor
      */
     public Case process(Case c, Options o) throws Exception {
+        float sizeThreshold = (Float) o.getOptionValue("size");
+        float intensityThreshold = (Float) o.getOptionValue("intensity");
+        Vector centers = (Vector) (c.getData().getData(DataId.cellCenters));
+        
+        Iterator it = centers.iterator();
+        while (it.hasNext()) {
+            CellCenter cc = (CellCenter) it.next();
+            int x = cc.getX();
+            int y = cc.getY();
+            int z = cc.getZ();
+            if (c.getStack().getIntensity(x,y,z) < intensityThreshold)
+                removePeak(cc);
+        }
+        
+        Vector boas = (Vector) (c.getData().getData(DataId.cellBasinsOfAtraction));
+        it = boas.iterator();
+        
+        while (it.hasNext()) {
+            BOA boa= (BOA) it.next();
+            float size =
+                    boa.getPixels().size()*
+                    (c.getStack().getXScale())*
+                    (c.getStack().getYScale())*
+                    (c.getStack().getZScale());
+            if (size < sizeThreshold)
+                removePeak(boa);
+        }
         return c;
+    }
+    
+    public void removePeak(Object o) {
+        
     }
 }
