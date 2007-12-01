@@ -33,11 +33,14 @@ public class TextGUI {
         Case myCase = new Case(stack);
         System.out.println("Creating an Inverter");
         Inverter inverter = new Inverter();
-        MeanFilter meanFilter = new MeanFilter();
-        System.out.println("Inverting the Case");
+        //MeanFilter meanFilter = new MeanFilter();
+        System.out.println("Creating an Options");
         Options options = new Options();
-        options.addOption("radius", 2);
-        myCase = meanFilter.process(myCase, options);
+        System.out.println("Adding an Options");
+        options.addOption("radius", new Float(2));
+        System.out.println("Inverting the Case");
+        myCase = inverter.process(myCase, options);
+        System.out.println("Getting the Stack");
         Stack workerStack = myCase.getStack();
         Image workedImage = workerStack.getImage(0);
         printImage(workedImage);

@@ -1,15 +1,15 @@
 package Costanza;
 
 import java.lang.Exception;
-import java.util.Map;
+import java.util.HashMap;
 
 public class Options {
     /** Container with options. */
-    private Map<String, Object> options;
+    private HashMap<String, Object> options;
 
     /** Empty constructor. */
     public Options() {
-        // Do nothing.
+        options = new HashMap<String, Object>();
     }
 
     /** Returns option value. */
