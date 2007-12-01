@@ -57,7 +57,7 @@ public class Data {
     /**Retrives data Collection associated with dataId
      *@return Collection
      */
-    public Collection<?> getData( DataId id ){
+    public Collection getData( DataId id ){
         return mMap.get( id );
     }
 }

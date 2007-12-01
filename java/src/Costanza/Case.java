@@ -21,6 +21,7 @@ public class Case {
         //System.out.println("Case: Original Stack 1: " + s.getDepth());
         mOriginalStack = s;
         mStack = (Stack) s.clone();
+        mData = new Data();
         //System.out.println("Case: New Stack 1: " + mStack.getDepth());
         //System.out.println("Case: Original Stack 2: " + s.getDepth());
         if(mStack == null) {
