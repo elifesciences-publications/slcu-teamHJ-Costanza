@@ -11,16 +11,16 @@ import java.util.Set;
  */
 public class Data {
     /**Maps dataId to a Set of Objects which represent data*/
-    private Map< String, Set< Object > > mMap;
+    private Map< DataId, Set< Object > > mMap;
     
     public Data(){
-        mMap = new HashMap< String, Set< Object > >();
+        mMap = new HashMap< DataId, Set< Object > >();
     }
     
     /**Attaches data Object to a dataId
      *@param String id, Object o
      */
-    public void attachData( String id, Object o ){
+    public void attachData( DataId id, Object o ){
         if(mMap.containsKey(id)) {
             mMap.get(id).add(o);
         } else {
@@ -33,7 +33,7 @@ public class Data {
     /**Attaches all the data Objects contained in the Collection to the dataId
      *@param String id, Collection c
      */
-    public void attachData( String id, Collection<Object> c ){
+    public void attachData( DataId id, Collection<Object> c ){
         if(mMap.containsKey(id)) {
             mMap.get(id).addAll(c);
         } else {
@@ -44,7 +44,7 @@ public class Data {
     /**Retrives data Collection associated with dataId
      *@return Collection
      */
-    public Collection getData( String id ){
+    public Collection<Object> getData( DataId id ){
         return mMap.get( id );
     }
 }
