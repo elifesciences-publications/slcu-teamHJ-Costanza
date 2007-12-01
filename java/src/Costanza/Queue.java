@@ -7,18 +7,6 @@ public class Queue {
     /** Queue containing the job queue. */
     private java.util.Queue<Job> jobs;
     
-    /** Processor factory. */
-    private Factory factory;
-    
-    /** Current Case. */
-    private Case currentCase;
-    
-    /** Constructor for Queue class. */
-    public Queue(Factory factory, Case currentCase) {
-        this.factory = factory;
-        this.currentCase = currentCase;
-    }
-    
     /** Add job to queue. */
     public void addJob(Job job) throws Exception {
         if (!jobs.offer(job)) {
@@ -30,7 +18,7 @@ public class Queue {
      *
      * This member function steps through the queue and calls process() in all processors.
      */
-    public void run() throws Exception {
+    public void run(Factory factory, Case currentCase) throws Exception {
         while (true) {
             Job job = jobs.poll();
             if (job == null) {
