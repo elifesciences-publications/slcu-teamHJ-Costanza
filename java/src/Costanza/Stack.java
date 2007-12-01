@@ -1,5 +1,6 @@
 package Costanza;
 import java.util.Vector;
+import java.lang.Exception;
 
 
 /**
@@ -85,7 +86,7 @@ public class Stack {
      * Gets the maximum intensity.
      * @return the intensity maximum
      */
-     public float getMaxIntensity() {
+    public float getMaxIntensity() {
         return maxIntensity;
     }
     
@@ -93,7 +94,7 @@ public class Stack {
      * Gets the maximum intensity.
      * @return the intensity minimum
      */
-     public float getMinIntensity() {
+    public float getMinIntensity() {
         return minIntensity;
     }
     
@@ -101,7 +102,7 @@ public class Stack {
      * Gets the maximum allowed intensity
      * @return the maximum intensity limit
      */
-     public float getMaxIntensityLimit() {
+    public float getMaxIntensityLimit() {
         return maxIntensityLimit;
     }
     
@@ -110,7 +111,7 @@ public class Stack {
      * @param a point (x,y,z) in pixel space.
      * @return intensity in point (x,y,z)
      */
-     public float getIntensity(int x, int y, int z) {
+    public float getIntensity(int x, int y, int z) {
         return myImage.elementAt(z).getIntensity(x,y);
     }
     
@@ -122,20 +123,23 @@ public class Stack {
      * has correct dimension and sets the minimum and maximum intensities.
      *@param Image
      */
-     public void addImage(Image I) {
+    public void addImage(Image I) throws Exception {
         if (myImage.isEmpty()) {
             height = I.getHeight();
             width = I.getWidth();
             maxIntensity = I.getMaxIntensity();
             minIntensity = I.getMinIntensity();
         } else if (I.getHeight() != height && I.getWidth() != width){
-            System.out.println("image height and width must be the same for each image in the stack.");
-            System.exit(-1);
-        } else if ( I.getMaxIntensity() > maxIntensity )
+            throw new Exception("image height and width must be the same for each image in the stack.");
+        } else if ( I.getMaxIntensity() > maxIntensity ) {
             maxIntensity= I.getMaxIntensity();
-        else if ( I.getMinIntensity() > minIntensity )
+        } else if ( I.getMinIntensity() > minIntensity ) {
             minIntensity= I.getMinIntensity();
+        }
         
+        if (maxIntensity > 1.0f && minIntensity < 0.0f) {
+            throw new Exception("Intensity is out of range");
+        }
         myImage.add(I);
     }
     
@@ -143,11 +147,11 @@ public class Stack {
     
     
     /** Sets depth*/
-     public void setDepth(int d) {
+    public void setDepth(int d) {
         depth = d;
     }
     
-     public void setIntensity(int x, int y, int z, float value) {
+    public void setIntensity(int x, int y, int z, float value) {
         myImage.elementAt(z).setIntensity(x,y,value);
     }
 }
