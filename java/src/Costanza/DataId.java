@@ -4,5 +4,6 @@ public enum DataId {
 cellCenters,
 cellBasinsOfAtraction,
 cellNeighbors,
-cellIntensity
+cellIntensity,
+stackBackground
 }
