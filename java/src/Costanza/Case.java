@@ -1,6 +1,7 @@
+package Costanza;
+
 /** Case class holds Data and image Stack information that will be used by the Processor.
  */
-
 public class Case {
     
     /**Data contained in the Case.*/

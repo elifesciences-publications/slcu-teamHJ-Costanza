@@ -52,7 +52,7 @@
 		  version="true"
 		  use="true"
 		  windowtitle="Costanza API">
-		  <fileset dir="src">
+		  <fileset dir="src/Costanza">
 			  <include name="*.java"/>
 			  <exclude name="*Test*"/>
 		  </fileset>
