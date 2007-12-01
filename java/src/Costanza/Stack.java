@@ -168,6 +168,7 @@ public class Stack {
             throw new Exception("Intensity is out of range");
         }
         myImage.addElement(I);
+        depth= myImage.size();
     }
     
     /** 
