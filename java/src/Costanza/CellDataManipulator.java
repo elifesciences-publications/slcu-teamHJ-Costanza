@@ -3,6 +3,7 @@ package Costanza;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 public class CellDataManipulator {
     
@@ -13,7 +14,7 @@ public class CellDataManipulator {
         this.data = d;
     }
     
-    public void merge(DataId id, String c1Id, String c2Id){
+    public void merge(DataId id, int c1Id, int c2Id){
         Collection cells = data.getData(id);
         if( cells == null ){
             System.out.println("Data id: " + id + " not found in Data.");
@@ -63,7 +64,7 @@ public class CellDataManipulator {
                     if(basin.getId() == c1Id){
                         b1 = basin;
                         ++breaker;
-                    } else if(center.getId() == c2Id){
+                    } else if(basin.getId() == c2Id){
                         b2 = basin;
                         ++breaker;
                     }
@@ -75,10 +76,10 @@ public class CellDataManipulator {
                 
                 BOA mergedB = new BOA( data.newCellId() );
                 
-                Vector<Pixel> 
+                Vector<Pixel> v = new Vector<Pixel>( b1.getPixels() );
             }
         }
         
     }
 }
-}
+

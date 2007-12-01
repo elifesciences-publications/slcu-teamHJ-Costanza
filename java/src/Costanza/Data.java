@@ -20,7 +20,7 @@ public class Data {
     }
     
     public int newCellId(){
-        return ++maxCellId
+        return ++maxCellId;
     }
     /**Attaches data Object to a dataId
      *@param String id, Object o
