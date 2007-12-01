@@ -30,23 +30,16 @@ public class TextGUI {
         Stack stack = new Stack();
         System.out.println("Adding an Image to the Stack");
         stack.addImage(image);
-        stack.setIntensity(3,0,0,1.0f);
-        printImage(image);
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
-        System.out.println("Creating an Inverter");
-        Inverter inverter = new Inverter();
-        //MeanFilter meanFilter = new MeanFilter();
-        System.out.println("Creating an Options");
         Options options = new Options();
-        System.out.println("Adding an Options");
-        options.addOption("radius", new Float(2));
-        System.out.println("Inverting the Case");
+        options.addOption("radius", new Float(1));
+        Inverter inverter = new Inverter();
         myCase = inverter.process(myCase, options);
-        System.out.println("Getting the Stack");
-        Stack workerStack = myCase.getStack();
-        Image workedImage = workerStack.getImage(0);
-        printImage(workedImage);
+        printImage(myCase.getStack().getImage(0));
+        MeanFilter meanFilter = new MeanFilter();
+        myCase = meanFilter.process(myCase, options);
+        printImage(myCase.getStack().getImage(0));
     }
     
     private void setTheImage(Image image){
@@ -63,9 +56,7 @@ public class TextGUI {
     private void printImage(Image image){
         System.out.println("Image: " + image);
         for(int i=0; i<image.getWidth(); ++i){
-            //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
-                //System.out.println("Inside second loop");
                 System.out.print(image.getIntensity(i,j) + " ");
             }
             System.out.println();
