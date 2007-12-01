@@ -60,7 +60,7 @@ public class Stack {
         return tmp;
     }
     
-    Image getImage(int index) {
+    public Image getImage(int index) {
         return myImage.get(index);
     }
     
