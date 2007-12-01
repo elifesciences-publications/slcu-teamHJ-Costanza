@@ -21,7 +21,7 @@ public class Stack {
     private int width;
     
     /** Contains scale of image in x,y z direction.*/
-    private Vector<Float> scale;
+    private float[] scale;
     
     /** Internal representation of the stack.*/
     private Vector<Image> myImage;
@@ -37,19 +37,19 @@ public class Stack {
     
     public Stack() {
         myImage = new Vector<Image>();
-        scale = new Vector<Float>(3);
-        setXScale(1.0f);
-        setYScale(1.0f);
-        setZScale(1.0f);
+        scale = new float[3];
+        scale[0] =1.0f;
+        scale[1] = 1.0f;
+        scale[2] = 1.0f;
     }
     public Object clone() { 
         Stack tmp = new Stack();
         tmp.setHeight(height);
         tmp.setWidth(width);
         tmp.setDepth(depth);
-        tmp.setXScale(scale.elementAt(0));
-        tmp.setYScale(scale.elementAt(1));
-        tmp.setZScale(scale.elementAt(2));
+        tmp.setXScale(scale[0]);
+        tmp.setYScale(scale[1]);
+        tmp.setZScale(scale[2]);
         Vector<Image> copy = new Vector<Image>();
         int numInStack = myImage.size();
         for (int i = 0; i < numInStack; ++i)
@@ -87,7 +87,7 @@ public class Stack {
      * @return scale factor in the x-direction
      */
     public float getXScale() {
-        return scale.elementAt(0).floatValue();
+        return scale[0];
     }
     
     /**
@@ -95,7 +95,7 @@ public class Stack {
      * @return scale factor in the y-direction
      */
     public float getYScale() {
-        return scale.elementAt(1).floatValue();
+        return scale[1];
     }
     
     /**
@@ -103,7 +103,7 @@ public class Stack {
      * @return scale factor in the z-direction
      */
     public float getZScale() {
-        return scale.elementAt(2).floatValue();
+        return scale[3];
     }
     
     /**
@@ -210,7 +210,7 @@ public class Stack {
      * @param new scale value.
      */
     public void setXScale(float s) {
-        scale.setElementAt(s, 0);
+        scale[0]=s;
     } 
 
     /** 
@@ -218,7 +218,7 @@ public class Stack {
      * @param new scale value.
      */
     public void setYScale(float s) {
-        scale.setElementAt(s, 1);
+        scale[1]=s;
     } 
     
     /** 
@@ -226,7 +226,7 @@ public class Stack {
      * @param new scale value.
      */
     public void setZScale(float s) {
-        scale.setElementAt(s, 2);
+        scale[2]=s;
     }
     
     public void setStack(Vector<Image> stack) {
