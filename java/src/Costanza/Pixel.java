@@ -11,8 +11,7 @@ public class Pixel {
     public Pixel(){}
     
     /**Create Pixel with indices x, y and z*/
-    public Pixel( int x,  int y, int z )
-    {
+    public Pixel( int x,  int y, int z ) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -58,5 +57,9 @@ public class Pixel {
      **/
     public void setZ( int z ){
         this.z = z;
+    }
+    
+    public boolean equals(Pixel p){
+        return ( this.x == p.x && this.y == p.y && this.z == p.z );
     }
 }
