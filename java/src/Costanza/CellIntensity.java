@@ -9,14 +9,14 @@ public class CellIntensity extends CellId{
     /**Constructs uninitialized CellIntensity with id.
      *@param String id
      */
-    public CellIntensity( String id ){
+    public CellIntensity( int id ){
         super(id);
     }
     
     /**Constructs CellIntensity with specified intensity and with id.
      *@param Sring id, float
      */
-    public CellIntensity( String id, float intens ) {
+    public CellIntensity( int id, float intens ) {
         super(id);
         intensity = intens;
     }

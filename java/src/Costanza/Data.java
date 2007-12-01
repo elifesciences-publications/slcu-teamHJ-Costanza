@@ -12,11 +12,16 @@ import java.util.Set;
 public class Data {
     /**Maps dataId to a Set of Objects which represent data*/
     private Map< DataId, Set< Object > > mMap;
+    private int maxCellId;
     
     public Data(){
         mMap = new HashMap< DataId, Set< Object > >();
+        maxCellId = 0;
     }
     
+    public int newCellId(){
+        return ++maxCellId
+    }
     /**Attaches data Object to a dataId
      *@param String id, Object o
      */

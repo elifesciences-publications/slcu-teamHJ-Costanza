@@ -4,17 +4,17 @@ package Costanza;
 public class CellId {
     
     /**Id of the Cell*/
-    private String id;
+    private int id;
     
     /** Creates a new instance of CellId */
-    public CellId( String id ) {
+    public CellId( int id ) {
         this.id = id;
     }
     
     /**retrives id of the BOA.
     *@return String
     */
-    public String getId(){
+    public int getId(){
         return id;
     }
 }

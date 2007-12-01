@@ -15,7 +15,7 @@ public class CellNeighbors extends CellId{
     /**Constructs empty BOA with id.
      *@param String id
      */
-    public CellNeighbors( String id ){
+    public CellNeighbors( int id ){
         super(id);
         neighbors = new TreeSet<String>();
     }
@@ -23,7 +23,7 @@ public class CellNeighbors extends CellId{
     /**Constructs BOA including id Strings in Collection c and with id.
      *@param String id, Collection<String> c
      */
-    public CellNeighbors( String id, Collection<String> c ) {
+    public CellNeighbors( int id, Collection<String> c ) {
         super(id);
         neighbors = new TreeSet<String>(c);
     }

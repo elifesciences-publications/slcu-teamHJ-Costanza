@@ -14,7 +14,7 @@ public class BOA extends CellId{
     /**Constructs empty BOA with id.
      *@param String id
      */
-    public BOA( String id ){
+    public BOA( int id ){
         super(id);
         pixels = new TreeSet<Pixel>();
     }
@@ -22,7 +22,7 @@ public class BOA extends CellId{
     /**Constructs BOA including Pixels in Collection c with id.
      *@param String id
      */
-    public BOA( String id, Collection<Pixel> c ) {
+    public BOA( int id, Collection<Pixel> c ) {
         super(id);
         pixels = new TreeSet<Pixel>(c);
     }

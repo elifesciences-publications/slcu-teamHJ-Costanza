@@ -12,7 +12,7 @@ public class CellCenter extends CellId{
     /**Constructs uninitialized CellCenter with id.
      *@param String id
      */
-    public CellCenter( String id ){
+    public CellCenter( int id ){
         super(id);
         pixel = new Pixel();
     }
@@ -20,7 +20,7 @@ public class CellCenter extends CellId{
     /**Constructs CellCenter at indices x, y, z and with id.
      *@param Sring id, int x, int y, int z
      */
-    public CellCenter( String id, int x, int y, int z ) {
+    public CellCenter( int id, int x, int y, int z ) {
         super(id);
         pixel = new Pixel(x, y, z);
     }

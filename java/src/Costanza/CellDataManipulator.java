@@ -14,15 +14,17 @@ public class CellDataManipulator {
     }
     
     public void merge(DataId id, String c1Id, String c2Id){
-        Collection centers = data.getData(DataId.cellCenters);
-        if( centers == null ){
+        Collection cells = data.getData(id);
+        if( cells == null ){
             System.out.println("Data id: " + id + " not found in Data.");
             return;
         }
         
+        Iterator iter = cells.iterator();
+        
         switch(id){
             case cellCenters:{
-                Iterator iter = centers.iterator();
+                
                 CellCenter c1 = null, c2 = null;
                 int breaker = 0;
                 while(iter.hasNext() || breaker < 2){
@@ -36,7 +38,7 @@ public class CellDataManipulator {
                     }
                 }
                 if( c1 == null || c2 == null ){
-                    System.out.println("Cell id: " + c1 + " or " + c2 + " not found in cellCenters Data.");
+                    System.out.println("Cell id: " + c1.getId() + " or " + c2.getId() + " not found in cellCenters Data.");
                     return;
                 }
                 
@@ -44,10 +46,39 @@ public class CellDataManipulator {
                 int y = (c2.getY() + c1.getY())/2;
                 int z = (c2.getZ() + c1.getZ())/2;
                 
-                CellCenter midC = new CellCenter("someUniqueID", x, y, z);
                 
+                CellCenter midC = new CellCenter(data.newCellId(), x, y, z);
+                
+                data.removeData(DataId.cellCenters, c1);
+                data.removeData(DataId.cellCenters, c2);
+                
+                data.attachData(DataId.cellCenters, midC);
+                
+            }
+            case cellBasinsOfAtraction:{
+                BOA b1 = null, b2 = null;
+                int breaker = 0;
+                while(iter.hasNext() || breaker < 2){
+                    BOA basin = (BOA)iter.next();
+                    if(basin.getId() == c1Id){
+                        b1 = basin;
+                        ++breaker;
+                    } else if(center.getId() == c2Id){
+                        b2 = basin;
+                        ++breaker;
+                    }
+                }
+                if( b1 == null || b2 == null ){
+                    System.out.println("Cell id: " + b1.getId() + " or " + b2.getId() + " not found in BOA Data.");
+                    return;
+                }
+                
+                BOA mergedB = new BOA( data.newCellId() );
+                
+                Vector<Pixel> 
             }
         }
         
     }
+}
 }
