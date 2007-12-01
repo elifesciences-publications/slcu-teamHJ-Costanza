@@ -37,6 +37,10 @@ public class Stack {
     
     public Stack() {
         myImage = new Vector<Image>();
+        scale = new Vector<Float>(3);
+        setXScale(1.0f);
+        setYScale(1.0f);
+        setZScale(1.0f);
     }
     public Object clone() { 
         Stack tmp = new Stack();
