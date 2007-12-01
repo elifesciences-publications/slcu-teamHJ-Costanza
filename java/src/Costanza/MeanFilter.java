@@ -11,7 +11,7 @@ import java.util.Vector;
  */
 public class MeanFilter extends Processor {
     
-    public Case process(Case c) {
+    public Case process(Case c, Options options) {
 	
 	float radius = 1.0f;
 	float radius2 = radius*radius;

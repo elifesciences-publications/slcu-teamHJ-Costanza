@@ -8,7 +8,7 @@ package Costanza;
  */
 public class Inverter extends Processor {
     
-    public Case process(Case c) throws Exception {
+    public Case process(Case c, Options options) throws Exception {
         System.out.println("Inside process");
         Stack stack = c.getStack();
         if(stack == null){
