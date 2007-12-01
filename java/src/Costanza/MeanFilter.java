@@ -20,12 +20,13 @@ public class MeanFilter extends Processor {
         int ySize=c.getStack().getWidth();
         
         // Introduce a local clone
-        if( c.getStack()==null) {
+        if( c.getStack() == null) {
             throw new Exception("No working stack initialised in case");
         }
         Stack localStack;
         localStack = (Stack) c.getStack().clone();
-        
+        //System.out.println("Local Stack: " + localStack);
+        //System.out.println("Original Stack: " + c.getStack());
         // To save some multiplications
         double zScale2 = c.getStack().getZScale()*c.getStack().getZScale();
         double xScale2 = c.getStack().getXScale()*c.getStack().getXScale();
@@ -69,7 +70,7 @@ public class MeanFilter extends Processor {
                         }
                     }
                     if (norm>0) {
-                        localStack.setIntensity(xI,yI,zI,value/norm);
+                       localStack.setIntensity(xI,yI,zI,value/norm);
                     }
                 }
             }

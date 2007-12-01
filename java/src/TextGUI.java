@@ -52,7 +52,7 @@ public class TextGUI {
             //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
                 //System.out.println("Inside second loop");
-                image.setIntensity(i, j, (i == j) ? 1 : 0);
+                image.setIntensity(i, j, (i == 5 && j == 5) ? 1 : 0);
             }
         }
     }
