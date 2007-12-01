@@ -4,7 +4,7 @@ import java.lang.Float;
 import java.util.Vector;
 
 /** Container class for pixel information */
-public class Image {    
+public class Image {
     /** Greyscale channel */
     private Vector<Float> pixels;
     
@@ -13,7 +13,7 @@ public class Image {
     
     /** Height of image. */
     private int height;
-       
+    
     /** Constructor for class Image.
      *
      * This is the constructor that should be used to create a new Image object. It sets the width and height of the image.
@@ -22,7 +22,8 @@ public class Image {
     public Image(int width, int height) {
         this.width = width;
         this.height = height;
-        pixels = new Vector<Float>(width * height);
+        pixels = new Vector<Float>();
+        pixels.setSize(width * height);
     }
     
     /** Returns the width of the image. */
@@ -44,7 +45,7 @@ public class Image {
     public void setHeight(int height) {
         this.height = height;
     }
- 
+    
     /** Returns the intensity for pixel at position (x, y). */
     public float getIntensity(int x, int y) {
         Float element = pixels.elementAt(x + y * width);
@@ -54,6 +55,7 @@ public class Image {
     /** Sets the intensity for pixel at position (x, y). */
     public void setIntensity(int x, int y, float value) {
         pixels.setElementAt(new Float(value), x + y * width);
+        
     }
     
     /** Returns the maximum intensity of the image. */
