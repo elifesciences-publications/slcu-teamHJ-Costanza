@@ -24,7 +24,7 @@ public class Stack {
     private Vector<Float> scale;
     
     /** Internal representation of the stack.*/
-    private Vector<Image> myImage = new Vector<Image>();
+    private Vector<Image> myImage;
     
     /** Stores the maximal intensity in the stack*/
     private float maxIntensity;
@@ -35,20 +35,22 @@ public class Stack {
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit=1.0f;
     
+    public Stack() {
+        myImage = new Vector<Image>();
+    }
     public Object clone() { 
         Stack tmp = new Stack();
+        tmp.setHeight(height);
+        tmp.setWidth(width);
         tmp.setDepth(depth);
         tmp.setXScale(scale.elementAt(0));
         tmp.setYScale(scale.elementAt(1));
         tmp.setZScale(scale.elementAt(2));
-        Iterator<Image> it = myImage.iterator();
-        try {
-        while (it.hasNext())
-            tmp.addImage(it.next());
-        } catch(Exception e) {
-            System.exit(-1);
-        }
-        
+        Vector<Image> copy = new Vector<Image>();
+        int numInStack = myImage.size();
+        for (int i = 0; i < numInStack; ++i)
+            copy.set(i,myImage.elementAt(i));
+        tmp.setStack(copy);
         return tmp;
     }
     
@@ -168,6 +170,22 @@ public class Stack {
     }
     
     /** 
+     * Sets height of stack.
+     * @param new height h.
+     */
+    public void setHeight(int h) {
+        height = h;
+    }
+    
+    /** 
+     * Sets width of stack.
+     * @param new width w.
+     */
+    public void setWidth(int w) {
+        width = w;
+    }
+    
+    /** 
      * Sets depth of stack.
      * @param new depth d.
      */
@@ -205,5 +223,9 @@ public class Stack {
      */
     public void setZScale(float s) {
         scale.setElementAt(s, 2);
-    } 
+    }
+    
+    public void setStack(Vector<Image> stack) {
+        myImage = stack;
+    }
 }
