@@ -25,7 +25,7 @@ public class PeakMerger extends Processor{
   * @see Processor
   */   
  public Case process(Case c, Options o) throws Exception {
-     //float radius = (float)o.getOptionValue("radius");   
+     float R = (Float) o.getOptionValue("radius");   
      return c;
     }
 }
