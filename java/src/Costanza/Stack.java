@@ -60,6 +60,10 @@ public class Stack {
         return tmp;
     }
     
+    Image getImage(int index) {
+        return myImage.get(index);
+    }
+    
     /**
      * Member function returning the depth of the stack.
      * @return depth of stack
