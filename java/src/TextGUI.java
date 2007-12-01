@@ -42,8 +42,9 @@ public class TextGUI {
         Inverter inverter = new Inverter();
         System.out.println("Inverting the Case");
         myCase = inverter.process(myCase, new Options());
-        for(int i=0; i<myCase.getStack())
-        
+        Stack workerStack = myCase.getStack();
+        //for(int i=0; i<workerStack.getStack(); ++i){
+        //}
     }
     
     public static void main(String[] argv){
