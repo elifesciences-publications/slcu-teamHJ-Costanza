@@ -1,6 +1,7 @@
 package Costanza;
 import java.util.HashMap;
 
+/** Object factory for Processor objects. */
 public class Factory {
     /** Map holding Processor id strings and their classes. */
     private HashMap<String, Class<? extends Processor>> processorClasses;
@@ -15,6 +16,7 @@ public class Factory {
         processorClasses.put(processorId, processorClass);
     }
     
+    /** Create object using processorId. */
     public Processor createProcessor(String processorId) throws Exception {
         if (!processorClasses.containsKey(processorId)) {
             throw new Exception("Class not found in factory.");
