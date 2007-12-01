@@ -8,25 +8,30 @@ import java.util.Vector;
  *
  */
 public class Stack {
+    
     /**depth in z-direction.*/
     private int depth;
+    
     /**Height of the image, taken from the Image class.*/
     private int height;
+    
     /**Width of the image, taken from Image class.*/
     private int width;
+    
     /** Contains scale of image in x,y z direction.*/
     private Vector<Float> scale;
+    
     /** Internal representation of the stack.*/
     private Vector<Image> myImage;
+    
     /** Stores the maximal intensity in the stack*/
     private float maxIntensity;
+    
     /** Stores the minimal intensity in the stack*/
     private float minIntensity;
+    
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit=1.0f;
-    
-    Stack() {
-    }
     
     /**
      * Member function returning the depth of the stack.
@@ -56,7 +61,7 @@ public class Stack {
      * Gets scale in x-direction.
      * @return scale factor in the x-direction
      */
-    float getXScale() {
+    public float getXScale() {
         return scale.elementAt(0).floatValue();
     }
     
@@ -64,7 +69,7 @@ public class Stack {
      * Gets scale in y-direction.
      * @return scale factor in the y-direction
      */
-    float getYScale() {
+    public float getYScale() {
         return scale.elementAt(1).floatValue();
     }
     
@@ -72,7 +77,7 @@ public class Stack {
      * Gets scale in x-direction.
      * @return scale factor in the z-direction
      */
-    float getZScale() {
+    public float getZScale() {
         return scale.elementAt(2).floatValue();
     }
     
@@ -80,7 +85,7 @@ public class Stack {
      * Gets the maximum intensity.
      * @return the intensity maximum
      */
-    float getMaxIntensity() {
+     public float getMaxIntensity() {
         return maxIntensity;
     }
     
@@ -88,7 +93,7 @@ public class Stack {
      * Gets the maximum intensity.
      * @return the intensity minimum
      */
-    float getMinIntensity() {
+     public float getMinIntensity() {
         return minIntensity;
     }
     
@@ -96,7 +101,7 @@ public class Stack {
      * Gets the maximum allowed intensity
      * @return the maximum intensity limit
      */
-    float getMaxIntensityLimit() {
+     public float getMaxIntensityLimit() {
         return maxIntensityLimit;
     }
     
@@ -105,19 +110,19 @@ public class Stack {
      * @param a point (x,y,z) in pixel space.
      * @return intensity in point (x,y,z)
      */
-    float getIntensity(int x, int y, int z) {
+     public float getIntensity(int x, int y, int z) {
         return myImage.elementAt(z).getIntensity(x,y);
     }
     
     
     
-    /** 
-     * Adds an image to the stack. If the stack is empty it sets the 
-     * height and width fields, otherwise it checks so that the image 
+    /**
+     * Adds an image to the stack. If the stack is empty it sets the
+     * height and width fields, otherwise it checks so that the image
      * has correct dimension and sets the minimum and maximum intensities.
      *@param Image
      */
-    void addImage(Image I) {
+     public void addImage(Image I) {
         if (myImage.isEmpty()) {
             height = I.getHeight();
             width = I.getWidth();
@@ -138,11 +143,11 @@ public class Stack {
     
     
     /** Sets depth*/
-    void setDepth(int d) {
+     public void setDepth(int d) {
         depth = d;
     }
     
-    void setIntensity(int x, int y, int z, float value) {
+     public void setIntensity(int x, int y, int z, float value) {
         myImage.elementAt(z).setIntensity(x,y,value);
     }
 }

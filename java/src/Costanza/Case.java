@@ -1,6 +1,7 @@
 package Costanza;
 
-/** Case class holds Data and image Stack information that will be used by the Processor.
+/**
+ * Case class holds Data and image Stack information that will be used by the Processor.
  */
 public class Case {
     
@@ -11,22 +12,28 @@ public class Case {
     /**Original image stack contained in the Case*/
     private Stack mOriginalStack;
     
-    /**Case constructor.
-     *@param Stack s
-    */
+    /**
+     * Case constructor.
+     * 
+     * @param Stack s
+     */
     public Case( Stack s ){
         mOriginalStack = s;
     }
     
-    /**Accessor for a working copy of Stack.
-     *@return Stack
+    /**
+     * Accessor for a working copy of Stack.
+     * 
+     * @return Stack
      */
     public Stack getStack(){
         return mStack;
     }
     
-    /**Accessor for the original Stack.
-     *@return Stack
+    /**
+     * Accessor for the original Stack.
+     * 
+     * @return Stack
      */
     public final Stack getOriginalStack(){
         return mOriginalStack;
@@ -39,8 +46,10 @@ public class Case {
         return mData;
     }
     
-    /**Set method for working copy of the Stack.
-     *@param Stack s 
+    /**
+     * Set method for working copy of the Stack.
+     * 
+     * @param Stack s
      */
     public void setStack( Stack s ){
         mStack = s;
