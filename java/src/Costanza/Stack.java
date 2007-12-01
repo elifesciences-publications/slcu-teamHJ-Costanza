@@ -68,7 +68,7 @@ public class Stack {
      * Member function returning the depth of the stack.
      * @return depth of stack
      */
-    int getDepth() {
+    public int getDepth() {
         return depth;
     }
     
@@ -76,7 +76,7 @@ public class Stack {
      * Member function returning the height of the stack.
      * @return height of stack
      */
-    int getHeight() {
+    public int getHeight() {
         return height;
     }
     
@@ -84,7 +84,7 @@ public class Stack {
      * Member function returning the width of the stack.
      * @return width of stack
      */
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
     
