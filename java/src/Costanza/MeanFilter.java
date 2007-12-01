@@ -20,6 +20,9 @@ public class MeanFilter extends Processor {
 				int ySize=c.getStack().getWidth();
 				
 				// Introduce a local clone
+				if( c.getStack()==null) {
+            throw new Exception("No working stack initialised in case");
+        }
 				Stack localStack;
 				localStack = (Stack) c.getStack().clone();
 				
