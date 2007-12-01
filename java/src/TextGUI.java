@@ -4,6 +4,7 @@ import Costanza.Inverter;
 import Costanza.Case;
 import Costanza.Options;
 import Costanza.MeanFilter;
+import Costanza.GradientDescent;
 
 /**
  * The Text version of our GUI.
@@ -15,8 +16,8 @@ public class TextGUI {
     public TextGUI() throws Exception {
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
-        for(int i=0; i<40; ++i){
-            stack.addImage(new Image(1000, 1000));
+        for(int i=0; i<20; ++i){
+            stack.addImage(new Image(400, 400));
         }
         //System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
         //System.out.println("Text: Original Stack 1: " + stack.getDepth());
@@ -33,8 +34,10 @@ public class TextGUI {
         //Inverter inverter = new Inverter();
         //myCase = inverter.process(myCase, options);
         //System.out.println("Text: Original Stack 3: " + myCase.getStack().getDepth());
-        MeanFilter meanFilter = new MeanFilter();
-        myCase = meanFilter.process(myCase, options);
+        //MeanFilter meanFilter = new MeanFilter();
+        //myCase = meanFilter.process(myCase, options);
+        GradientDescent gd = new GradientDescent();
+        myCase = gd.process(myCase, options);
         //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
         for(int i=0; i<myCase.getStack().getDepth(); ++i){
             //printImage(myCase.getStack().getImage(i));
