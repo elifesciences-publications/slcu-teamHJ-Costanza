@@ -1,6 +1,7 @@
 package Costanza;
 import java.util.Vector;
 import java.lang.Exception;
+import java.util.Iterator;
 
 
 /**
@@ -33,6 +34,23 @@ public class Stack {
     
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit=1.0f;
+    
+    public Object clone() { 
+        Stack tmp = new Stack();
+        tmp.setDepth(depth);
+        tmp.setXScale(scale.elementAt(0));
+        tmp.setYScale(scale.elementAt(1));
+        tmp.setZScale(scale.elementAt(2));
+        Iterator<Image> it = myImage.iterator();
+        try {
+        while (it.hasNext())
+            tmp.addImage(it.next());
+        } catch(Exception e) {
+            System.exit(-1);
+        }
+        
+        return tmp;
+    }
     
     /**
      * Member function returning the depth of the stack.
@@ -140,7 +158,7 @@ public class Stack {
         if (maxIntensity > 1.0f && minIntensity < 0.0f) {
             throw new Exception("Intensity is out of range");
         }
-        myImage.add(I);
+        myImage.addElement(I);
     }
     
     /** 
@@ -158,4 +176,28 @@ public class Stack {
     public void setIntensity(int x, int y, int z, float value) {
         myImage.elementAt(z).setIntensity(x,y,value);
     }
+    
+    /** 
+     * Sets x-scale of Stack.
+     * @param new scale value.
+     */
+    public void setXScale(float s) {
+        scale.setElementAt(s, 0);
+    } 
+
+    /** 
+     * Sets y-scale of Stack.
+     * @param new scale value.
+     */
+    public void setYScale(float s) {
+        scale.setElementAt(s, 1);
+    } 
+    
+    /** 
+     * Sets z-scale of Stack.
+     * @param new scale value.
+     */
+    public void setZScale(float s) {
+        scale.setElementAt(s, 2);
+    } 
 }
