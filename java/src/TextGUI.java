@@ -17,7 +17,9 @@ public class TextGUI {
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
         for(int i=0; i<20; ++i){
-            stack.addImage(new Image(400, 400));
+            Image image = new Image(10, 10);
+            setTheImageRandom(image);
+            stack.addImage(image);
         }
         //System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
         //System.out.println("Text: Original Stack 1: " + stack.getDepth());
@@ -58,6 +60,22 @@ public class TextGUI {
             }
         }
     }
+    
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param image the image to set
+     */
+    private void setTheImageRandom(Image image){
+        System.out.println("Image: " + image);
+        for(int i=0; i<image.getWidth(); ++i){
+            //System.out.println("Inside first loop");
+            for(int j=0; j<image.getHeight(); ++j){
+                //System.out.println("Inside second loop");
+                image.setIntensity(i, j, (float)Math.random());
+            }
+        }
+    }
+    
     /**
      * Print an Image to the terminal.
      * @param image the image to print
