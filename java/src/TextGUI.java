@@ -15,10 +15,9 @@ public class TextGUI {
     public TextGUI() throws Exception {
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
-        stack.addImage(new Image(10, 10)); //System.out.println("Size 1");
-        stack.addImage(new Image(10, 10)); //System.out.println("Size 2");
-        stack.addImage(new Image(10, 10)); //System.out.println("Size 3");
-        stack.addImage(new Image(10, 10));
+        for(int i=0; i<40; ++i){
+            stack.addImage(new Image(1000, 1000));
+        }
         //System.out.println("Creating an Image of size: " + image.getWidth() + " " + image.getHeight());
         //System.out.println("Text: Original Stack 1: " + stack.getDepth());
         System.out.println("Creating a Case");
@@ -38,7 +37,7 @@ public class TextGUI {
         myCase = meanFilter.process(myCase, options);
         //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
         for(int i=0; i<myCase.getStack().getDepth(); ++i){
-            printImage(myCase.getStack().getImage(i));
+            //printImage(myCase.getStack().getImage(i));
         }
     }
     
