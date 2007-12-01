@@ -69,7 +69,7 @@ public class MeanFilter extends Processor {
 												}
 										}
 										if (norm>0) {
-												localStack.setIntensity(xI,yI,zI,value);
+												localStack.setIntensity(xI,yI,zI,value/norm);
 										}
 								}
 						}

@@ -31,54 +31,106 @@ public class GradientDescent extends Processor {
      */
     public Case process(Case c, Options o) throws Exception{
 				
-// 				Vector<BasinofAttractor> boa();
-// 				Vector<Pixel> max();
-  
-// 				Vector<Pixel> walkTmp;//positions for one walk (start point)
-// 				// Marker for which pixels that have been visited
-// 				std::vector< std::vector< std::vector<int> > > flag( W() );
-// 				for( int i=0 ; i<flag.size() ; ++i ) {
-// 						flag[i].resize( H() );
-// 						for( int j=0 ; j<flag[i].size() ; ++j ) {
-// 								flag[i][j].resize( D() );
-// 						}
-// 				}
-				
-// 				//Set flag for background pixels to -1
-// 				Vector<Pixel> bg();
-// 				bg = c.getBackground();
-// 				int bgSize = bg.size();
-// 				for (int i=0; i<bgSize; ++i ) {
-// 						flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getX() ]
-// 								[ bg.elementAt(i).getX() ]=-1;
-// 				}
-				
-// 				int count=1;
-// 				//Find the maxima from each pixel
-// 				int depth=c.getStack().getDepth();
-// 				int height=c.getStack().getHeighth();
-// 				int width=c.getStack().getWidth();
-// 				for (int zStart=0; zStart<depth; ++zStart) {
-// 						for (int yStart=0; yStart<height; ++yStart) {
-// 								for (int xStart=0; xStart<width; ++xStart) {
-// 										int x = xStart;
-// 										int y = yStart;
-// 										int z = zStart;
-// 										walkTmp.resize(1);
-// 										walkTmp[0].resize(3);
-// 										walkTmp[0][0]=x;walkTmp[0][1]=y;walkTmp[0][2]=z;
+ 				Vector<BasinofAttractor> boa();
+ 				Vector<Pixel> max();
+
+ 				Vector<Pixel> walkTmp;//positions for one walk (start point)
+ 				// Marker for which pixels that have been visited
+ 				std::vector< std::vector< std::vector<int> > > flag( W() );
+ 				for( int i=0 ; i<flag.size() ; ++i ) {
+ 						flag[i].resize( H() );
+ 						for( int j=0 ; j<flag[i].size() ; ++j ) {
+ 								flag[i][j].resize( D() );
+ 						}
+ 				}
+			
+ 				//Set flag for background pixels to -1
+ 				Vector<Pixel> bg();
+ 				bg = c.getBackground();
+ 				int bgSize = bg.size();
+ 				for (int i=0; i<bgSize; ++i ) {
+ 						flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getX() ]
+ 								[ bg.elementAt(i).getX() ]=-1;
+ 				}
+			
+ 				int count=1;
+ 				//Find the maxima from each pixel
+ 				int depth=c.getStack().getDepth();
+ 				int height=c.getStack().getHeighth();
+ 				int width=c.getStack().getWidth();
+ 				for (int zStart=0; zStart<depth; ++zStart) {
+ 						for (int yStart=0; yStart<height; ++yStart) {
+ 								for (int xStart=0; xStart<width; ++xStart) {
+ 										int x = xStart;
+ 										int y = yStart;
+ 										int z = zStart;
+ 										walkTmp.resize(1);
+ 										walkTmp[0].resize(3);
+ 										walkTmp[0][0]=x;walkTmp[0][1]=y;walkTmp[0][2]=z;
 										
-// 										if (i==0 && j==0) {
-// 												System.out.println("New stack.");
-// 										}
-// 										//find the max by walking uphill (greedy)
-// 										double value,newValue;
-// 										if( !flag[h][i][j] ) {
-// 												do {
-// 														tmpFlag[h][i][j]=1;
-// 														newValue=value=pix(h,i,j);
-// 														int xNew=x, yNew=y, zNew=z;
-// 														//XXX
+ 										if (i==0 && j==0) {
+ 												System.out.println("New stack.");
+ 										}
+ 										//find the max by walking uphill (greedy)
+ 										double value,newValue;
+ 										if( !flag[h][i][j] ) {
+ 												do {
+ 														tmpFlag[h][i][j]=1;
+ 														newValue=value=c.getStack().getIntensity(x,y,z);
+ 														int xNew=x, yNew=y, zNew=z;
+
+														//Check all pixels around a given pixel
+// 														for (int zz=z-1; zz<=z+1; ++zz) {
+// 																for (int yy=y-1; yy<=y+1; ++yy) {
+// 																		for (int xx=x-1; xx<=x+1; ++xx) {
+// 																				if( xx>=0 && yy>=0 && zz>=0 && 
+// 																						xx<width && yy<height && zz<depth )
+// 																						if( c.getStack().getIntensity(xx,yy,zz)>newValue ) {
+// 																								newValue=c.getStack().getIntensity(xx,yy,zz);
+// 																								xNew = xx;
+// 																								yNew = yy;
+// 																								zNew = zz;
+// 																						}
+// 																		}
+// 																}
+// 														}
+
+														//Check nearest neighbors
+														for(int a=-1 ; a<=1 ; a+=2 ) {
+																int hh = h+a;
+																if( hh>=0 && hh<D() && pix(hh,i,j)>=newValue ) {
+																		newValue=pix(hh,i,j);
+																		newH=hh;
+																		newI=i;
+																		newJ=j;
+																}
+																int ii = i+a;
+																if( ii>=0 && ii<H() && pix(h,ii,j)>newValue ) {
+																		newValue=pix(h,ii,j);
+																		newH=h;
+																		newI=ii;
+																		newJ=j;
+																}
+																int jj = j+a;  
+																if( jj>=0 && jj<W() && pix(h,i,jj)>newValue ) {
+																		newValue=pix(h,i,jj);
+																		newH=h;
+																		newI=i;
+																		newJ=jj;
+																}
+														}
+														h=newH;
+														i=newI;
+														j=newJ;	
+														std::vector<int> tmpPos(3);
+														tmpPos[0]=h;tmpPos[1]=i;tmpPos[2]=j;
+														walkTmp.push_back( tmpPos );
+												} while( newValue>value && !flag[h][i][j] && !tmpFlag[h][i][j] );
+												tmpFlag[h][i][j]=1;
+										}
+										
+
+														
 // 	  //Check all pixels around a given pixel
 // 	  for(int ii=i-1 ; ii<=i+1 ; ii++ )
 // 			for(int jj=j-1 ; jj<=j+1 ; jj++ )
