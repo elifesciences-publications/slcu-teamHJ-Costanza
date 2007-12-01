@@ -20,6 +20,9 @@ public class Case {
     public Case( Stack s ){
         mOriginalStack = s;
         mStack = (Stack) s.clone();
+        if(mStack == null) {
+            System.out.println("Clone is empty!");
+        }
     }
     
     /**

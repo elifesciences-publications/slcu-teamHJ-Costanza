@@ -2,6 +2,7 @@ import Costanza.Image;
 import Costanza.Stack;
 import Costanza.Inverter;
 import Costanza.Case;
+import Costanza.Options;
 
 /*
  * TextGUI.java
@@ -40,7 +41,7 @@ public class TextGUI {
         System.out.println("Creating an Inverter");
         Inverter inverter = new Inverter();
         System.out.println("Inverting the Case");
-        myCase = inverter.process(myCase);
+        myCase = inverter.process(myCase, new Options());
         
     }
     

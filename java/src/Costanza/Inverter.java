@@ -14,7 +14,8 @@ public class Inverter extends Processor {
         if(stack == null){
             throw new Exception("No working stack initialised in case");
         }
-        float max=stack.getMaxIntensityLimit();
+        System.out.println("Inside process 1");
+        float max = stack.getMaxIntensityLimit();
         System.out.println("Inside process 2");
         int depth = stack.getDepth();
         System.out.println("Inside process3");
