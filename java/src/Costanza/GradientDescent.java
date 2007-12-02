@@ -182,14 +182,23 @@ public class GradientDescent extends Processor {
 								}
 						}
 				}
-				/** @todo Attach the cell positions to the data in the case  
-				 */
-				
-				/** @todo Expand the background appropriately.
-				 */
+				// Attach the cell positions to the data in the case  
+				Vector<CellCenter> cc = new Vector<CellCenter>();
+				int numCellCenter = max.size();
+				for (int i=0; i<numCellCenter; ++i) {
+						cc.add(new CellCenter(i,max.get(i)));
+				}
+				c.getData().attachData(DataId.cellCenters,cc);
 				
 				/** @todo Deliver the boas to the data in the case.
 				 */
+				c.getData().attachData(DataId.cellBasinsOfAttraction,boa);
+
+				/** @todo Expand the background appropriately.
+				 */
+
+				System.out.println("CellcenterCounter:" + c.getData().sizeOfData(DataId.cellCenters));
+				System.out.println("BOACounter:" + c.getData().sizeOfData(DataId.cellBasinsOfAttraction));
 				System.out.println("Gradient Descent found " + max.size() + " cells");
 				return c;
 		}
