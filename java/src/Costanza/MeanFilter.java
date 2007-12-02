@@ -13,7 +13,8 @@ public class MeanFilter extends Processor {
     
     public Case process(Case c, Options options) throws Exception {
         //System.out.println("Mean: Original Stack: " + c.getStack().getDepth());
-        float radius = (Float) (options.getOptionValue("radius"));
+        Float tmpRadius = (Float) (options.getOptionValue("radius"));
+				float radius = tmpRadius.floatValue();
         float radius2 = radius*radius;
         int zSize=c.getStack().getDepth();
         int xSize=c.getStack().getHeight();
