@@ -25,6 +25,13 @@ public class CellCenter extends CellId{
         pixel = new Pixel(x, y, z);
     }
     
+     /**Constructs CellCenter at a Pixel p and with id.
+     *@param Sring id, Pixel p
+     */
+    public CellCenter( int id, Pixel p ) {
+        super(id);
+        pixel = p;
+    }
     /**Gets the Pixel defining the center.
      *@return Pixel
      */

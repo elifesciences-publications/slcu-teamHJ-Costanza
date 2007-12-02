@@ -1,21 +1,21 @@
 package Costanza;
 
 import java.util.HashMap;
-import java.util.HashSet;
+//import java.util.HashSet;
 import java.lang.String;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
+import java.util.Vector;
 
 /**Data is a container for different types of data used by Processor.
  */
 public class Data {
     /**Maps dataId to a Set of Objects which represent data*/
-    private Map< DataId, Set< Object > > mMap;
+    private Map< DataId, Vector< Object > > mMap;
     //private int maxCellId;
     
     public Data(){
-        mMap = new HashMap< DataId, Set< Object > >();
+        mMap = new HashMap< DataId, Vector< Object > >();
         //maxCellId = 0;
     }
     
@@ -29,7 +29,7 @@ public class Data {
         if(mMap.containsKey(id)) {
             mMap.get(id).add(o);
         } else {
-            Set<Object> s = new HashSet<Object>();
+            Vector<Object> s = new Vector<Object>();
             s.add( o );
             mMap.put( id, s );
         }
@@ -42,7 +42,7 @@ public class Data {
         if(mMap.containsKey(id)) {
             mMap.get(id).addAll(c);
         } else {
-            mMap.put( id, new HashSet<Object>(c) );
+            mMap.put( id, new Vector<Object>(c) );
         }
     }
     
