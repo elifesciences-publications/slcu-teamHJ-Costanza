@@ -47,12 +47,13 @@ public class Data {
     /**Attaches all the data Objects contained in the Collection to the dataId
      *@param String id, Collection c
      */
-    public void attachData( DataId id, Collection<Object> c ){
+    public void attachDataCollection( DataId id, Collection<Object> c ){
         if(mMap.containsKey(id)) {
             mMap.get(id).addAll(c);
+            System.out.println("id present, Collection size: " + c.size());
         } 
         else {
-            System.out.println("Collection size: " + c.size());
+            System.out.println("no id, Collection size: " + c.size());
             mMap.put( id, new Vector<Object>(c) );
         }
     }
