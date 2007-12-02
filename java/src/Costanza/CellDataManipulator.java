@@ -3,6 +3,7 @@ package Costanza;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.Vector;
 
 public class CellDataManipulator {
@@ -19,6 +20,15 @@ public class CellDataManipulator {
      */
     public void mergeAllData(int c1Id, int c2Id, int newCellId){
         
+        Set<DataId> ids = data.getDataKeys();
+        Iterator iter = ids.iterator();
+        
+        while(iter.hasNext()){
+            DataId id = (DataId)iter.next();
+            if(id.name().startsWith("cell")){
+                merge(id, c1Id, c2Id, newCellId);
+            }
+        }
     }
     
     /**Merges data of given type for cells identified with cell ids and assigns new cell id to merged cell.
