@@ -1,10 +1,13 @@
 import Costanza.Image;
 import Costanza.Stack;
-import Costanza.Inverter;
 import Costanza.Case;
 import Costanza.Options;
+import Costanza.Inverter;
 import Costanza.MeanFilter;
 import Costanza.GradientDescent;
+import Costanza.IntensityFinder;
+import Costanza.PeakMerger;
+import Costanza.PeakRemover;
 
 /**
  * The Text version of our GUI.
@@ -14,6 +17,14 @@ public class TextGUI {
     
     /** Creates a new instance of TextGUI */
     public TextGUI() throws Exception {
+
+				int invertFlag=1, 
+						meanFilterFlag=1, 
+						gradientDescentFlag=1, 
+						intensityFinderFlag=1, 
+						peakMergerFlag=1, 
+						peakRemoverFlag=0;
+
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
         for(int i=0; i<20; ++i){
@@ -25,25 +36,79 @@ public class TextGUI {
         //System.out.println("Text: Original Stack 1: " + stack.getDepth());
         System.out.println("Creating a Case");
         Case myCase = new Case(stack);
-        System.out.println("Filling images");
-//         for(int i=0; i<myCase.getStack().getDepth(); ++i){
-//             myCase.getStack().setIntensity(4,i+4,i,(i == 1) ? 1.0f : 0.0f);
-//         }
-        System.out.println("Creating options");
-        //System.out.println("Text: Original Stack 2: " + myCase.getStack().getDepth());
-        Options options = new Options();
-        options.addOption("radius", new Float(1));
-        //Inverter inverter = new Inverter();
-        //myCase = inverter.process(myCase, options);
-        //System.out.println("Text: Original Stack 3: " + myCase.getStack().getDepth());
-        //MeanFilter meanFilter = new MeanFilter();
-        //myCase = meanFilter.process(myCase, options);
-        System.out.println("Creating a GradientDescent");				
-        GradientDescent gd = new GradientDescent();
-        myCase = gd.process(myCase, options);
-        //System.out.println("Text: Original Stack 5: " + myCase.getStack().getDepth());
+        //System.out.println("Filling images");
+				//for(int i=0; i<myCase.getStack().getDepth(); ++i){
+				//myCase.getStack().setIntensity(4,i+4,i,(i == 1) ? 1.0f : 0.0f);
+				//}
+				if (invertFlag!=0) {
+						System.out.println("### Applying Invert ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						System.out.println("Creating Processor");
+						Inverter inverter = new Inverter();
+						System.out.println("Running Processor");
+						myCase = inverter.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				if (meanFilterFlag!=0) {
+						System.out.println("### Applying MeanFilter ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						options.addOption("radius", new Float(1));
+						System.out.println("Creating Processor");
+						MeanFilter meanFilter = new MeanFilter();
+						System.out.println("Running Processor");
+						myCase = meanFilter.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				if (gradientDescentFlag!=0) {
+						System.out.println("### Applying GradientDescent ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						System.out.println("Creating Processor");
+						GradientDescent gradientDescent = new GradientDescent();
+						System.out.println("Running Processor");
+						myCase = gradientDescent.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				if (intensityFinderFlag!=0) {
+						System.out.println("### Applying IntensityFinder ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						System.out.println("Creating Processor");
+						IntensityFinder intensityFinder = new IntensityFinder();
+						System.out.println("Running Processor");
+						myCase = intensityFinder.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				if (peakMergerFlag!=0) {
+						System.out.println("### Applying PeakMerger ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						options.addOption("radius", new Float(1));
+						System.out.println("Creating Processor");
+						PeakMerger peakMerger = new PeakMerger();
+						System.out.println("Running Processor");
+						myCase = peakMerger.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				if (peakRemoverFlag!=0) {
+						System.out.println("### Applying PeakRemover ###");
+						System.out.println("Creating options");
+						Options options = new Options();
+						options.addOption("sizeThreshold", new Float(10));
+						options.addOption("intensityThreshold", new Float(10));
+						System.out.println("Creating Processor");
+						PeakRemover peakRemover = new PeakRemover();
+						System.out.println("Running Processor");
+						myCase = peakRemover.process(myCase, options);
+						System.out.println("Done!\n");
+				}
+				
+
+        System.out.println("FINAL RESULT\n\n");				
         for(int i=0; i<myCase.getStack().getDepth(); ++i){
-            //printImage(myCase.getStack().getImage(i));
+            printImage(myCase.getStack().getImage(i));
         }
     }
     

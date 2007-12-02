@@ -20,16 +20,12 @@ import java.util.Vector;
  */
 public class GradientDescent extends Processor {
     
-//     /**
-//      * Creates a new instance of GradientDescent
-//      */
-//     public GradientDescent() {
-//     }
-    
     /**
      * Implementation of the Gradient descent algorithm.
      *  @param a Case to work on.
      *  @return a modified Case.
+		 * @todo Recursively add plateau pixels.
+		 * @todo Expand the background appropriately.
      */
     public Case process(Case c, Options o) throws Exception {
         
@@ -188,8 +184,7 @@ public class GradientDescent extends Processor {
         }
         c.getData().attachDataCollection(DataId.cellCenters,cc);
         
-        /** @todo Deliver the boas to the data in the case.
-         */
+        // Deliver the boas to the data in the case.
         c.getData().attachDataCollection(DataId.cellBasinsOfAttraction,boa);
         
         /** @todo Expand the background appropriately.
