@@ -3,6 +3,7 @@ import Costanza.Driver;
 import Costanza.Factory;
 import Costanza.Image;
 import Costanza.Inverter;
+import Costanza.MeanFilter;
 import Costanza.Job;
 import Costanza.Options;
 import Costanza.Queue;
@@ -58,9 +59,12 @@ public class Costanza_Plugin implements PlugInFilter {
         
         IJ.showMessage("Costanza", "Step one finished!");
         
-        Inverter inverter = new Inverter();
+        //Inverter inverter = new Inverter();
+		MeanFilter meanFilter = new MeanFilter();
         try {
-            inverter.process(IJCase, new Options());
+			Options options = new Options();
+			options.addOption("radius", new Float(1.0f));
+            meanFilter.process(IJCase, options);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
