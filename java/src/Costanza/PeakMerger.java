@@ -31,22 +31,26 @@ public class PeakMerger extends Processor{
      */
     public Case process(Case c, Options o) throws Exception {
         Float R = (Float) o.getOptionValue("radius");
-              float [] scale = c.getStack().getScale();
-        Object[] centers = c.getData().getData(DataId.cellCenters).toArray();  
+        float [] scale = c.getStack().getScale();
+        Object[] centers = c.getData().getData(DataId.cellCenters).toArray();
         for (int i =0; i < centers.length; ++i) {
             CellCenter cc1 = (CellCenter) centers[i];
             for (int j=i+1; j < centers.length; ++j) {
                 CellCenter cc2 = (CellCenter) centers[j];
                 if ( !cc1.toString().equals(cc2.toString())
-                && getDistance(cc1,cc2, scale) < R.floatValue())
-                    c.getManipulator().merge(DataId.cellCenters, cc1.getId(), cc2.getId(), cc1.getId());
+                && getDistance(cc1,cc2, scale) < R.floatValue()) {
+                    System.out.println("merge:");
+                    c.getManipulator().merge(
+                            DataId.cellCenters, cc1.getId(), cc2.getId(), 100000);
+                    System.out.println("merged");
+                }
             }
         }
         return c;
     }
     
     private void sendForMerging(CellCenter cc1, CellCenter cc2) {
-     System.out.println("MERGE U FUCK");   
+        System.out.println("MERGE U FUCK");
     }
     
     /**

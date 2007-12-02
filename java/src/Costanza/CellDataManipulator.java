@@ -25,15 +25,19 @@ public class CellDataManipulator {
         
         switch(id){
             case cellCenters:{
-                
                 CellCenter e1 = null, e2 = null;
                 int breaker = 0;
                 while(iter.hasNext() && breaker < 2){
                     CellCenter elem = (CellCenter)iter.next();
+                    
                     if(elem.getId() == c1Id){
+                        System.out.println("found id 1");
+           
                         e1 = elem;
                         ++breaker;
                     } else if(elem.getId() == c2Id){
+                        System.out.println("found id2");
+           
                         e2 = elem;
                         ++breaker;
                     }
@@ -49,14 +53,13 @@ public class CellDataManipulator {
                 
                 
                 CellCenter midC = new CellCenter(newCellId, x, y, z);
-                
                 data.removeData(DataId.cellCenters, e1);
                 data.removeData(DataId.cellCenters, e2);
-                
                 data.attachData(DataId.cellCenters, midC);
-                
+                break;
             }
             case cellBasinsOfAttraction:{
+                        
                 BOA e1 = null, e2 = null;
                 int breaker = 0;
                 while(iter.hasNext() && breaker < 2){
@@ -81,6 +84,7 @@ public class CellDataManipulator {
                 data.removeData(DataId.cellBasinsOfAttraction, e2);
                 
                 data.attachData(DataId.cellBasinsOfAttraction, mergedB);
+                break;
             }
         }
         
