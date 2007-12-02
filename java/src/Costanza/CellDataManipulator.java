@@ -1,7 +1,10 @@
 
 package Costanza;
 
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.LineNumberReader;
+import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -16,6 +19,66 @@ public class CellDataManipulator {
         this.data = d;
     }
     
+    /**Reads data of given DataId to the file
+     *@param DataId id, String fileName, Options opt
+     */
+    public void readData(DataId id, String fileName, Options opt) throws Exception{
+        Collection coll = data.getData(id);
+        if( coll != null ){
+            data.clearData(id);
+        }
+        
+        
+        LineNumberReader lnr = new LineNumberReader(new FileReader(fileName));
+        lnr.setLineNumber(1);
+        StreamTokenizer stok = new StreamTokenizer(lnr);
+        stok.parseNumbers();
+        stok.eolIsSignificant(true);
+        stok.nextToken();
+        if(checkToken(stok,StreamTokenizer.TT_NUMBER))
+            return;
+        int nCells = (int)stok.nval;
+        stok.nextToken();
+        if(checkToken(stok, StreamTokenizer.TT_NUMBER))
+            return;
+        int nDim = (int)stok.nval;
+        
+        stok.nextToken();
+        if( checkToken(stok, StreamTokenizer.TT_EOL))
+            return;
+        
+        int counter = 0;
+        for(int i = 0; i < nCells && stok.ttype != StreamTokenizer.TT_EOF; ++i){
+            lnr.setLineNumber(i+2);
+            stok.nextToken();
+            if(checkToken(stok, StreamTokenizer.TT_NUMBER))
+                return;
+            int x = (int)stok.nval;
+            stok.nextToken();
+            if(checkToken(stok, StreamTokenizer.TT_NUMBER))
+                return;
+            int y = (int)stok.nval;
+            stok.nextToken();
+            if(checkToken(stok, StreamTokenizer.TT_NUMBER))
+                return;
+            int z = (int)stok.nval;
+            
+            stok.nextToken();
+            if( checkToken(stok, StreamTokenizer.TT_EOL))
+                return;
+            
+            CellCenter cent = new CellCenter(i,x,y,z);
+            data.attachData(DataId.cellCenters, cent);
+        }
+    }
+    
+    private boolean checkToken(StreamTokenizer stok, int t){
+        if (stok.ttype != t){
+            System.out.println("Not valid data format in the input file . No data read.");
+            return false;
+        }
+        return true;
+    }
     /**Writes data of given DataId to the file
      *@param DataId id, String fileName, Options opt
      */
@@ -34,32 +97,32 @@ public class CellDataManipulator {
         //writer.write("DataId" + delim + id.name() +"\n");
         String dim = "3";
         switch(id){
-            case cellCenters:{ 
+            case cellCenters:{
                 writer.write(coll.size() + sp + dim + "\n");
                 while(iter.hasNext()){
                     CellCenter elem = (CellCenter)iter.next();
                     //writer.write(elem.getId());
                     //writer.write(delim + " ");
                     writer.write(elem.getX() + sp + elem.getY() + sp + elem.getZ() + "\n");
-                                      
+                    
                 }
                 break;
             }
             case cellBasinsOfAttraction:{
-            writer.write(coll.size() + sp + dim + "\n");
-            while(iter.hasNext()){
+                writer.write(coll.size() + sp + dim + "\n");
+                while(iter.hasNext()){
                     BOA elem = (BOA)iter.next();
                     writer.write(elem.getId() + "\n");
                     Iterator<Pixel> pixIter = elem.getPixels().iterator();
                     while(pixIter.hasNext()){
-                       Pixel pix = pixIter.next();
-                       writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n"); 
-                    }                 
+                        Pixel pix = pixIter.next();
+                        writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n");
+                    }
                 }
                 break;
             }
         }
-               
+        
     }
     /**Merges all
      *@param int c1Id, int c2Id, int newCellId
@@ -98,12 +161,12 @@ public class CellDataManipulator {
                     
                     if(elem.getId() == c1Id){
                         //System.out.println("found id 1");
-           
+                        
                         e1 = elem;
                         ++breaker;
                     } else if(elem.getId() == c2Id){
                         //System.out.println("found id2");
-           
+                        
                         e2 = elem;
                         ++breaker;
                     }
@@ -122,11 +185,11 @@ public class CellDataManipulator {
                 data.removeData(DataId.cellCenters, e1);
                 data.removeData(DataId.cellCenters, e2);
                 data.attachData(DataId.cellCenters, midC);
-
+                
                 break;
             }
             case cellBasinsOfAttraction:{
-                        
+                
                 BOA e1 = null, e2 = null;
                 int breaker = 0;
                 while(iter.hasNext() && breaker < 2){

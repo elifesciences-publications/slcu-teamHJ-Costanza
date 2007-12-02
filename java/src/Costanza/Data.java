@@ -68,12 +68,21 @@ public class Data {
         }
     }
     
-    /**Remove data object o from Data set with DataId id
+    /**Removes data object o from Data set with id DataId
      *@param DataId id, Object o
      */
     public void removeData( DataId id, Object o ){
         if(mMap.containsKey(id)) {
             mMap.get(id).remove(o);
+        }
+    }
+    
+    /**Removes all data from Data set with id DataId
+     *@param DataId id
+     */
+    public void clearData( DataId id ){
+        if(mMap.containsKey(id)) {
+            mMap.get(id).clear();
         }
     }
     /**Retrives data Collection associated with dataId
