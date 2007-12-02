@@ -128,7 +128,7 @@ public class TextGUI2 {
                 float intensity = image.getIntensity(i,j);
                 int newRgb = 1;
                 newRgb = newRgb | (Float.floatToIntBits(intensity) << 8);
-                bi.setRGB(i,j,(int)(intensity*5));
+                bi.setRGB(i,j,(int)intensity);
             }
         }
         return bi;
