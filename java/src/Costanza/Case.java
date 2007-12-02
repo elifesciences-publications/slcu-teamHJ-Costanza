@@ -12,6 +12,8 @@ public class Case {
     /**Original image stack contained in the Case*/
     private Stack mOriginalStack;
     
+    private CellDataManipulator manip;
+    
     /**
      * Case constructor.
      *
@@ -22,6 +24,7 @@ public class Case {
         mOriginalStack = s;
         mStack = (Stack) s.clone();
         mData = new Data();
+        manip = new CellDataManipulator( mData );
         //System.out.println("Case: New Stack 1: " + mStack.getDepth());
         //System.out.println("Case: Original Stack 2: " + s.getDepth());
         if(mStack == null) {
@@ -29,6 +32,9 @@ public class Case {
         }
     }
     
+    public CellDataManipulator getManipulator(){
+        return manip;
+    }
     /**
      * Accessor for a working copy of Stack.
      *
