@@ -1,8 +1,11 @@
 import Costanza.Case;
+import Costanza.Driver;
 import Costanza.Factory;
 import Costanza.Image;
 import Costanza.Inverter;
+import Costanza.Job;
 import Costanza.Options;
+import Costanza.Queue;
 import Costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
@@ -13,7 +16,6 @@ import java.awt.event.ActionListener;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     private Factory factory;
-    
     private MainFrame frame;
     
     public void run(String arg) {
@@ -41,8 +43,14 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
             Stack stack = Tools.createStackFromImagePlus(imagePlus);
             Case IJCase = new Case(stack);
             
-            Inverter inverter = new Inverter();
-            inverter.process(IJCase, new Options());
+            Queue jobs = new Queue();
+            
+            if (frame.getPanel().getInvertCheckboxState() == true) {
+                jobs.addJob(new Job("invert", null));
+            }
+            
+            Driver driver = new Driver(jobs, IJCase, factory);
+            driver.run();
             
             Stack result = IJCase.getStack();
             int width = result.getWidth();
@@ -71,15 +79,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     
 //        try {
 //
-////        Queue jobs = new Queue();
-////        try {
-////            jobs.addJob(new Job("invert", new Options()));
-////        } catch (Exception exception) {
-////            exception.printStackTrace();
-////        }
 //
-////        Driver driver = new Driver(jobs, IJCase, factory);
-////        driver.run();
 //
 //
 //        } catch (Exception exception) {
