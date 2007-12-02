@@ -56,7 +56,7 @@ public class CellDataManipulator {
                 data.attachData(DataId.cellCenters, midC);
                 
             }
-            case cellBasinsOfAtraction:{
+            case cellBasinsOfAttraction:{
                 BOA e1 = null, e2 = null;
                 int breaker = 0;
                 while(iter.hasNext() && breaker < 2){
@@ -77,10 +77,10 @@ public class CellDataManipulator {
                 BOA mergedB = new BOA( newCellId, e1.getPixels() );
                 mergedB.addPixels(e2.getPixels());
                 
-                data.removeData(DataId.cellBasinsOfAtraction, e1);
-                data.removeData(DataId.cellBasinsOfAtraction, e2);
+                data.removeData(DataId.cellBasinsOfAttraction, e1);
+                data.removeData(DataId.cellBasinsOfAttraction, e2);
                 
-                data.attachData(DataId.cellBasinsOfAtraction, mergedB);
+                data.attachData(DataId.cellBasinsOfAttraction, mergedB);
             }
         }
         

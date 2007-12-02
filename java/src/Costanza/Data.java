@@ -38,7 +38,8 @@ public class Data {
     public int sizeOfData(DataId id){
         if(mMap.containsKey(id)) {
             return mMap.get(id).size();
-        } else {
+        } 
+        else {
             return 0;
         }
     }
@@ -49,7 +50,9 @@ public class Data {
     public void attachData( DataId id, Collection<Object> c ){
         if(mMap.containsKey(id)) {
             mMap.get(id).addAll(c);
-        } else {
+        } 
+        else {
+            System.out.println("Collection size: " + c.size());
             mMap.put( id, new Vector<Object>(c) );
         }
     }
