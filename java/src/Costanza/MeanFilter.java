@@ -12,6 +12,9 @@ import java.util.Vector;
 public class MeanFilter extends Processor {
     
     public Case process(Case c, Options options) throws Exception {
+				if (1==1) {
+						throw new Exception("Hello Patrik");
+				}
         //System.out.println("Mean: Original Stack: " + c.getStack().getDepth());
         float radius = (Float) (options.getOptionValue("radius"));
         float radius2 = radius*radius;
