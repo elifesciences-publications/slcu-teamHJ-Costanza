@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
+ * PeakMerger merges peaks if they are closer than some threshold.
  *
  * @author pontus
  */
@@ -30,14 +31,12 @@ public class PeakMerger extends Processor{
      */
     public Case process(Case c, Options o) throws Exception {
         float R = (Float) o.getOptionValue("radius");
-        float [] scale = c.getStack().getScale();
-        Collection cellCenters = c.getData().getData(DataId.cellCenters);
-        Iterator it1 = cellCenters.iterator();
-        while (it1.hasNext() ) {
-            CellCenter cc1 = (CellCenter) it1.next();
-            Iterator it2 = cellCenters.iterator();
-            while (it2.hasNext()) {
-                CellCenter cc2 = (CellCenter) it2.next();
+              float [] scale = c.getStack().getScale();
+        Object[] centers = c.getData().getData(DataId.cellCenters).toArray();  
+        for (int i =0; i < centers.length; ++i) {
+            CellCenter cc1 = (CellCenter) centers[i];
+            for (int j=i+1; j < centers.length; ++j) {
+                CellCenter cc2 = (CellCenter) centers[j];
                 if ( !cc1.toString().equals(cc2.toString())
                 && getDistance(cc1,cc2, scale) < R)
                     sendForMerging(cc1, cc2);
@@ -47,7 +46,7 @@ public class PeakMerger extends Processor{
     }
     
     private void sendForMerging(CellCenter cc1, CellCenter cc2) {
-        
+     System.out.println("MERGE U FUCK");   
     }
     
     /**
@@ -63,6 +62,8 @@ public class PeakMerger extends Processor{
         float x2 = cc2.getX();
         float y2 = cc2.getY();
         float z2 = cc2.getZ();
+        //System.out.println("center 1:" + cc1.getId() + " " + x1 + " " + y1 + " " + z1);
+        //System.out.println("center 2:" + cc2.getId() + " " + x2 + " " + y2 + " " + z2);
         return (float)Math.sqrt(
                 (x1-x2)*(x1-x2)*scale[0]*scale[0] +
                 (y1-y2)*(y1-y2)*scale[1]*scale[1] +

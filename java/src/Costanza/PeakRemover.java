@@ -13,6 +13,8 @@ import java.util.Iterator;
 import java.util.Collection;
 
 /**
+ * PeakRemover removes a peak if its smaller than some threshold size, 
+ * or if has an intensity lower than some threshold.
  *
  * @author pontus
  */
@@ -24,21 +26,22 @@ public class PeakRemover extends Processor {
     
     /**
      * Implements the PeakRemover algorithm.
-     * @param a Case and an Option
+     * @param a Case and an Option containing two 
+     * thresholds for size and intensity.
      * @returns a modified Case object
      * @see Processor
      */
     public Case process(Case c, Options o) throws Exception {
-        float sizeThreshold = (Float) o.getOptionValue("size");
-        float intensityThreshold = (Float) o.getOptionValue("intensity");
+        float sizeThreshold = (Float) o.getOptionValue("sizeThreshold");
+        float intensityThreshold = (Float) o.getOptionValue("intensityThreshold");
         Collection centers = c.getData().getData(DataId.cellCenters);
-        
         Iterator it = centers.iterator();
         while (it.hasNext()) {
             CellCenter cc = (CellCenter) it.next();
             int x = cc.getX();
             int y = cc.getY();
             int z = cc.getZ();
+            //System.out.println("intensity: " + c.getStack().getIntensity(x,y,z));
             if (c.getStack().getIntensity(x,y,z) < intensityThreshold)
                 removePeak(cc);
         }
@@ -53,6 +56,7 @@ public class PeakRemover extends Processor {
                     (c.getStack().getXScale())*
                     (c.getStack().getYScale())*
                     (c.getStack().getZScale());
+            //System.out.println("size: " + size);
             if (size < sizeThreshold)
                 removePeak(boa);
         }
@@ -60,6 +64,7 @@ public class PeakRemover extends Processor {
     }
     
     public void removePeak(Object o) {
+        System.out.println("REMOVE U FUCK");
         
     }
 }
