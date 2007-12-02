@@ -188,11 +188,11 @@ public class GradientDescent extends Processor {
 				for (int i=0; i<numCellCenter; ++i) {
 						cc.add(new CellCenter(i,max.get(i)));
 				}
-				c.getData().attachData(DataId.cellCenters,cc);
+				//c.getData().attachDataCollection(DataId.cellCenters,cc);
 				
 				/** @todo Deliver the boas to the data in the case.
 				 */
-				c.getData().attachData(DataId.cellBasinsOfAttraction,boa);
+				//c.getData().attachDataCollection(DataId.cellBasinsOfAttraction,boa);
 
 				/** @todo Expand the background appropriately.
 				 */
