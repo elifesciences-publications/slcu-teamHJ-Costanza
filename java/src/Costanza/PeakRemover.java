@@ -46,7 +46,7 @@ public class PeakRemover extends Processor {
                 removePeak(cc);
         }
         
-        Collection boas = c.getData().getData(DataId.cellBasinsOfAtraction);
+        Collection boas = c.getData().getData(DataId.cellBasinsOfAttraction);
         it = boas.iterator();
         
         while (it.hasNext()) {

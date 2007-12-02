@@ -2,7 +2,7 @@ package Costanza;
 
 public enum DataId {
 cellCenters,
-cellBasinsOfAtraction,
+cellBasinsOfAttraction,
 cellNeighbors,
 cellIntensity,
 stackBackground

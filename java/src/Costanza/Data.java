@@ -35,6 +35,14 @@ public class Data {
         }
     }
     
+    public int sizeOfData(DataId id){
+        if(mMap.containsKey(id)) {
+            return mMap.get(id).size();
+        } else {
+            return 0;
+        }
+    }
+    
     /**Attaches all the data Objects contained in the Collection to the dataId
      *@param String id, Collection c
      */
