@@ -1,6 +1,7 @@
 
 package Costanza;
 
+import java.io.FileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -15,6 +16,51 @@ public class CellDataManipulator {
         this.data = d;
     }
     
+    /**Writes data of given DataId to the file
+     *@param DataId id, String fileName, Options opt
+     */
+    public void writeData(DataId id, String fileName, Options opt) throws Exception{
+        Collection coll = data.getData(id);
+        if( coll == null ){
+            System.out.println("Data id: " + id + " not found in Data.");
+            return;
+        }
+        
+        FileWriter writer = new FileWriter(fileName);
+        
+        Iterator iter = coll.iterator();
+        //String delim = ":";
+        String sp = " ";
+        //writer.write("DataId" + delim + id.name() +"\n");
+        String dim = "3";
+        switch(id){
+            case cellCenters:{ 
+                writer.write(coll.size() + sp + dim + "\n");
+                while(iter.hasNext()){
+                    CellCenter elem = (CellCenter)iter.next();
+                    //writer.write(elem.getId());
+                    //writer.write(delim + " ");
+                    writer.write(elem.getX() + sp + elem.getY() + sp + elem.getZ() + "\n");
+                                      
+                }
+                break;
+            }
+            case cellBasinsOfAttraction:{
+            writer.write(coll.size() + sp + dim + "\n");
+            while(iter.hasNext()){
+                    BOA elem = (BOA)iter.next();
+                    writer.write(elem.getId() + "\n");
+                    Iterator<Pixel> pixIter = elem.getPixels().iterator();
+                    while(pixIter.hasNext()){
+                       Pixel pix = pixIter.next();
+                       writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n"); 
+                    }                 
+                }
+                break;
+            }
+        }
+               
+    }
     /**Merges all
      *@param int c1Id, int c2Id, int newCellId
      */
@@ -51,12 +97,12 @@ public class CellDataManipulator {
                     CellCenter elem = (CellCenter)iter.next();
                     
                     if(elem.getId() == c1Id){
-                        System.out.println("found id 1");
+                        //System.out.println("found id 1");
            
                         e1 = elem;
                         ++breaker;
                     } else if(elem.getId() == c2Id){
-                        System.out.println("found id2");
+                        //System.out.println("found id2");
            
                         e2 = elem;
                         ++breaker;
