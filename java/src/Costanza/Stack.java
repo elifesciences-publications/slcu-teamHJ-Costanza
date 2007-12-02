@@ -10,10 +10,7 @@ import java.util.Iterator;
  *
  */
 public class Stack {
-    
-    /**depth in z-direction.*/
-    private int depth;
-    
+     
     /**Height of the image, taken from the Image class.*/
     private int height;
     
@@ -33,12 +30,12 @@ public class Stack {
     private float minIntensity;
     
     /** Stores the maximal allowed intensity, default is 1.0*/
-    private float maxIntensityLimit=1.0f;
+    private float maxIntensityLimit;
     
     public Stack() {
         myImage = new Vector<Image>();
         myImage.setSize(0);
-        depth = 0;
+        maxIntensityLimit=1.0f;
     }
     
     public Object clone() {
@@ -46,7 +43,6 @@ public class Stack {
         Stack tmp = new Stack();
         tmp.setHeight(height);
         tmp.setWidth(width);
-        tmp.setDepth(depth);
         tmp.setXScale(scale[0]);
         tmp.setYScale(scale[1]);
         tmp.setZScale(scale[2]);
@@ -179,7 +175,6 @@ public class Stack {
         //System.out.println("Size: " + myImage.size());
         myImage.addElement(I);
         //System.out.println("Size: " + myImage.size());
-        depth = myImage.size();
     }
     
     /**
@@ -229,15 +224,7 @@ public class Stack {
     private void setWidth(int w) {
         width = w;
     }
-    
-    /**
-     * Sets depth of stack.
-     * @param new depth d.
-     */
-    private void setDepth(int d) {
-        depth = d;
-    }
-    
+       
     /**
      * Sets the Vector of images.
      * @param a Vector<Image>
