@@ -20,8 +20,20 @@ public class Data {
     }
     
     //public int newCellId(){
-      //  return ++maxCellId;
+    //  return ++maxCellId;
     //}
+    
+    /**Gives the size of the data of given type
+     *@param DataId id
+     */
+    public int sizeOfData(DataId id){
+        if(mMap.containsKey(id)) {
+            return mMap.get(id).size();
+        } else {
+            return 0;
+        }
+    }
+    
     /**Attaches data Object to a dataId
      *@param String id, Object o
      */
@@ -35,15 +47,6 @@ public class Data {
         }
     }
     
-    public int sizeOfData(DataId id){
-        if(mMap.containsKey(id)) {
-            return mMap.get(id).size();
-        } 
-        else {
-            return 0;
-        }
-    }
-    
     /**Attaches all the data Objects contained in the Collection to the dataId
      *@param String id, Collection c
      */
@@ -51,8 +54,7 @@ public class Data {
         if(mMap.containsKey(id)) {
             mMap.get(id).addAll(c);
             //System.out.println("id present, Collection size: " + c.size());
-        } 
-        else {
+        } else {
             //System.out.println("no id, Collection size: " + c.size());
             mMap.put( id, new Vector<Object>(c) );
         }
