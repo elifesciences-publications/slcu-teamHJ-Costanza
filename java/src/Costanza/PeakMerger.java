@@ -40,8 +40,7 @@ public class PeakMerger extends Processor{
                 if ( !cc1.toString().equals(cc2.toString())
                 && getDistance(cc1,cc2, scale) < R.floatValue()) {
                     System.out.println("merge:");
-                    c.getManipulator().merge(
-                            DataId.cellCenters, cc1.getId(), cc2.getId(), 100000);
+                    c.getManipulator().mergeAllData( cc1.getId(), cc2.getId(), cc1.getId());
                     System.out.println("merged");
                 }
             }
