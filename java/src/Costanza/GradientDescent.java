@@ -33,12 +33,16 @@ public class GradientDescent extends Processor {
      */
     public Case process(Case c, Options o) throws Exception {
 				
+				System.out.println("GradientDescent::process");
+				if( c.getStack()==null) {
+            throw new Exception("No working stack initialised in case from gradientdescent");
+        }
+
 				int depth=c.getStack().getDepth();
 				int height=c.getStack().getHeight();
 				int width=c.getStack().getWidth();
 
 				Vector<Pixel> max = new Vector<Pixel>();//Potential cell centers
-				
 				// Marker for which pixels that have been visited
 				int [][][] flag = new int [width][height][depth];
 				for (int x=0; x<width; ++x ) {
@@ -48,17 +52,22 @@ public class GradientDescent extends Processor {
 								}
 						}
 				}
-				
-				//Set flag for background pixels to -1
-				Collection bgTmp = c.getData().getData(DataId.stackBackground);
-				StackBackground sb = (StackBackground) bgTmp.iterator().next();
-				Vector<Pixel> bg = new Vector<Pixel>(sb.getPixels());
-				int bgSize = bg.size();
-				for (int i=0; i<bgSize; ++i ) {						
-						flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getY() ]
-								[ bg.elementAt(i).getZ() ]=-1;
+				//Get background and set flag for background pixels to -1
+ 				Collection bgTmp = c.getData().getData(DataId.stackBackground);				
+				Vector<Pixel> bg = null;
+ 				if (bgTmp!=null && bgTmp.iterator().hasNext()) {
+						StackBackground sb = (StackBackground) bgTmp.iterator().next();
+						bg = new Vector<Pixel>(sb.getPixels());
+						int bgSize = bg.size();
+						for (int i=0; i<bgSize; ++i ) {						
+								flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getY() ]
+										[ bg.elementAt(i).getZ() ]=-1;
+						}
 				}
-				
+				else {
+						bg = new Vector<Pixel>();
+						bg.setSize(0);
+ 				}
 				int count=1;
 				//Find the maxima from each pixel
 				for (int zStart=0; zStart<depth; ++zStart) {
@@ -159,24 +168,29 @@ public class GradientDescent extends Processor {
 				}
 				//Save the basins of attraction
 				Vector<BOA> boa = new Vector<BOA>();
-				boa.setSize( max.size() );
+				for (int i=0; i<max.size(); ++i) {
+						boa.add(new BOA(i));
+				}
 				for (int x=0; x<width; ++x) {
-						for (int y=0; x<width; ++y) {
-								for (int z=0; x<width; ++z) {
+						for (int y=0; y<height; ++y) {
+								for (int z=0; z<depth; ++z) {
 										if (flag[x][y][z]>0) {
+												//int tmpInt=flag[x][y][z]-1;
+												//System.out.println(x + " " + y + " " + z + " " + tmpInt);
 												boa.elementAt(flag[x][y][z]-1).addPixel(new Pixel(x,y,z));
 										} 
 								}
 						}
 				}
-				// Attach the cell positions to the data in the case  
+				/** @todo Attach the cell positions to the data in the case  
+				 */
 				
-
 				/** @todo Expand the background appropriately.
 				 */
-
+				
 				/** @todo Deliver the boas to the data in the case.
 				 */
+				System.out.println("Gradient Descent found " + max.size() + " cells");
 				return c;
 		}
 }
