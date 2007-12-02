@@ -32,8 +32,9 @@ public class PeakRemover extends Processor {
      * @see Processor
      */
     public Case process(Case c, Options o) throws Exception {
-        float sizeThreshold = (Float) o.getOptionValue("sizeThreshold");
-        float intensityThreshold = (Float) o.getOptionValue("intensityThreshold");
+        Float sizeThreshold = (Float) o.getOptionValue("sizeThreshold");
+        Float intensityThreshold = (Float) o.getOptionValue("intensityThreshold");
+ 
         Collection centers = c.getData().getData(DataId.cellCenters);
         Iterator it = centers.iterator();
         while (it.hasNext()) {
@@ -57,7 +58,7 @@ public class PeakRemover extends Processor {
                     (c.getStack().getYScale())*
                     (c.getStack().getZScale());
             //System.out.println("size: " + size);
-            if (size < sizeThreshold)
+            if (size < sizeThreshold.floatValue())
                 removePeak(boa);
         }
         return c;
