@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.Iterator;
+import java.lang.Exception;
+
 
 /**Data is a container for different types of data used by Processor.
  */
@@ -24,11 +27,42 @@ public class Data {
     //  return ++maxCellId;
     //}
     
-    /**Gets Set of keys of available data types 
+    /**Gets Set of keys of available data types
      *
      */
     public Set<DataId> getDataKeys(){
-        return mMap.keySet(); 
+        return mMap.keySet();
+    }
+    
+    public Object getObject(DataId dId,int cId) throws Exception {
+        Object o = null;
+        Vector v = mMap.get(dId);
+        Iterator it = v.iterator();
+        switch(dId) {
+            case cellCenters:{
+                while (it.hasNext()) {
+                    CellCenter cc = (CellCenter) it.next();
+                    //System.out.println(cc.getId() + " " + cId);
+                    if (cc.getId() == cId) {
+                        o = cc;
+                        break;
+                    }
+                }
+            }
+            case cellBasinsOfAttraction: {
+                while (it.hasNext()) {
+                    BOA boa = (BOA) it.next();
+                    if (boa.getId() == cId) {
+                        o = boa;
+                        break;
+                    }
+                }
+            }
+        }
+        if (o==null) 
+            throw new Exception("CellId " + cId + " not found" );
+            
+        return o;
     }
     
     /**Gives the size of the data of given type
@@ -74,7 +108,7 @@ public class Data {
     public void removeData( DataId id, Object o ){
         if(mMap.containsKey(id)) {
             mMap.get(id).remove(o);
-        }
+        } 
     }
     
     /**Removes all data from Data set with id DataId

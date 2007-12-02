@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
+import java.lang.Exception;
 
 public class CellDataManipulator {
     
@@ -149,7 +150,7 @@ public class CellDataManipulator {
             System.out.println("Data id: " + id + " not found in Data.");
             return;
         }
-        
+        System.out.println("merge " + id.toString());
         Iterator iter = cells.iterator();
         
         switch(id){
@@ -219,5 +220,27 @@ public class CellDataManipulator {
         }
         
     }
+    
+    public void removeAll(int cId) throws Exception {
+        Set<DataId> ids = data.getDataKeys();
+        Iterator iter = ids.iterator();
+        //System.out.println("removeAll");
+                
+        while(iter.hasNext()){
+            DataId id = (DataId)iter.next();
+            if(id.name().startsWith("cell")){
+                //System.out.println("remove " + id.toString());
+                remove(id, cId);
+            }
+        }
+    }
+    
+    private void remove(DataId dId,int cId) throws Exception {
+            if(dId.name().startsWith("cell")){
+                //System.out.println(dId.name() + " " + dId.toString());
+                data.removeData(dId, data.getObject(dId,cId));
+            }
+    }
+   
 }
 
