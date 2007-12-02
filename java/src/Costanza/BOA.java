@@ -1,22 +1,21 @@
 package Costanza;
 
 import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Vector;
 
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
  */
 public class BOA extends CellId{
     
     /**Collection of pixels definig BOA.*/
-    private Set<Pixel> pixels;
+    private Vector<Pixel> pixels;
     
     /**Constructs empty BOA with id.
      *@param String id
      */
     public BOA( int id ){
         super(id);
-        pixels = new TreeSet<Pixel>();
+        pixels = new Vector<Pixel>();
     }
     
     /**Constructs BOA including Pixels in Collection c with id.
@@ -24,7 +23,7 @@ public class BOA extends CellId{
      */
     public BOA( int id, Collection<Pixel> c ) {
         super(id);
-        pixels = new TreeSet<Pixel>(c);
+        pixels = new Vector<Pixel>(c);
     }
     
     /**adds Pixel to the BOA.

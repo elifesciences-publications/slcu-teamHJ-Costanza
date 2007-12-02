@@ -14,7 +14,7 @@ public class CellDataManipulator {
         this.data = d;
     }
     
-    public void merge(DataId id, int c1Id, int c2Id){
+    public void merge(DataId id, int c1Id, int c2Id, int newCellId){
         Collection cells = data.getData(id);
         if( cells == null ){
             System.out.println("Data id: " + id + " not found in Data.");
@@ -74,9 +74,11 @@ public class CellDataManipulator {
                     return;
                 }
                 
-                BOA mergedB = new BOA( data.newCellId() );
+                BOA mergedB = new BOA( data.newCellId(), b1.getPixels() );
+                mergedB.addPixels(b2.getPixels());
                 
-                Vector<Pixel> v = new Vector<Pixel>( b1.getPixels() );
+                data.removeData(DataId.cellBasinsOfAtraction, b1);
+                data.removeData(DataId.cellBasinsOfAtraction, b2);
             }
         }
         
