@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.lang.String;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 /**Data is a container for different types of data used by Processor.
@@ -22,6 +23,13 @@ public class Data {
     //public int newCellId(){
     //  return ++maxCellId;
     //}
+    
+    /**Gets Set of keys of available data types 
+     *
+     */
+    public Set<DataId> getDataKeys(){
+        return mMap.keySet(); 
+    }
     
     /**Gives the size of the data of given type
      *@param DataId id

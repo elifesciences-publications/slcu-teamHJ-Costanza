@@ -1,5 +1,6 @@
 package Costanza;
 
+import java.util.Collection;
 import java.util.Vector;
 
 /**CellIntensity is a Pixel, CellId and float intensity.*/
@@ -23,6 +24,13 @@ public class CellIntensity extends CellId{
         super(id);
         intensities = new Vector<Float>();
         intensities.add(intens);
+    }
+    /**Constructs CellIntensity with specified intensities and with id.
+     *@param Sring id, Colllection<Float>
+     */
+    public CellIntensity( int id, Collection<Float> intens ) {
+        super(id);
+        intensities = new Vector<Float>(intens);
     }
     
     /**Adds/appends new intensity to the CellIntensity
