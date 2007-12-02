@@ -13,6 +13,7 @@ import ij.ImageStack;
 import ij.process.FloatProcessor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.Float;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     private Factory factory;
@@ -27,6 +28,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     private void initFactory() {
         factory = new Factory();
         factory.register("invert", Costanza.Inverter.class);
+        factory.register("meanfilter", Costanza.MeanFilter.class);
     }
     
     
@@ -45,7 +47,14 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
             
             Queue jobs = new Queue();
             
-            if (frame.getPanel().getInvertCheckboxState() == true) {
+            MainPanel panel = frame.getPanel();
+            
+            Float radius = new Float(panel.getMeanFieldRadiusValue());
+            Options option = new Options();
+            option.addOption("radius", radius);
+            jobs.addJob(new Job("meanfield", option));
+            
+            if (panel.getInvertCheckboxState() == true) {
                 jobs.addJob(new Job("invert", null));
             }
             
