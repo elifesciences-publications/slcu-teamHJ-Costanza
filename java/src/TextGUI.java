@@ -27,7 +27,7 @@ public class TextGUI {
 
         System.out.println("Creating a Stack");
         Stack stack = new Stack();
-        for(int i=0; i<20; ++i){
+        for(int i=0; i<10; ++i){
             Image image = new Image(10, 10);
             setTheImageRandom(image);
             stack.addImage(image);
@@ -54,7 +54,7 @@ public class TextGUI {
 						System.out.println("### Applying MeanFilter ###");
 						System.out.println("Creating options");
 						Options options = new Options();
-						options.addOption("radius", new Float(1));
+						options.addOption("radius", new Float(3));
 						System.out.println("Creating Processor");
 						MeanFilter meanFilter = new MeanFilter();
 						System.out.println("Running Processor");
@@ -107,9 +107,9 @@ public class TextGUI {
 				
 
         System.out.println("FINAL RESULT\n\n");				
-        for(int i=0; i<myCase.getStack().getDepth(); ++i){
-            printImage(myCase.getStack().getImage(i));
-        }
+        //for(int i=0; i<myCase.getStack().getDepth(); ++i){
+				//  printImage(myCase.getStack().getImage(i));
+        //}
     }
     
     /**

@@ -1,6 +1,7 @@
 package Costanza;
 import java.util.Vector;
 import java.util.Collection;
+import java.util.Iterator;
 /**
  * This class can be used to extract intensities in individual basin of attractions.
  *
@@ -10,8 +11,7 @@ import java.util.Collection;
 public class IntensityFinder extends Processor {
     
     public Case process(Case c, Options options) throws Exception {
-        System.out.println("IntensityFinder::process");
-        float radius = (Float) (options.getOptionValue("radius"));
+        //System.out.println("IntensityFinder::process");
         
         // Check that there is an original stack in case
         if( c.getOriginalStack() == null) {
@@ -21,16 +21,18 @@ public class IntensityFinder extends Processor {
 				Vector<BOA> boa = new Vector<BOA>();
  				Collection boaCollection = c.getData().getData(DataId.cellBasinsOfAttraction);				
  				if (boaCollection!=null && boaCollection.iterator().hasNext()) {
-						while (boaCollection.iterator().hasNext()) {
-								BOA boaTmp = (BOA) boaCollection.iterator().next();
+						//int count=0;
+						Iterator i = boaCollection.iterator();
+						while (i.hasNext()) {
+								BOA boaTmp = (BOA) i.next();
 								boa.add( boaTmp );
-								//boa.add( new Vector<Pixel>(boaTmp.getPixels()) );
+								//++count;
 						}
+						//System.out.println("Number of collected BOAs " + count);
 				}
 				else {//No boas found, nothing to do for this function
 						return c;
 				}											
-
 				// Extract and sve the intensities
 				int numBoa = boa.size();
 				Vector<Float> intensity = new Vector<Float>();
@@ -39,14 +41,13 @@ public class IntensityFinder extends Processor {
 						intensity.add(0.0f);
 						meanIntensity.add(0.0f);
         }
-				
  				for (int i=0; i<numBoa; ++i) {						
 						Vector<Pixel> pixels = new Vector<Pixel>(boa.get(i).getPixels());
  						int numPixel = pixels.size();
  						for (int j=0; j<numPixel; ++j) {
-								int x = pixels.get(i).getX();
-								int y = pixels.get(i).getY();
-								int z = pixels.get(i).getZ();
+								int x = pixels.get(j).getX();
+								int y = pixels.get(j).getY();
+								int z = pixels.get(j).getZ();
 								intensity.set(i,intensity.get(i)+
 															c.getOriginalStack().getIntensity(x,y,z));
 						}
@@ -55,7 +56,6 @@ public class IntensityFinder extends Processor {
 						int numPixel = 1;//boa.get(i).size();
 						meanIntensity.set(i,intensity.get(i)/numPixel);
 				}
-				
 				// Add the total and mean intensity
 				Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
 				for (int i=0; i<numBoa; ++i) {
