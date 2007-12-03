@@ -1,9 +1,9 @@
 package costanza;
 
 public enum DataId {
-cellCenters,
-cellBasinsOfAttraction,
-cellNeighbors,
-cellIntensity,
-stackBackground
+    cellCenters,
+    cellBasinsOfAttraction,
+    cellNeighbors,
+    cellIntensity,
+    stackBackground
 }
