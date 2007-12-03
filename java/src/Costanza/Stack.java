@@ -35,7 +35,7 @@ public class Stack {
     public Stack() {
         myImage = new Vector<Image>();
         myImage.setSize(0);
-        maxIntensityLimit=1.0f;
+        maxIntensityLimit=255;
     }
     
     public Object clone() {

@@ -1,12 +1,18 @@
 package Costanza;
 
+import java.awt.image.WritableRaster;
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
 import java.util.Iterator;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /** Container class for pixel information */
 public class Image {
-    /** Greyscale channel */
-    private float[] pixels;
+    
+    /** A BufferedImage representing a Greyscale channel */
+    BufferedImage bi;
     
     /** Width of image. */
     private int width;
@@ -22,16 +28,31 @@ public class Image {
     public Image(int width, int height) {
         this.width = width;
         this.height = height;
-        pixels = new float[width*height];
-        for(int i=0; i<width*height; ++i) pixels[i] = 0.0f;
+        bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+    }
+    
+    /** Constructor for class Image from an AWT Image.
+     * Note that this does NOT copy the BufferedImage! Any changes made 
+     * to Image will affect the BufferedImage as well.
+     * @param bi the BufferedImage to construct our Image from.
+     */
+    public Image(BufferedImage bi) {
+        width = bi.getWidth();
+        height = bi.getHeight();
+        this.bi = bi;        
     }
     
     public Object clone() {
-        Image tmp = new Image(width, height);
-        float[] tmpArray = new float[width*height];
-        System.arraycopy(pixels, 0, tmpArray, 0, pixels.length);
-        tmp.setPixelVector(tmpArray);
-        return tmp;
+        Image newImage = new Image(bi.getWidth(), bi.getHeight());
+        WritableRaster raster = bi.copyData( null );
+        BufferedImage copy = new BufferedImage( bi.getColorModel(), raster, bi.isAlphaPremultiplied(), null );
+        newImage.setBufferedImage(copy);
+        /*try {
+            ImageIO.write(copy, "jpg", new File("apa1.jpg"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }*/
+        return newImage;
     }
     
     /** Returns the width of the image. */
@@ -47,34 +68,47 @@ public class Image {
     public void setHeight(int height) { this.height = height; }
     
     /** Returns the intensity for pixel at position (x, y). */
-    public float getIntensity(int x, int y) { return pixels[x + y * width]; }
+    public float getIntensity(int x, int y) { return bi.getRaster().getSampleFloat(x,y,0); }
     
     /** Sets the intensity for pixel at position (x, y). */
     public void setIntensity(int x, int y, float value) {
-        pixels[x + y * width] = value;
+        bi.getRaster().setSample(x,y,0,value);
     }
     
     /**
      * Sets the Vector of pixels.
      * @param pixelVector The float array of pixels we want to set
      */
-    private void setPixelVector(float[] pixelVector) { pixels = pixelVector; }
+    private void setPixelVector(float[] pixelVector) { throw new UnsupportedOperationException("Not yet implemented"); }
+    
     
     /** Returns the maximum intensity of the image. */
     public float getMaxIntensity() {
         float max = Float.NEGATIVE_INFINITY;
-        for (int i = 0; i < pixels.length; ++i) {
-            if (pixels[i] > max) { max = pixels[i]; }
+        for (int i = 0; i < bi.getWidth(); ++i) {
+            for (int j = 0; j < bi.getHeight(); j++) {
+                if (getIntensity(i,j) > max) { max = getIntensity(i,j); }
+            }
         }
+        max = 255.0f; //Fix for Inverter.
         return max;
     }
     
     /** Returns the minimum intensity of the image. */
     public float getMinIntensity() {
         float min = Float.POSITIVE_INFINITY;
-        for (int i = 0; i < pixels.length; ++i) {
-            if (pixels[i] < min) {  min = pixels[i]; }
+        for (int i = 0; i < bi.getWidth(); ++i) {
+            for (int j = 0; j < bi.getHeight(); j++) {
+                if (getIntensity(i,j) < min) { min = getIntensity(i,j); }
+            }
         }
         return min;
     }
+    
+    public void setBufferedImage(BufferedImage bufferedImage) {
+        bi = bufferedImage;
+    }
+
+    public BufferedImage getImage() { return bi; }
+    
 }

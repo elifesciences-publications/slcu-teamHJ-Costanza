@@ -35,8 +35,8 @@ public class TextGUI2 {
         System.out.println("Applying the Mean filter.");
         MeanFilter meanFilter = new MeanFilter();
         meanFilter.process(myCase, options);
-        //Inverter inverter = new Inverter();
-        //inverter.process(myCase, options);
+        Inverter inverter = new Inverter();
+        inverter.process(myCase, options);
         System.out.println("Saving the images.");
         saveImageStack(baseName, myCase.getStack());
         
@@ -64,7 +64,7 @@ public class TextGUI2 {
         Image image = new Image(w, h);
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                image.setIntensity(i,j,bi.getRaster().getSampleFloat(i,j,0)/255.0f);
+                image.setIntensity(i,j,bi.getRaster().getSampleFloat(i,j,0));
                 //System.out.println("Setting intensity: "+image.getIntensity(i,j));
             }
         }
@@ -106,9 +106,8 @@ public class TextGUI2 {
         for (int i = 0; i < stack.getDepth(); i++) {
             Image image = stack.getImage(i);
             try {
-                BufferedImage bi = toAwtImage(image); // retrieve image
-                File outputfile = new File(baseName+i+"New.jpg");
-                ImageIO.write(bi, "jpg", outputfile);
+                BufferedImage bi = image.getImage();//toAwtImage(image); // retrieve image
+                ImageIO.write(bi, "jpg", new File(baseName+i+"New.jpg"));
             } catch (IOException e){}
         }
     }
