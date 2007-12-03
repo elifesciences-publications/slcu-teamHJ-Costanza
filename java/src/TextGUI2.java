@@ -34,9 +34,9 @@ public class TextGUI2 {
         options.addOption("radius", new Float(1.0f));
         System.out.println("Applying the Mean filter.");
         MeanFilter meanFilter = new MeanFilter();
-        //meanFilter.process(myCase, options);
-        Inverter inverter = new Inverter();
-        inverter.process(myCase, options);
+        meanFilter.process(myCase, options);
+        //Inverter inverter = new Inverter();
+        //inverter.process(myCase, options);
         System.out.println("Saving the images.");
         saveImageStack(baseName, myCase.getStack());
         
@@ -53,21 +53,18 @@ public class TextGUI2 {
     }
     
     private Image getImage(String baseName) {
-        BufferedImage awtImage = null;
+        BufferedImage bi = null;
         try {
-            awtImage = ImageIO.read(new File(baseName));
+            bi = ImageIO.read(new File(baseName));
         } catch (IOException e) {
             System.out.println("Couldn't read file " + baseName + ": " + e.getMessage());
         }
-        int w = awtImage.getWidth(null);
-        int h = awtImage.getHeight(null);
-        Graphics g = awtImage.getGraphics();
-        g.drawImage(awtImage, 0, 0, null);
+        int w = bi.getWidth(null);
+        int h = bi.getHeight(null);
         Image image = new Image(w, h);
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                //image.setIntensity(i,j,handlesinglepixel(awtImage.getRGB(i,j))/255.0f);
-                image.setIntensity(i,j,awtImage.getRaster().getSampleFloat(i,j,0)/255.0f);
+                image.setIntensity(i,j,bi.getRaster().getSampleFloat(i,j,0)/255.0f);
                 //System.out.println("Setting intensity: "+image.getIntensity(i,j));
             }
         }
