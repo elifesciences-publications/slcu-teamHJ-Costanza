@@ -90,7 +90,6 @@ public class Image {
                 if (getIntensity(i,j) > max) { max = getIntensity(i,j); }
             }
         }
-        max = 255.0f; //Fix for Inverter.
         return max;
     }
     
@@ -105,10 +104,16 @@ public class Image {
         return min;
     }
     
+    /** Sets the BufferedImage in our Image.
+     * @param bufferedImage the BufferedImage to set.
+     */
     public void setBufferedImage(BufferedImage bufferedImage) {
         bi = bufferedImage;
     }
 
+    /** Returns the current BufferedImage in this Image.
+     * @return the current BufferedImage stored in this Image.
+     */
     public BufferedImage getImage() { return bi; }
     
 }
