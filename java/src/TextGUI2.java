@@ -101,14 +101,7 @@ public class TextGUI2 {
         return (float)(red);
     }
     
-    public static void main(String[] argv){
-        try{
-            new TextGUI2(argv[0]);
-        }catch(Exception e){
-            System.out.print("Error: ");
-            System.out.println(e.getMessage());
-        }
-    }
+    
     
     private void saveImageStack(String baseName, Stack stack) {
         for (int i = 0; i < stack.getDepth(); i++) {
@@ -128,9 +121,20 @@ public class TextGUI2 {
                 float intensity = image.getIntensity(i,j);
                 int newRgb = 1;
                 newRgb = newRgb | (Float.floatToIntBits(intensity) << 8);
-                bi.setRGB(i,j,(int)intensity);
+                newRgb = newRgb | (Float.floatToIntBits(intensity) << 16);
+                newRgb = newRgb | (Float.floatToIntBits(intensity) << 24);
+                bi.setRGB(i,j,newRgb);
             }
         }
         return bi;
+    }
+    
+    public static void main(String[] argv){
+        try{
+            new TextGUI2(argv[0]);
+        }catch(Exception e){
+            System.out.print("Error: ");
+            System.out.println(e.getMessage());
+        }
     }
 }
