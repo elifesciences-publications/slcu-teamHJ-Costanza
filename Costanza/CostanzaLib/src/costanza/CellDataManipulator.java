@@ -1,5 +1,5 @@
 
-package Costanza;
+package costanza;
 
 import java.io.FileReader;
 import java.io.FileWriter;

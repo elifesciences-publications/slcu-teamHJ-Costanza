@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 //import CellId;
 //import Costanza.Pixel;

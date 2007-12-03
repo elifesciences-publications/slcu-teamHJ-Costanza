@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 /**Id for the cell*/
 public class CellId {

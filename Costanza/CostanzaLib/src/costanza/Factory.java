@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 import java.util.HashMap;
 
 /** Object factory for Processor objects. */

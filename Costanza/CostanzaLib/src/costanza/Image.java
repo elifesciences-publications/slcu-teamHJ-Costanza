@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 import java.awt.image.WritableRaster;
 import java.io.File;

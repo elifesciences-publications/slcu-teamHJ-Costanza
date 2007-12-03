@@ -1,18 +1,18 @@
-import Costanza.Case;
-import Costanza.Driver;
-import Costanza.Factory;
-import Costanza.Image;
-import Costanza.Inverter;
-import Costanza.MeanFilter;
-import Costanza.GradientDescent;
-import Costanza.PeakMerger;
-import Costanza.Job;
-import Costanza.Options;
-import Costanza.Queue;
-import Costanza.Stack;
-import Costanza.Pixel;
-import Costanza.CellCenter;
-import Costanza.DataId;
+import costanza.Case;
+import costanza.Driver;
+import costanza.Factory;
+import costanza.Image;
+import costanza.Inverter;
+import costanza.MeanFilter;
+import costanza.GradientDescent;
+import costanza.PeakMerger;
+import costanza.Job;
+import costanza.Options;
+import costanza.Queue;
+import costanza.Stack;
+import costanza.Pixel;
+import costanza.CellCenter;
+import costanza.DataId;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -171,8 +171,8 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
     
     private void initFactory() {
         factory = new Factory();
-        factory.register("invert", Costanza.Inverter.class);
-        factory.register("meanfilter", Costanza.MeanFilter.class);
+        factory.register("invert", costanza.Inverter.class);
+        factory.register("meanfilter", costanza.MeanFilter.class);
     }
     
     private Stack createStackFromImagePlus() throws Exception {

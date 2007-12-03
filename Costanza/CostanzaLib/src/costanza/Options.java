@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 import java.lang.Exception;
 import java.util.HashMap;

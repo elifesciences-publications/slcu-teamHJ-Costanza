@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 import java.util.Vector;
 /**
  * A mean intensity filter for smoothening the stack.

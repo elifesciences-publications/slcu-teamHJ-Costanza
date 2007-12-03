@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 /**
  * Invert a stack by setting all intensity values to

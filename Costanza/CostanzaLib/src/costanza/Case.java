@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 /**
  * Case class holds Data and image Stack information that will be used by the Processor.

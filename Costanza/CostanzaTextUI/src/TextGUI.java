@@ -1,13 +1,13 @@
-import Costanza.Image;
-import Costanza.Stack;
-import Costanza.Case;
-import Costanza.Options;
-import Costanza.Inverter;
-import Costanza.MeanFilter;
-import Costanza.GradientDescent;
-import Costanza.IntensityFinder;
-import Costanza.PeakMerger;
-import Costanza.PeakRemover;
+import costanza.Image;
+import costanza.Stack;
+import costanza.Case;
+import costanza.Options;
+import costanza.Inverter;
+import costanza.MeanFilter;
+import costanza.GradientDescent;
+import costanza.IntensityFinder;
+import costanza.PeakMerger;
+import costanza.PeakRemover;
 
 /**
  * The Text version of our GUI.

@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 public enum DataId {
 cellCenters,

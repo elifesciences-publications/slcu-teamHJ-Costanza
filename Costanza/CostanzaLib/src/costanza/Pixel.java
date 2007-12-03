@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 /**Pixel is tripple of indices. It's used by Data classes
  */

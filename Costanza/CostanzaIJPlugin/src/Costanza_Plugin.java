@@ -1,12 +1,12 @@
-import Costanza.Case;
-import Costanza.Driver;
-import Costanza.Factory;
-import Costanza.Image;
-import Costanza.Inverter;
-import Costanza.Job;
-import Costanza.Options;
-import Costanza.Queue;
-import Costanza.Stack;
+import costanza.Case;
+import costanza.Driver;
+import costanza.Factory;
+import costanza.Image;
+import costanza.Inverter;
+import costanza.Job;
+import costanza.Options;
+import costanza.Queue;
+import costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -27,8 +27,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     
     private void initFactory() {
         factory = new Factory();
-        factory.register("invert", Costanza.Inverter.class);
-        factory.register("meanfilter", Costanza.MeanFilter.class);
+        factory.register("invert", costanza.Inverter.class);
+        factory.register("meanfilter", costanza.MeanFilter.class);
     }
     
     

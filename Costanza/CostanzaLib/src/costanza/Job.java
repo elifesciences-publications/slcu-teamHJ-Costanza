@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 
 public class Job {
     private String processorId;

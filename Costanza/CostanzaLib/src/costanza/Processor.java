@@ -1,4 +1,4 @@
-package Costanza;
+package costanza;
 /**
  * Base class for a Processor.
  * @see Inverter

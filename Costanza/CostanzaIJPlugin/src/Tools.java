@@ -1,5 +1,5 @@
-import Costanza.Image;
-import Costanza.Stack;
+import costanza.Image;
+import costanza.Stack;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.process.ImageProcessor;
