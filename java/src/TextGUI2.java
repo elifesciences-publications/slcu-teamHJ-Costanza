@@ -38,7 +38,7 @@ public class TextGUI2 {
         Inverter inverter = new Inverter();
         inverter.process(myCase, options);
         System.out.println("Saving the images.");
-        saveImageStack(baseName, stack);
+        saveImageStack(baseName, myCase.getStack());
         
     }
     
@@ -63,15 +63,17 @@ public class TextGUI2 {
         int h = awtImage.getHeight(null);
         Graphics g = awtImage.getGraphics();
         g.drawImage(awtImage, 0, 0, null);
-        float[] pixels = handlepixels(awtImage, 0, 0, w, h);
         Image image = new Image(w, h);
-        for (int i = 0; i < pixels.length; i++) {
-            image.setIntensity(i%w, i/w, pixels[i]);
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                image.setIntensity(i,j,handlesinglepixel(awtImage.getRGB(i,j))/255.0f);
+                //System.out.println("Setting intensity: "+image.getIntensity(i,j));
+            }
         }
         return image;
     }
     
-    private float[] handlepixels(java.awt.Image img, int x, int y, int w, int h) {
+    private float[] handlepixels(BufferedImage img, int x, int y, int w, int h) {
         int[] pixels = new int[w * h];
         float[] floatPixels = new float[w * h];
         PixelGrabber pg = new PixelGrabber(img, x, y, w, h, pixels, 0, w);
@@ -87,17 +89,18 @@ public class TextGUI2 {
         }
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
-                floatPixels[j * w + i] = handlesinglepixel(x+i, y+j, pixels[j * w + i]);
+                floatPixels[j * w + i] = handlesinglepixel(pixels[j * w + i]);
             }
         }
         return floatPixels;
     }
     
-    public float handlesinglepixel(int x, int y, int pixel) {
+    public float handlesinglepixel(int pixel) {
         int alpha = (pixel >> 24) & 0xff;
         int red   = (pixel >> 16) & 0xff;
         int green = (pixel >>  8) & 0xff;
         int blue  = (pixel      ) & 0xff;
+        
         return (float)(red);
     }
     
@@ -119,11 +122,7 @@ public class TextGUI2 {
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
                 float intensity = image.getIntensity(i,j);
-                int newRgb = 1;
-                newRgb = newRgb | (Float.floatToIntBits(intensity) << 8);
-                newRgb = newRgb | (Float.floatToIntBits(intensity) << 16);
-                newRgb = newRgb | (Float.floatToIntBits(intensity) << 24);
-                bi.setRGB(i,j,newRgb);
+                bi.getRaster().setSample(i,j,0,intensity*255);
             }
         }
         return bi;
