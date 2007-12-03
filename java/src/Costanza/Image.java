@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 /** Container class for pixel information */
 public class Image {
     
-    /** A BufferedImage representing a Greyscale channel */
+    /** A BufferedImage representing a Greyscale channel. */
     BufferedImage bi;
     
     /** Width of image. */
@@ -21,9 +21,8 @@ public class Image {
     private int height;
     
     /** Constructor for class Image.
-     *
-     * This is the constructor that should be used to create a new Image object. It sets the width and height of the image.
-     *
+     * This is the constructor that should be used to create a new Image object. 
+     * It sets the width and height of the image.
      */
     public Image(int width, int height) {
         this.width = width;
@@ -42,6 +41,9 @@ public class Image {
         this.bi = bi;        
     }
     
+    /**Implementation of the Objects clone method.
+     * Naturally this clones our Object.
+     */
     public Object clone() {
         Image newImage = new Image(bi.getWidth(), bi.getHeight());
         WritableRaster raster = bi.copyData( null );
@@ -75,8 +77,7 @@ public class Image {
         bi.getRaster().setSample(x,y,0,value);
     }
     
-    /**
-     * Sets the Vector of pixels.
+    /**Sets the Vector of pixels.
      * @param pixelVector The float array of pixels we want to set
      */
     private void setPixelVector(float[] pixelVector) { throw new UnsupportedOperationException("Not yet implemented"); }
