@@ -66,7 +66,8 @@ public class TextGUI2 {
         Image image = new Image(w, h);
         for (int i = 0; i < w; i++) {
             for (int j = 0; j < h; j++) {
-                image.setIntensity(i,j,handlesinglepixel(awtImage.getRGB(i,j))/255.0f);
+                //image.setIntensity(i,j,handlesinglepixel(awtImage.getRGB(i,j))/255.0f);
+                image.setIntensity(i,j,awtImage.getRaster().getSampleFloat(i,j,0)/255.0f);
                 //System.out.println("Setting intensity: "+image.getIntensity(i,j));
             }
         }
@@ -104,8 +105,6 @@ public class TextGUI2 {
         return (float)(red);
     }
     
-    
-    
     private void saveImageStack(String baseName, Stack stack) {
         for (int i = 0; i < stack.getDepth(); i++) {
             Image image = stack.getImage(i);
@@ -121,8 +120,8 @@ public class TextGUI2 {
         BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
         for (int i = 0; i < image.getWidth(); i++) {
             for (int j = 0; j < image.getHeight(); j++) {
-                float intensity = image.getIntensity(i,j);
-                bi.getRaster().setSample(i,j,0,intensity*255);
+                float intensity = image.getIntensity(i,j)*255;
+                bi.getRaster().setSample(i,j,0,intensity);
             }
         }
         return bi;
