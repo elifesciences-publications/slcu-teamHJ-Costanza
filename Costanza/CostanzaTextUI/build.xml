@@ -1,0 +1,53 @@
+<project name="Costanza" default="dist" basedir=".">
+    <description>
+        This builds the Costanza program.
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+  <property name="doc"  location="docs"/>
+
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" description="compile the source ">
+    <!-- Compile the java code from ${src} into ${build} -->
+	<javac target="1.5" 
+		source="1.5" 
+		srcdir="${src}" 
+		encoding="utf-8"
+		destdir="${build}"
+		debug="on"
+		deprecation="on"
+		debuglevel="lines, vars, source"
+		verbose="no">
+		<compilerarg line="-Xlint:unchecked -cp ../CostanzaLib/dist/lib/CostanzaLib.jar:."/>
+	</javac>
+  </target>
+
+  <target name="doc" description="document the code">
+	  <javadoc destdir="docs/api"
+		  author="true"
+		  version="true"
+		  use="true"
+		  windowtitle="Costanza API">
+		  <fileset dir="src/Costanza">
+			  <include name="*.java"/>
+			  <exclude name="*Test*"/>
+		  </fileset>
+	  </javadoc>
+  </target>
+
+  <target name="clean"
+	  description="clean up" >
+	  <!-- Delete the ${build} and ${dist} directory trees -->
+	  <delete dir="${build}"/>
+	  <delete dir="${dist}"/>
+	  <delete dir="${doc}"/>
+  </target>
+</project>
