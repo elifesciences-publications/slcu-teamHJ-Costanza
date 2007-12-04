@@ -3,7 +3,7 @@ import costanza.Stack;
 
 /** Utility class for the Costanza Plugin. */
 public class Tools {
-
+   
     /** Create new Stack object from ij.ImagePlus object. */
     static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
 	ij.ImageStack imageStack = imagePlus.getStack();
@@ -17,7 +17,7 @@ public class Tools {
 	}
 	return stack;
     }
-
+    
     /** Creates new ij.ImagePlus object from Stack. */
     static public ij.ImagePlus createImagePlusFromStack(Stack stack) throws Exception {
 	int width = stack.getWidth();
