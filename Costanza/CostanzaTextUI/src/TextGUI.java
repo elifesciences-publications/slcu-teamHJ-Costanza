@@ -137,7 +137,7 @@ public class TextGUI {
             //System.out.println("Inside first loop");
             for(int j=0; j<image.getHeight(); ++j){
                 //System.out.println("Inside second loop");
-                image.setIntensity(i, j, (float)Math.random());
+                image.setIntensity(i, j, (float)Math.random()*255);
             }
         }
     }
