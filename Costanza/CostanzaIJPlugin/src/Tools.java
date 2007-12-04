@@ -36,7 +36,7 @@ public class Tools {
     static public ij.process.ImageProcessor getImageProcessorFromImage(Image image) throws Exception {
 	ij.ImagePlus ip = new ij.ImagePlus("", image.getImage());
 	ij.ImageStack stack = ip.getImageStack();
-	if (stack.getHeight() != 1) {
+	if (stack.getSize() != 1) {
 	    throw new Exception("Unexpected error in Tools.getImageProcessorFromImage()");
 	}
 	return stack.getProcessor(1);

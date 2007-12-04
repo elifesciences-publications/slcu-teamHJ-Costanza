@@ -1,11 +1,13 @@
+
 public class MainPanel extends java.awt.Panel {
+
 	Costanza_Plugin plugin;
 
 	MainPanel(Costanza_Plugin plugin) {
 		initComponents();
 		this.plugin = plugin;
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -23,6 +25,8 @@ public class MainPanel extends java.awt.Panel {
         filterRepeatLabel = new java.awt.Label();
         filterRepeatTextField = new java.awt.TextField();
 
+        setBackground(java.awt.Color.white);
+        setForeground(java.awt.Color.black);
         setLayout(new java.awt.GridBagLayout());
 
         radiusLabel.setAlignment(java.awt.Label.RIGHT);
@@ -39,6 +43,11 @@ public class MainPanel extends java.awt.Panel {
         add(cancelButton, gridBagConstraints);
 
         startButton.setLabel("Start");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -64,6 +73,20 @@ public class MainPanel extends java.awt.Panel {
         gridBagConstraints.gridy = 1;
         add(filterRepeatTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
+		float radius;
+		int repeat;
+		boolean invert;
+		try {
+			radius = new Float(radiusTextField.getText()).floatValue();
+			repeat = new Integer(filterRepeatTextField.getText()).intValue();
+			invert = invertCheckbox.getState();
+		} catch (Exception exception) {
+			plugin.badUserInput();
+			return;
+		}
+		plugin.start(radius, repeat, invert);
+	}//GEN-LAST:event_startButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button cancelButton;
