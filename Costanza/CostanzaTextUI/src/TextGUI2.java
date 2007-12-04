@@ -6,22 +6,17 @@ import costanza.Case;
 import costanza.Options;
 import costanza.MeanFilter;
 import costanza.GradientDescent;
-import costanza.Driver;
 import costanza.IntensityFinder;
 import costanza.PeakMerger;
 import costanza.PeakRemover;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBuffer;
-import java.awt.image.DataBufferByte;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageOutputStream;
 
 /**
  * The Text version of our GUI.
@@ -31,17 +26,17 @@ public class TextGUI2 {
 
     /** Creates a new instance of TextGUI */
     public TextGUI2(String baseName) throws Exception {
-	int invertFlag = 1,
-		meanFilterFlag = 1,
-		gradientDescentFlag = 1,
-		intensityFinderFlag = 1,
-		peakMergerFlag = 1,
-		peakRemoverFlag = 0;
+	final int invertFlag = 1;
+	final int meanFilterFlag = 1;
+	final int gradientDescentFlag = 1;
+	final int intensityFinderFlag = 1;
+	final int peakMergerFlag = 0;
+	final int peakRemoverFlag = 0;
 
 	System.out.println("Creating a Stack");
 	Stack stack = getImageStack(baseName);
 	Case myCase = new Case(stack);
-	
+
 	if (invertFlag != 0) {
 	    System.out.println("### Applying Invert ###");
 	    System.out.println("Creating options");
@@ -116,9 +111,15 @@ public class TextGUI2 {
 
     private Stack getImageStack(String baseName) throws Exception {
 	Stack stack = new Stack();
-	for (int i = 0; i < 4; ++i) {
-	    System.out.println("Opening image: " + baseName + i + ".jpg");
-	    Image image = getImage(baseName + i + ".jpg");
+	String fname = "";
+	for (int i = 0; i < 20; ++i) {
+	    if (i < 10) {
+		fname = baseName + "0" + i + ".jpg";
+	    } else {
+		fname = baseName + i + ".jpg";
+	    }
+	    System.out.println("Opening image: " + fname);
+	    Image image = getImage(fname);
 	    stack.addImage(image);
 	}
 	return stack;
@@ -177,9 +178,15 @@ public class TextGUI2 {
     private void saveImageStack(String baseName, Stack stack) {
 	for (int i = 0; i < stack.getDepth(); i++) {
 	    Image image = stack.getImage(i);
+	    String fname = "";
+	    if (i < 10) {
+		fname = baseName + "0" + i + ".jpg";
+	    } else {
+		fname = baseName + i + ".jpg";
+	    }
 	    try {
 		BufferedImage bi = image.getImage();//toAwtImage(image); // retrieve image
-		ImageIO.write(bi, "jpg", new File(baseName + i + "New.jpg"));
+		ImageIO.write(bi, "jpg", new File(fname));
 	    } catch (IOException e) {
 	    }
 	}
