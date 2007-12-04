@@ -22,9 +22,9 @@ public class PeakRemover extends Processor {
 
 	/**
 	 * Implements the PeakRemover algorithm.
-	 * @param a Case and an Option containing two
-	 * thresholds for size and intensity.
-	 * @returns a modified Case object
+	 * @param c a Case 
+	 * @param an Option containing two thresholds for size and intensity.
+	 * @return a modified Case object
 	 * @see Processor
 	 */
 	public Case process(Case c, Options o) throws Exception {

@@ -23,8 +23,9 @@ public class PeakMerger extends Processor {
 
     /**
      * Implements the PeakMerger algorithm.
-     * @param a Case and an Option
-     * @returns a modified Case object
+     * @param c a Case 
+	 * @param o an Option
+     * @return a modified Case object
      * @see Processor
      */
     public Case process(Case c, Options o) throws Exception {
