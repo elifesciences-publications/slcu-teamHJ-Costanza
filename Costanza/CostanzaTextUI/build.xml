@@ -1,6 +1,6 @@
-<project name="Costanza" default="dist" basedir=".">
+<project name="Costanza" default="compile" basedir=".">
     <description>
-        This builds the Costanza program.
+        This builds the Costanza TextGUI.
     </description>
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
