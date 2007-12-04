@@ -19,7 +19,7 @@ public class Factory {
     /** Create object using processorId. */
     public Processor createProcessor(String processorId) throws Exception {
         if (!processorClasses.containsKey(processorId)) {
-            throw new Exception("Class not found in factory.");
+            throw new Exception("Class '" + processorId + "' not found in factory.");
         }
         Class<? extends Processor> processorClass;
         processorClass = processorClasses.get(processorId);
