@@ -34,7 +34,7 @@ public class Data {
         return mMap.keySet();
     }
     
-    public Object getObject(DataId dId,int cId) throws Exception {
+    public Object getObject(DataId dId,int cId) {
         Object o = null;
         Vector v = mMap.get(dId);
         Iterator it = v.iterator();
@@ -48,6 +48,7 @@ public class Data {
                         break;
                     }
                 }
+		break;
             }
             case cellBasinsOfAttraction: {
                 while (it.hasNext()) {
@@ -57,10 +58,12 @@ public class Data {
                         break;
                     }
                 }
+		break;
             }
         }
         if (o==null) 
-            throw new Exception("CellId " + cId + " not found" );
+	    return null;
+            //throw new Exception("CellId " + cId + " not found" );
             
         return o;
     }
@@ -80,7 +83,7 @@ public class Data {
      *@param String id, Object o
      */
     public void attachData( DataId id, Object o ){
-        if(mMap.containsKey(id)) {
+   	if(mMap.containsKey(id)) {
             mMap.get(id).add(o);
         } else {
             Vector<Object> s = new Vector<Object>();
@@ -106,9 +109,8 @@ public class Data {
      *@param DataId id, Object o
      */
     public void removeData( DataId id, Object o ){
-        if(mMap.containsKey(id)) {
-            mMap.get(id).remove(o);
-        } 
+        if(mMap.containsKey(id)) 
+         mMap.get(id).remove(o); 
     }
     
     /**Removes all data from Data set with id DataId
