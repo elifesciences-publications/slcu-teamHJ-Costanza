@@ -42,10 +42,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
             Queue jobs = new Queue();
             
             MainPanel panel = frame.getPanel();
-            
-            Float radius = new Float(panel.getMeanFieldRadiusValue());
+            float radius = panel.getMeanFieldRadiusValue();
             Options option = new Options();
-            option.addOption("radius", radius);
+            option.addOption("radius", new Float(radius));
             jobs.addJob(new Job("meanfilter", option));
             
             if (panel.getInvertCheckboxState() == true) {
