@@ -1,15 +1,12 @@
 import costanza.Case;
 import costanza.Driver;
 import costanza.Factory;
-import costanza.Image;
 import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
 import costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.FloatProcessor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
