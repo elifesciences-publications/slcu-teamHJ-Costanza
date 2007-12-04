@@ -33,7 +33,6 @@ public class PeakMerger extends Processor {
 	Object obj[] = c.getData().getData(DataId.cellCenters).toArray();
 	int numObj = obj.length;
 	int i = 0;
-	test:
 	for (; i < numObj; ++i) {
 	    Object o1 = obj[i];
 	    for (Object o2 : c.getData().getData(DataId.cellCenters).toArray()) {
@@ -43,7 +42,7 @@ public class PeakMerger extends Processor {
 		    i=0;
 		    obj = c.getData().getData(DataId.cellCenters).toArray();
 		    numObj = obj.length;
-		    continue test;
+		    break;
 		}
 	    }
 	}
