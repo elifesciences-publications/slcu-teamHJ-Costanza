@@ -1,31 +1,23 @@
 package costanza;
 
+import java.awt.Graphics;
 import java.awt.image.WritableRaster;
-import java.io.File;
-import java.io.IOException;
-import java.util.Vector;
-import java.util.Iterator;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 
 /** Container class for pixel information */
 public class Image {
 
     /** A BufferedImage representing a Greyscale channel. */
     BufferedImage bi;
-    /** Width of image. */
-    private int width;
-    /** Height of image. */
-    private int height;
+    final int imageType = BufferedImage.TYPE_BYTE_GRAY;
+	    
 
     /** Constructor for class Image.
      * This is the constructor that should be used to create a new Image object. 
      * It sets the width and height of the image.
      */
     public Image(int width, int height) {
-	this.width = width;
-	this.height = height;
-	bi = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
+	bi = new BufferedImage(width, height, imageType);
     }
 
     /** Constructor for class Image from an AWT Image.
@@ -33,13 +25,14 @@ public class Image {
      * to Image will affect the BufferedImage as well.
      * @param bi the BufferedImage to construct our Image from.
      */
-    public Image(java.awt.Image bi) throws Exception {
-	width = bi.getWidth(null);
-	height = bi.getHeight(null);
-	if (bi instanceof BufferedImage) {
-	    this.bi = (BufferedImage) bi;
+    public Image(java.awt.Image image) {
+	if (image instanceof BufferedImage) {
+	    this.bi = (BufferedImage) image;
 	}else{
-	    throw new Exception("AWT Image sent is not of BufferedImage instance.");
+	    this.bi = new BufferedImage(image.getWidth(null), image.getHeight(null), imageType);
+	    Graphics g = bi.getGraphics();
+	    g.drawImage(image, 0, 0, null);
+	    //throw new Exception("AWT Image sent is not of BufferedImage instance.");
 	}
     }
 
@@ -60,24 +53,10 @@ public class Image {
     }
 
     /** Returns the width of the image. */
-    public int getWidth() {
-	return width;
-    }
-
-    /** Sets the width of the image. */
-    public void setWidth(int width) {
-	this.width = width;
-    }
+    public int getWidth() { return bi.getWidth(); }
 
     /** Returns the width of the image. */
-    public int getHeight() {
-	return height;
-    }
-
-    /** Sets the height of the image. */
-    public void setHeight(int height) {
-	this.height = height;
-    }
+    public int getHeight() { return bi.getHeight(); }
 
     /** Returns the intensity for pixel at position (x, y). */
     public float getIntensity(int x, int y) {
