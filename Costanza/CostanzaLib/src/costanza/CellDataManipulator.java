@@ -231,6 +231,7 @@ public class CellDataManipulator {
 
     private void remove(DataId dId, int cId) throws Exception {
 	if (dId.name().startsWith("cell")) {
+	    	//System.out.println("remove " + dId.name() + " with ID " + cId );
 	    data.removeData(dId, data.getObject(dId, cId));
 	}
     }
