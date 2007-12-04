@@ -3,10 +3,10 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
     
     MainFrame(Costanza_Plugin plugin) {
 	super("Costanza Plugin");
-	panel = new MainPanel(plugin);
+	panel = new MainPanel();
     }
 
-    MainPanel getPanel() {
-	return panel;
-    }
+//    MainPanel getPanel() {
+//	return panel;
+  //  }
 }
