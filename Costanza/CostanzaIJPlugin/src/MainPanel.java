@@ -1,10 +1,11 @@
 public class MainPanel extends java.awt.Panel {
+	Costanza_Plugin plugin;
 
-	/** Creates new form MainPanel */
-	public MainPanel() {
+	MainPanel(Costanza_Plugin plugin) {
 		initComponents();
+		this.plugin = plugin;
 	}
-
+	
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -63,6 +64,7 @@ public class MainPanel extends java.awt.Panel {
         gridBagConstraints.gridy = 1;
         add(filterRepeatTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button cancelButton;
     private java.awt.Label filterRepeatLabel;

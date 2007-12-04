@@ -7,8 +7,10 @@ import costanza.Queue;
 import costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Costanza_Plugin implements ij.plugin.PlugIn  {
+public class Costanza_Plugin implements ij.plugin.PlugIn, ActionListener  {
     private Factory factory;
     private MainFrame frame;
     
@@ -24,7 +26,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn  {
         factory.register("meanfilter", costanza.MeanFilter.class);
     }
         
-    private void start() {
+    public void start(float radius, int repeat, boolean invert) {
         try {
             ImagePlus imagePlus = IJ.getImage();
             Stack stack = Tools.createStackFromImagePlus(imagePlus);
@@ -32,15 +34,15 @@ public class Costanza_Plugin implements ij.plugin.PlugIn  {
             
             Queue jobs = new Queue();
             
-//     //       MainPanel panel = frame.getPanel();
-////            float radius = panel.getMeanFieldRadiusValue();
-//            Options option = new Options();
-//            option.addOption("radius", new Float(radius));
-//            jobs.addJob(new Job("meanfilter", option));
-//            
-//            if (panel.getInvertCheckboxState() == true) {
-//                jobs.addJob(new Job("invert", null));
-//            }
+            Options option = new Options();
+            option.addOption("radius", new Float(radius));
+			for (int i = 0; i < repeat; ++i) {
+				jobs.addJob(new Job("meanfilter", option));				
+			}
+            
+            if (invert == true) {
+                jobs.addJob(new Job("invert", null));
+            }
             
             Driver driver = new Driver(jobs, IJCase, factory);
             driver.run();
@@ -53,6 +55,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn  {
             IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
         }
     }
+
+	public void actionPerformed(ActionEvent e) {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
 }
 
 

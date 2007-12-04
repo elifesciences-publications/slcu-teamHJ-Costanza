@@ -4,7 +4,7 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
 
 	MainFrame(Costanza_Plugin plugin) {
 		super("Costanza Plugin");
-		panel = new MainPanel();
+		panel = new MainPanel(plugin);
 		add(panel);
 		pack();
 	}
