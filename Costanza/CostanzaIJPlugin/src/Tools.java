@@ -1,41 +1,44 @@
 import costanza.Image;
 import costanza.Stack;
-import ij.ImagePlus;
-import ij.ImageStack;
-import ij.process.ImageProcessor;
 
+/** Utility class for the Costanza Plugin. */
 public class Tools {
-    static public Stack createStackFromImagePlus(ImagePlus imagePlus) throws Exception {
-        try {
-            ImageStack imageStack = imagePlus.getStack();
-            int slices = imageStack.getSize();
-            
-            Stack stack = new Stack();
-            for (int n = 1; n <= slices; ++n) {
-                ImageProcessor sliceProcessor = imageStack.getProcessor(n);
-                ImageProcessor floatProcessor = sliceProcessor.convertToFloat();
-                
-                Image image = getFloatImageFromImageProcessor(floatProcessor);
-                
-                stack.addImage(image);
-            }
-            return stack;
-        } catch (Exception exception) {
-            throw exception;
-        }
+
+    /** Create new Stack object from ij.ImagePlus object. */
+    static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
+	ij.ImageStack imageStack = imagePlus.getStack();
+	int slices = imageStack.getSize();
+
+	Stack stack = new Stack();
+	for (int n = 1; n <= slices; ++n) {
+	    ij.process.ImageProcessor sliceProcessor = imageStack.getProcessor(n);
+	    ij.process.ImageProcessor floatProcessor = sliceProcessor.convertToFloat();
+	    stack.addImage(new Image(floatProcessor.createImage()));
+	}
+	return stack;
     }
-    
-    static public Image getFloatImageFromImageProcessor(ImageProcessor imageProcessor) {
-        int width = imageProcessor.getWidth();
-        int height = imageProcessor.getHeight();
-        
-        Image image = new Image(width, height);
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                float value = imageProcessor.getf(x, y) / 255.0f;
-                image.setIntensity(x, y, value);
-            }
-        }
-        return image;
+
+    /** Creates new ij.ImagePlus object from Stack. */
+    static public ij.ImagePlus createImagePlusFromStack(Stack stack) throws Exception {
+	int width = stack.getWidth();
+	int height = stack.getHeight();
+
+	ij.ImageStack is = new ij.ImageStack(width, height);
+
+	for (int i = 0; i < stack.getDepth(); ++i) {
+	    Image image = stack.getImage(i);
+	    is.addSlice("", getImageProcessorFromImage(image));
+	}
+	return new ij.ImagePlus("Test Image", is);
+    }
+
+    /** Get ij.ImageProcessor from Image. */
+    static public ij.process.ImageProcessor getImageProcessorFromImage(Image image) throws Exception {
+	ij.ImagePlus ip = new ij.ImagePlus("", image.getImage());
+	ij.ImageStack stack = ip.getImageStack();
+	if (stack.getHeight() != 1) {
+	    throw new Exception("Unexpected error in Tools.getImageProcessorFromImage()");
+	}
+	return stack.getProcessor(1);
     }
 }
