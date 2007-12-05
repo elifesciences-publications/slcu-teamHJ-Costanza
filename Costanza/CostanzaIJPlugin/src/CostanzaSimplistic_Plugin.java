@@ -15,12 +15,15 @@ import costanza.Stack;
 import costanza.Pixel;
 import costanza.CellCenter;
 import costanza.DataId;
+import costanza.BOA;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.plugin.filter.PlugInFilter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
+import ij.process.ImageConverter;
+import ij.plugin.Converter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
@@ -49,13 +52,18 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			GenericDialog gd = new GenericDialog("Parameter settings");
 
 			gd.addMessage("Background extraction:");
-			gd.addCheckbox("Apply background extractor:",false);
+			gd.addCheckbox("Apply background extractor",false);
 			gd.addNumericField("Background intensity threshold:",0,1);
 
-			gd.addMessage("Preprocessing:");
+			gd.addMessage("\nPreprocessing:");
 			gd.addNumericField("Number of smooth runs:",0,0);
 			gd.addNumericField("Smooth radius:",0,1);
-			
+			gd.addCheckbox("Show preprocessed stack",false);
+
+			gd.addMessage("\nGradient Descent:");
+			gd.addCheckbox("Show gradient descent centers",false);
+			gd.addCheckbox("Show gradient descent boas",false);
+
 			gd.addMessage("Postprocessing:");
 			gd.addCheckbox("Apply merger:",false);
 			gd.addNumericField("Merging radius:",0,1);
@@ -65,7 +73,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
 			gd.addMessage("Output:");
 			gd.addCheckbox("Show cell center stack:",true);
-			gd.addCheckbox("Show boa stack:",true);
+			gd.addCheckbox("Show boa stack:",false);
 
 			gd.showDialog();
 			
@@ -75,10 +83,17 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			}
 			
 			// Extract user provided values
+			//bg
 			boolean bgFlag = (boolean) gd.getNextBoolean();
 			float bgThreshold = (float) gd.getNextNumber();
+			//preproc
 			int smoothNum = (int) gd.getNextNumber();
 			float smoothR = (float) gd.getNextNumber();
+			boolean smoothOutput = (boolean) gd.getNextBoolean();
+			//gd
+			boolean gdCenterOutput = (boolean) gd.getNextBoolean();
+			boolean gdBoaOutput = (boolean) gd.getNextBoolean();
+			//postproc
 			boolean mergerFlag = (boolean) gd.getNextBoolean();
 			float mergerR = (float) gd.getNextNumber();
 			boolean removeFlag = (boolean) gd.getNextBoolean();
@@ -125,15 +140,52 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 						error("Error in meanfilter: " + ex.getMessage() + "\n");
 					}
 				}
+				if (smoothOutput) {
+					showStack(IJCase.getStack(),"Preprocessed");
+				}
 				IJ.showMessage("Costanza", "MeanFilter with radius "+smoothR+" applied "+smoothNum+" times.");
 			}
-      
+			
 			// GRADIENT DESCENT
 			GradientDescent gradientDescent = new GradientDescent();
 			try {
 				gradientDescent.process(IJCase, gradientDescentOptions);
 			} catch (Exception ex) {
 				error("Error in GradientDescent: " + ex.getMessage() + "\n");
+			}
+			if (gdCenterOutput) {
+				// Extract data and plot if applicable
+				Collection dataC = IJCase.getData().getData(DataId.cellCenters);
+				Vector<Pixel> dataP = new Vector<Pixel>();
+				Iterator dataI = dataC.iterator();
+				if (dataI.hasNext()) {
+					while (dataI.hasNext()) {
+						CellCenter center = (CellCenter) dataI.next();
+						dataP.add(center.getPixel());
+					}
+					showPixelsInStack(IJCase.getOriginalStack(),dataP,"Cell centers after gd");
+				}
+				else {
+					IJ.showMessage("Costanza", "No centers found for plotting.");
+				}
+			}
+			if (gdBoaOutput) {
+				// Extract boas
+				Vector<BOA> boa = new Vector<BOA>();
+ 				Collection boaCollection = IJCase.getData().getData(DataId.cellBasinsOfAttraction);				
+ 				if (boaCollection!=null && boaCollection.iterator().hasNext()) {
+					Iterator i = boaCollection.iterator();
+					while (i.hasNext()) {
+						BOA boaTmp = (BOA) i.next();
+						boa.add( boaTmp );
+					}
+					// Plot boas
+					showBoasInStack(IJCase.getOriginalStack(),boa,"BOAs after gd");
+				}
+				else {//No boas found, nothing to do for this function
+					IJ.showMessage("Costanza", "No boas found for plotting.");
+				}											
+
 			}
 			int numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
 			IJ.showMessage("Costanza", "GradientDescent found "+numPeak+" peaks.");
@@ -162,58 +214,39 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				IJ.showMessage("Costanza", "PeakRemover removed into "+numPeak+" peaks.");
 			}
 			
-
-
-			// GET DATA FROM CELL CENTERS AND SET THOSE VALUES
-			Collection dataC = IJCase.getData().getData(DataId.cellCenters);
-			Vector<Pixel> dataP = new Vector<Pixel>();
-			Iterator dataI = dataC.iterator();
-			while (dataI.hasNext()) {
-				CellCenter center = (CellCenter) dataI.next();
-				dataP.add(center.getPixel());
-			}
-			int widthI = IJCase.getStack().getWidth();
-			int heightI = IJCase.getStack().getHeight();
-			int depthI = IJCase.getStack().getDepth();
-			for (int xI=0; xI<widthI; ++xI) {
-				for (int yI=0; yI<heightI; ++yI) {
-					for (int zI=0; zI<depthI; ++zI) {
-						IJCase.getStack().setIntensity(xI,yI,zI,
-																					 0.2f+0.8f*IJCase.getOriginalStack().getIntensity(xI,yI,zI));
+			if (ccOutFlag) {
+				// Extract data and plot if applicable
+				Collection dataC = IJCase.getData().getData(DataId.cellCenters);
+				Vector<Pixel> dataP = new Vector<Pixel>();
+				Iterator dataI = dataC.iterator();
+				if (dataI.hasNext()) {
+					while (dataI.hasNext()) {
+						CellCenter center = (CellCenter) dataI.next();
+						dataP.add(center.getPixel());
 					}
+					showPixelsInStack(IJCase.getOriginalStack(),dataP,"Cell centers");
+				}
+				else {
+					IJ.showMessage("Costanza", "No centers found for plotting.");
 				}
 			}
-			int numPixel=dataP.size();
-			//IJ.showMessage("Costanza", "Found " + numPixel + " cells.");
-			for (int iI=0; iI<numPixel; ++iI) {
-				IJCase.getStack().setIntensity(dataP.get(iI).getX(),dataP.get(iI).getY(),dataP.get(iI).getZ(),0.0f);
-			}
-			
-			
-			// DISPLAY RESULT
-			Stack result = IJCase.getStack();
-			int width = result.getWidth();
-			int height = result.getHeight();
-      
-			ImageStack is = new ImageStack(width, height);
-      
-			for (int i = 0; i < result.getDepth(); ++i) {
-				Image image = result.getImage(i);
-				FloatProcessor fp = new FloatProcessor(image.getWidth(), image.getHeight());
-        
-				for (int x = 0; x < width; ++x) {
-					for (int y = 0; y < height; ++y) {
-						float value = image.getIntensity(x, y);
-						fp.setf(x, y, value);
+			if (boaOutFlag) {
+				// Extract boas
+				Vector<BOA> boa = new Vector<BOA>();
+ 				Collection boaCollection = IJCase.getData().getData(DataId.cellBasinsOfAttraction);				
+ 				if (boaCollection!=null && boaCollection.iterator().hasNext()) {
+					Iterator i = boaCollection.iterator();
+					while (i.hasNext()) {
+						BOA boaTmp = (BOA) i.next();
+						boa.add( boaTmp );
 					}
+					// Plot boas
+					showBoasInStack(IJCase.getOriginalStack(),boa,"BOAs");
 				}
-				is.addSlice("test", fp);
+				else {//No boas found, nothing to do for this function
+					IJ.showMessage("Costanza", "No boas found for plotting.");
+				}											
 			}
-			ImagePlus ip = new ImagePlus("Test Image", is);
-			//StackConverter sc(ip);
-			//sc.convertToRGB();
-			
-			ip.show();
 		} catch (Exception exception) {
 			error(exception.getMessage());
 		}    
@@ -254,7 +287,101 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		}
 		return image;
 	}
-  
+
+	private void showStack(Stack stack, String name) {
+		int width = stack.getWidth();
+		int height = stack.getHeight();
+    
+		ImageStack is = new ImageStack(width, height);
+		for (int i = 0; i < stack.getDepth(); ++i) {
+			Image image = stack.getImage(i);
+			FloatProcessor fp = new FloatProcessor(image.getWidth(), image.getHeight());
+			for (int x = 0; x < width; ++x) {
+				for (int y = 0; y < height; ++y) {
+					float value = image.getIntensity(x, y);
+					fp.setf(x, y, value);
+				}
+			}
+			is.addSlice("Img", fp);
+		}
+		ImagePlus ip = new ImagePlus(name, is);
+		ip.show();
+	}
+
+	private void showPixelsInStack(Stack stack,Vector<Pixel> pixels, String name) {
+		int width = stack.getWidth();
+		int height = stack.getHeight();
+    
+		ImageStack is = new ImageStack(width, height);
+		for (int i = 0; i < stack.getDepth(); ++i) {
+			Image image = stack.getImage(i);
+			FloatProcessor fp = new FloatProcessor(image.getWidth(), image.getHeight());
+			for (int x = 0; x < width; ++x) {
+				for (int y = 0; y < height; ++y) {
+					float value = image.getIntensity(x, y);
+					fp.setf(x, y, value);
+				}
+			}
+			is.addSlice("Img", fp);
+		}
+		ImagePlus ip = new ImagePlus(name, is);
+		ImageConverter ic = new ImageConverter(ip);
+		ic.convertToRGB();
+
+		//Extract rgb pixels and set centers to red color;
+		ImageStack is2;
+		is2 = ip.getStack();
+		int dimension = is2.getHeight()*is2.getWidth();
+		int depth = is2.getSize();
+		int [][] ipix = new int [depth][dimension];
+		IJ.showMessage("Costanza", "New stack num " + depth + ".");		
+
+		for (int z=0; z<depth; ++z) {
+			int [] tmp;
+			IJ.showMessage("Slice " + z + "before extraction");
+			tmp = (int []) is2.getPixels(z+1);
+			IJ.showMessage("Slice " + z);
+			for (int d=0; d<dimension; ++d) {
+				ipix[z][d] = tmp[d];
+			}
+		}
+		int numPixel=pixels.size();
+		//IJ.showMessage("Costanza", "Found " + numPixel + " cells.");
+		IJ.showMessage("Costanza", "Setting red centers.");		
+		for (int iI=0; iI<numPixel; ++iI) {
+			ipix[pixels.get(iI).getZ()][pixels.get(iI).getX()+width*pixels.get(iI).getY()]
+				= (int) 0xff0000;
+		}
+		IJ.showMessage("Costanza", "Setting pixels.");		
+		for (int z=0; z<depth; ++z) {
+			is2.setPixels(ipix[z],z+1);
+		}		
+		ImagePlus ip2 = new ImagePlus(name, is2);
+		IJ.showMessage("Costanza", "Showing pixels.");		
+		ip2.show();
+	}
+		
+	private void showBoasInStack(Stack stack,Vector<BOA> boas, String name) {
+		int width = stack.getWidth();
+		int height = stack.getHeight();
+    
+		ImageStack is = new ImageStack(width, height);
+		for (int i = 0; i < stack.getDepth(); ++i) {
+			Image image = stack.getImage(i);
+			FloatProcessor fp = new FloatProcessor(image.getWidth(), image.getHeight());
+			for (int x = 0; x < width; ++x) {
+				for (int y = 0; y < height; ++y) {
+					float value = image.getIntensity(x, y);
+					fp.setf(x, y, value);
+				}
+			}
+			is.addSlice("Img", fp);
+		}
+		ImagePlus ip = new ImagePlus(name, is);
+		
+		ip.show();
+  }
+	
 	private void error(String message) {
 		IJ.showMessage("Error", "An error occured: " + message + "\n");
 	}

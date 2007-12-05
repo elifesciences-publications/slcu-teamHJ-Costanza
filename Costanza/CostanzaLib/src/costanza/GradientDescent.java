@@ -48,21 +48,27 @@ public class GradientDescent extends Processor {
                 }
             }
         }
+				System.out.println("Try to extract the background.");
         //Get background and set flag for background pixels to -1
         Collection bgTmp = c.getData().getData(DataId.stackBackground);
         Vector<Pixel> bg = null;
         if (bgTmp!=null && bgTmp.iterator().hasNext()) {
-            StackBackground sb = (StackBackground) bgTmp.iterator().next();
-            bg = new Vector<Pixel>(sb.getPixels());
-            int bgSize = bg.size();
-            for (int i=0; i<bgSize; ++i ) {
-                flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getY() ]
-                        [ bg.elementAt(i).getZ() ]=-1;
-            }
+					System.out.println("Size of background: " + c.getData().sizeOfData(DataId.stackBackground)); 
+					System.out.println("Test1.");
+					StackBackground sb = (StackBackground) bgTmp.iterator().next();
+					System.out.println("Test2.");
+					bg = new Vector<Pixel>(sb.getPixels());
+					int bgSize = bg.size();
+					System.out.println("Size of background: " + bg.size()); 
+					for (int i=0; i<bgSize; ++i ) {
+						flag[ bg.elementAt(i).getX() ][ bg.elementAt(i).getY() ]
+							[ bg.elementAt(i).getZ() ]=-1;
+					}
         } else {
-            bg = new Vector<Pixel>();
-            bg.setSize(0);
+					bg = new Vector<Pixel>();
+					bg.setSize(0);
         }
+				System.out.println("Happily extracted the background.");
         int count=1;
         //Find the maxima from each pixel
         for (int zStart=0; zStart<depth; ++zStart) {
