@@ -11,11 +11,13 @@
   <target name="compile" description="Compile the source ">
 	  <ant target="dist" dir="CostanzaLib" inheritAll="false"/>
 	  <ant target="compile" dir="CostanzaTextUI" inheritAll="false"/>
+	  <ant target="compile" dir="CostanzaIJPlugin" inheritAll="false"/>
   </target>
 
   <target name="clean" description="Clean up" >
 	  <!-- Delete the ${build} and ${dist} directory trees -->
 	  <ant target="clean" dir="CostanzaLib" inheritAll="false"/>
 	  <ant target="clean" dir="CostanzaTextUI" inheritAll="false"/>
+	  <ant target="clean" dir="CostanzaIJPlugin" inheritAll="false"/>
   </target>
 </project>
