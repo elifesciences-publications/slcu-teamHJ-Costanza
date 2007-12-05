@@ -1,22 +1,23 @@
 package costanza;
 
 import java.util.Collection;
+import java.util.Vector;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Iterator;
 
 /**Data is a container for different types of data used by Processor.
  */
 public class Data {
 
-    /**Maps dataId to a Set of Objects which represent data*/
+    /**Maps dataId to a Vector of Objects which represent data*/
     //private Map< DataId, ? > mMap;
     //private int maxCellId;
-    private Set<CellCenter> cellCenterData;
-    private Set<BOA> cellBOAData;
-    //private Set<CellCenter> cellCenterData;
-    private Set<CellIntensity> cellIntensityData;
-    private Set<CellNeighbors> cellNeighborData;
+    private Vector<CellCenter> cellCenterData;
+    private Vector<BOA> cellBOAData;
+    //private Vector<CellCenter> cellCenterData;
+    private Vector<CellIntensity> cellIntensityData;
+    private Vector<CellNeighbors> cellNeighborData;
     private StackBackground stackBackgroundData;
     private Set<DataId> dataKeys;
 
@@ -63,25 +64,25 @@ public class Data {
         switch (id) {
             case cellCenters:
                 if (!dataKeys.contains(id)) {
-                    cellCenterData = new TreeSet<CellCenter>();
+                    cellCenterData = new Vector<CellCenter>();
                 }
                 cellCenterData.add((CellCenter) o);
                 break;
             case cellBasinsOfAttraction:
                 if (!dataKeys.contains(id)) {
-                    cellBOAData = new TreeSet<BOA>();
+                    cellBOAData = new Vector<BOA>();
                 }
                 cellBOAData.add((BOA) o);
                 break;
             case cellIntensity:
                 if (!dataKeys.contains(id)) {
-                    cellIntensityData = new TreeSet<CellIntensity>();
+                    cellIntensityData = new Vector<CellIntensity>();
                 }
                 cellIntensityData.add((CellIntensity) o);
                 break;
             case cellNeighbors:
                 if (!dataKeys.contains(id)) {
-                    cellNeighborData = new TreeSet<CellNeighbors>();
+                    cellNeighborData = new Vector<CellNeighbors>();
                 }
                 cellNeighborData.add((CellNeighbors) o);
                 break;
@@ -104,7 +105,7 @@ public class Data {
         switch (id) {
             case cellCenters:
                 if (!dataKeys.contains(id)) {
-                    cellCenterData = new TreeSet<CellCenter>();
+                    cellCenterData = new Vector<CellCenter>();
                 }
                 while (iter.hasNext()) {
                     cellCenterData.add((CellCenter) iter.next());
@@ -112,7 +113,7 @@ public class Data {
                 break;
             case cellBasinsOfAttraction:
                 if (!dataKeys.contains(id)) {
-                    cellBOAData = new TreeSet<BOA>();
+                    cellBOAData = new Vector<BOA>();
                 }
                 while (iter.hasNext()) {
                     cellBOAData.add((BOA) iter.next());
@@ -120,7 +121,7 @@ public class Data {
                 break;
             case cellIntensity:
                 if (!dataKeys.contains(id)) {
-                    cellIntensityData = new TreeSet<CellIntensity>();
+                    cellIntensityData = new Vector<CellIntensity>();
                 }
                 while (iter.hasNext()) {
                     cellIntensityData.add((CellIntensity) iter.next());
@@ -128,7 +129,7 @@ public class Data {
                 break;
             case cellNeighbors:
                 if (!dataKeys.contains(id)) {
-                    cellNeighborData = new TreeSet<CellNeighbors>();
+                    cellNeighborData = new Vector<CellNeighbors>();
                 }
                 while (iter.hasNext()) {
                     cellNeighborData.add((CellNeighbors) iter.next());
