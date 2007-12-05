@@ -7,6 +7,7 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
 		panel = new MainPanel(plugin);
 		add(panel);
 		pack();
+		setResizable(false);
 	}
 
 //    MainPanel getPanel() {
