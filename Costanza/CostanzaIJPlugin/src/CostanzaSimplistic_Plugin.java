@@ -65,11 +65,11 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			gd.addCheckbox("Show gradient descent boas",false);
 
 			gd.addMessage("Postprocessing:");
-			gd.addCheckbox("Apply merger:",false);
-			gd.addNumericField("Merging radius:",0,1);
 			gd.addCheckbox("Apply remover:",false);
 			gd.addNumericField("Minimal peak intensity:",0,1);
 			gd.addNumericField("Minimal boa size:",0,1);
+			gd.addCheckbox("Apply merger:",false);
+			gd.addNumericField("Merging radius:",0,1);
 
 			gd.addMessage("Output:");
 			gd.addCheckbox("Show cell center stack:",true);
@@ -94,11 +94,11 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			boolean gdCenterOutput = (boolean) gd.getNextBoolean();
 			boolean gdBoaOutput = (boolean) gd.getNextBoolean();
 			//postproc
-			boolean mergerFlag = (boolean) gd.getNextBoolean();
-			float mergerR = (float) gd.getNextNumber();
 			boolean removeFlag = (boolean) gd.getNextBoolean();
 			float minIntensity = (float) gd.getNextNumber();
 			float minSize = (float) gd.getNextNumber();
+			boolean mergerFlag = (boolean) gd.getNextBoolean();
+			float mergerR = (float) gd.getNextNumber();
 			boolean ccOutFlag = (boolean) gd.getNextBoolean();			
 			boolean boaOutFlag = (boolean) gd.getNextBoolean();			
 
@@ -113,11 +113,11 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			Options meanFilterOptions = new Options();
 			meanFilterOptions.addOption("radius", new Float(smoothR));
 			Options gradientDescentOptions = new Options();
-			Options peakMergerOptions = new Options();
-			peakMergerOptions.addOption("radius", new Float(mergerR));
 			Options peakRemoverOptions = new Options();
 			peakRemoverOptions.addOption("intensityThreshold", new Float(minIntensity));
 			peakRemoverOptions.addOption("sizeThreshold", new Float(minSize));
+			Options peakMergerOptions = new Options();
+			peakMergerOptions.addOption("radius", new Float(mergerR));
       
 			// BACKGROUND EXTRACTION
 			if (bgFlag) {
@@ -190,18 +190,6 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			int numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
 			IJ.showMessage("Costanza", "GradientDescent found "+numPeak+" peaks.");
 			
-			// PEAK MERGER
-			if (mergerFlag) {
-				PeakMerger peakMerger = new PeakMerger();
-				try {
-					peakMerger.process(IJCase, peakMergerOptions);
-				} catch (Exception ex) {
-					error("Error in PeakMerger: " + ex.getMessage() + "\n");
-				}
-				numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
-				IJ.showMessage("Costanza", "PeakMerger merged into "+numPeak+" peaks.");
-			}
-
 			// PEAK REMOVER
 			if (removeFlag) {
 				PeakRemover peakRemover = new PeakRemover();
@@ -212,6 +200,18 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				}
 				numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
 				IJ.showMessage("Costanza", "PeakRemover removed into "+numPeak+" peaks.");
+			}
+
+			// PEAK MERGER
+			if (mergerFlag) {
+				PeakMerger peakMerger = new PeakMerger();
+				try {
+					peakMerger.process(IJCase, peakMergerOptions);
+				} catch (Exception ex) {
+					error("Error in PeakMerger: " + ex.getMessage() + "\n");
+				}
+				numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
+				IJ.showMessage("Costanza", "PeakMerger merged into "+numPeak+" peaks.");
 			}
 			
 			if (ccOutFlag) {
@@ -383,6 +383,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
   }
 	
 	private void error(String message) {
+		System.out.println("An error occured: " + message + "\n");
 		IJ.showMessage("Error", "An error occured: " + message + "\n");
 	}
 }
