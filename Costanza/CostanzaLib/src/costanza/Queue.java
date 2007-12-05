@@ -23,7 +23,7 @@ public class Queue {
      *
      * This member function steps through the queue and calls process() in all processors.
      */
-    public void run(Factory factory, Case currentCase) throws Exception {
+    public void run(Factory<Processor> factory, Case currentCase) throws Exception {
         while (true) {
             Job job = jobs.poll();
             if (job == null) {
@@ -31,7 +31,7 @@ public class Queue {
             }
             Processor processor;
             try {
-                processor = factory.createProcessor(job.getProcessorId());
+                processor = factory.create(job.getProcessorId());
             } catch (Exception exception) {
                 throw exception;
             }
