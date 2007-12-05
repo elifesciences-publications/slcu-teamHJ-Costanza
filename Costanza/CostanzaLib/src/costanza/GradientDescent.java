@@ -50,14 +50,13 @@ public class GradientDescent extends Processor {
         }
 				System.out.println("Try to extract the background.");
         //Get background and set flag for background pixels to -1
-        Collection bgTmp = c.getData().getData(DataId.stackBackground);
+        StackBackground sb = (StackBackground)c.getStackData(DataId.stackBackground);
         Vector<Pixel> bg = null;
-        if (bgTmp!=null && bgTmp.iterator().hasNext()) {
-					System.out.println("Size of background: " + c.getData().sizeOfData(DataId.stackBackground)); 
+        if (sb!=null) {
+					System.out.println("Size of background: " + c.sizeOfData(DataId.stackBackground)); 
 					System.out.println("Test1.");
-					StackBackground sb = (StackBackground) bgTmp.iterator().next();
 					System.out.println("Test2.");
-					bg = new Vector<Pixel>(sb.getPixels());
+					bg = new Vector<Pixel>(sb);
 					int bgSize = bg.size();
 					System.out.println("Size of background: " + bg.size()); 
 					for (int i=0; i<bgSize; ++i ) {
@@ -188,16 +187,16 @@ public class GradientDescent extends Processor {
         for (int i=0; i<numCellCenter; ++i) {
             cc.add(new CellCenter(i,max.get(i)));
         }
-        c.getData().attachDataCollection(DataId.cellCenters,cc);
+        c.attachDataCollection(DataId.cellCenters,cc);
         
         // Deliver the boas to the data in the case.
-        c.getData().attachDataCollection(DataId.cellBasinsOfAttraction,boa);
+        c.attachDataCollection(DataId.cellBasinsOfAttraction,boa);
         
         /** @todo Expand the background appropriately.
          */
         
-        System.out.println("CellcenterCounter:" + c.getData().sizeOfData(DataId.cellCenters));
-        System.out.println("BOACounter:" + c.getData().sizeOfData(DataId.cellBasinsOfAttraction));
+        System.out.println("CellcenterCounter:" + c.sizeOfData(DataId.cellCenters));
+        System.out.println("BOACounter:" + c.sizeOfData(DataId.cellBasinsOfAttraction));
         System.out.println("Gradient Descent found " + max.size() + " cells");
         return c;
     }

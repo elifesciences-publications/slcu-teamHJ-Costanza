@@ -50,10 +50,9 @@ public class Data {
                 return getCellData(id).size();
             } else if (id.name().startsWith("stack")) {
                 return 1;
-            } else {
-                return 0;
-            }
+            }    
         }
+            return 0; 
     }
 
     /**Attaches data Object to a dataId

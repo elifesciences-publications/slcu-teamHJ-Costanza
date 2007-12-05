@@ -162,7 +162,7 @@ public class CellDataManipulator extends Data{
     /**Merges all
      *@param int c1Id, int c2Id, int newCellId
      */
-    public void mergeAllData(int c1Id, int c2Id, int newCellId) {
+    public void mergeAllData(int c1Id, int c2Id, int newCellId) throws Exception{
 
 	Set<DataId> ids = getDataKeys();
 	Iterator iter = ids.iterator();
@@ -178,7 +178,7 @@ public class CellDataManipulator extends Data{
     /**Merges data of given type for cells identified with cell ids and assigns new cell id to merged cell.
      *@param DataId id, int c1Id, int c2Id, int newCellId
      */
-    public void merge(DataId id, int c1Id, int c2Id, int newCellId) {
+    public void merge(DataId id, int c1Id, int c2Id, int newCellId) throws Exception{
 	Collection cells = getCellData(id);
 	if (cells == null) {
 	    System.out.println("Data id: " + id + " not found in Data.");
