@@ -1,52 +1,56 @@
 package costanza;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.TreeSet;
 
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
  */
-public class CellNeighbors extends CellId{
+public class CellNeighbors extends TreeSet<Integer> implements CellId{
     
-    /**Collection of Strings identifiing Neighbors.*/
-    private Set<String> neighbors;
+    /**Id of the cell that data corresponds to*/
+    int cellId;
 
     
     /**Constructs empty BOA with id.
-     *@param String id
+     *@param id id
      */
     public CellNeighbors( int id ){
-        super(id);
-        neighbors = new TreeSet<String>();
+        cellId = id;
     }
     
     /**Constructs BOA including id Strings in Collection c and with id.
-     *@param String id, Collection<String> c
+     *@param int id, Collection<String> c
      */
-    public CellNeighbors( int id, Collection<String> c ) {
-        super(id);
-        neighbors = new TreeSet<String>(c);
+    public CellNeighbors( int id, Collection<Integer> c ) {
+        super(c);
+        cellId = id;
     }
     
     /**adds Neighbor to CellNeighbors.
-     *@param String s neighbor id to be inserted
+     *@param int s neighbor id to be inserted
      */
-    public void addNeighbor( String s ) {
-        neighbors.add(s);
+    public void addNeighbor( int n ) {
+        add(n);
     }
     
     /**adds Neighbors from the Collection.
-     *@param Collection<String> which content is to be inserted
+     *@param Collection<Int> which content is to be inserted
      */
-    public void addNeighbors( Collection<String> c ) {
-        neighbors.addAll(c);
+    public void addNeighbors( Collection<Integer> c ) {
+        addAll(c);
     }
     
-    /**checks if the Sting s is the neighbor id.
+    /**checks if the int s is the neighbor id.
      *@return boolean true for s being the neighbor id
      */
-    public boolean hasNeighbor( String s ){
-        return neighbors.contains( s );
+    public boolean hasNeighbor( int s ){
+        return contains( s );
     }
     
+    /**Gets the id of the data's cell.
+     *@return int
+     */
+    public int getId(){
+        return cellId;
+    }
 }

@@ -1,55 +1,63 @@
 package costanza;
 
 import java.util.Collection;
-import java.util.Vector;
+import java.util.TreeSet;
 
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
+ * extends TreeSet<Pixel>, implements CellId
  */
-public class BOA extends CellId{
+public class BOA extends TreeSet<Pixel> implements CellId{
     
-    /**Collection of pixels definig BOA.*/
-    private Vector<Pixel> pixels;
-    
+    /**Id of the cell that data corresponds to*/
+    int cellId;
+ 
     /**Constructs empty BOA with id.
-     *@param String id
+     *@param int id
      */
     public BOA( int id ){
-        super(id);
-        pixels = new Vector<Pixel>();
+        cellId = id;
     }
     
     /**Constructs BOA including Pixels in Collection c with id.
-     *@param String id
+     *@param int id, Collection<Pixel> c
      */
     public BOA( int id, Collection<Pixel> c ) {
-        super(id);
-        pixels = new Vector<Pixel>(c);
+        super(c);
+        cellId = id;
     }
     
     /**adds Pixel to the BOA.
      *@param Pixel p to be inserted into the BOA
      */
     public void addPixel( Pixel p ) {
-        pixels.add(p);
+        add(p);
     }
     
     /**adds Pixels from the Collection to the BOA.
      *@param Collection<Pixel> which content is to be inserted into the BOA
      */
     public void addPixels( Collection<Pixel> c ) {
-        pixels.addAll(c);
+        addAll(c);
     }
     
     /**checks if the Pixel p is in the BOA.
      *@return boolean true for pixel being in the BOA
      */
     public boolean hasPixel( Pixel p ){
-        return pixels.contains( p );
+        return contains( p );
     }
-    /**Provides collection of Pixels in the BOA
-     *@return Collection<Pixels>
+    
+        /**Gets the id of the data's cell.
+     *@return int
      */
-    public Collection<Pixel> getPixels(){
-        return pixels;
+    public int getId(){
+        return cellId;
     }
+    
+//    /**Provides collection of Pixels in the BOA
+//     *@return Collection<Pixels>
+//     */
+//    public Collection<Pixel> getPixels(){
+//        return pixels;
+//    }
 }

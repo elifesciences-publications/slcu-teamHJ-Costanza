@@ -10,11 +10,21 @@ public class Pixel {
     /**Create uninitialized Pixel*/
     public Pixel(){}
     
-    /**Create Pixel with indices x, y and z*/
+    /**Create Pixel with indices x, y and z
+     *@param int x, int y, int z
+     */
     public Pixel( int x,  int y, int z ) {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+    
+    /**Copy constructor 
+     * Create Pixel which is a copy of p*/
+    public Pixel( Pixel p ) {
+        this.x = p.x;
+        this.y = p.y;
+        this.z = p.z;
     }
     
     /**Get Pixel index in x direction.

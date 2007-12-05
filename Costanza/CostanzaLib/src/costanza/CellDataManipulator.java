@@ -7,25 +7,20 @@ import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Vector;
 import java.lang.Exception;
 
-public class CellDataManipulator {
-
-    private Data data;
+public class CellDataManipulator extends Data{
 
     /** Creates a new instance of CellDataManipulator */
-    public CellDataManipulator(Data d) {
-	this.data = d;
-    }
+    public CellDataManipulator() {}
 
     /**Reads data of given DataId to the file
      *@param DataId id, String fileName, Options opt
      */
     public void readData(DataId id, String fileName, Options opt) throws Exception {
-	Collection coll = data.getData(id);
+	Collection coll = getCellData(id);
 	if (coll != null) {
-	    data.clearData(id);
+	    clearData(id);
 	}
 
 
@@ -75,7 +70,7 @@ public class CellDataManipulator {
 	    }
 
 	    CellCenter cent = new CellCenter(i, x, y, z);
-	    data.attachData(DataId.cellCenters, cent);
+	    attachData(DataId.cellCenters, cent);
 	}
     }
 
@@ -87,11 +82,42 @@ public class CellDataManipulator {
 	return true;
     }
 
+    public Object getObject(DataId dId,int cId) throws Exception {
+        Object o = null;
+        Collection<?> v = getCellData(dId);
+        Iterator it = v.iterator();
+        switch(dId) {
+            case cellCenters:{
+                while (it.hasNext()) {
+                    
+                    CellCenter cc = (CellCenter)it.next();
+                    //System.out.println(cc.getId() + " " + cId);
+                    if (cc.getId() == cId) {
+                        o = cc;
+                        break;
+                    }
+                }
+            }
+            case cellBasinsOfAttraction: {
+                while (it.hasNext()) {
+                    BOA boa = (BOA) it.next();
+                    if (boa.getId() == cId) {
+                        o = boa;
+                        break;
+                    }
+                }
+            }
+        }
+        if (o==null)
+            throw new Exception("CellId " + cId + " not found" );
+
+        return o;
+    }
     /**Writes data of given DataId to the file
      *@param DataId id, String fileName, Options opt
      */
     public void writeData(DataId id, String fileName, Options opt) throws Exception {
-	Collection coll = data.getData(id);
+	Collection coll = getCellData(id);
 	if (coll == null) {
 	    System.out.println("Data id: " + id + " not found in Data.");
 	    return;
@@ -121,7 +147,7 @@ public class CellDataManipulator {
 		while (iter.hasNext()) {
 		    BOA elem = (BOA) iter.next();
 		    writer.write(elem.getId() + "\n");
-		    Iterator<Pixel> pixIter = elem.getPixels().iterator();
+		    Iterator<Pixel> pixIter = elem.iterator();
 		    while (pixIter.hasNext()) {
 			Pixel pix = pixIter.next();
 			writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n");
@@ -138,7 +164,7 @@ public class CellDataManipulator {
      */
     public void mergeAllData(int c1Id, int c2Id, int newCellId) {
 
-	Set<DataId> ids = data.getDataKeys();
+	Set<DataId> ids = getDataKeys();
 	Iterator iter = ids.iterator();
 
 	while (iter.hasNext()) {
@@ -153,7 +179,7 @@ public class CellDataManipulator {
      *@param DataId id, int c1Id, int c2Id, int newCellId
      */
     public void merge(DataId id, int c1Id, int c2Id, int newCellId) {
-	Collection cells = data.getData(id);
+	Collection cells = getCellData(id);
 	if (cells == null) {
 	    System.out.println("Data id: " + id + " not found in Data.");
 	    return;
@@ -182,9 +208,9 @@ public class CellDataManipulator {
 		int y = (e2.getY() + e1.getY()) / 2;
 		int z = (e2.getZ() + e1.getZ()) / 2;
 		CellCenter midC = new CellCenter(newCellId, x, y, z);
-		data.removeData(DataId.cellCenters, e1);
-		data.removeData(DataId.cellCenters, e2);
-		data.attachData(DataId.cellCenters, midC);
+		removeData(DataId.cellCenters, e1);
+		removeData(DataId.cellCenters, e2);
+		attachData(DataId.cellCenters, midC);
 		break;
 	    }
 	    case cellBasinsOfAttraction: {
@@ -206,20 +232,20 @@ public class CellDataManipulator {
 		    return;
 		}
 
-		BOA mergedB = new BOA(newCellId, e1.getPixels());
-		mergedB.addPixels(e2.getPixels());
+		BOA mergedB = new BOA(newCellId, e1);
+		mergedB.addPixels(e2);
 
-		data.removeData(DataId.cellBasinsOfAttraction, e1);
-		data.removeData(DataId.cellBasinsOfAttraction, e2);
+		removeData(DataId.cellBasinsOfAttraction, e1);
+		removeData(DataId.cellBasinsOfAttraction, e2);
 
-		data.attachData(DataId.cellBasinsOfAttraction, mergedB);
+		attachData(DataId.cellBasinsOfAttraction, mergedB);
 		break;
 	    }
 	}
     }
 
     public void removeAll(int cId) throws Exception {
-	Set<DataId> ids = data.getDataKeys();
+	Set<DataId> ids = getDataKeys();
 	Iterator iter = ids.iterator();
 	while (iter.hasNext()) {
 	    DataId id = (DataId) iter.next();
@@ -232,7 +258,7 @@ public class CellDataManipulator {
     private void remove(DataId dId, int cId) throws Exception {
 	if (dId.name().startsWith("cell")) {
 	    	//System.out.println("remove " + dId.name() + " with ID " + cId );
-	    data.removeData(dId, data.getObject(dId, cId));
+	    removeData(dId, getObject(dId, cId));
 	}
     }
 }
