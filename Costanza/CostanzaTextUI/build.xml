@@ -26,7 +26,7 @@
 		deprecation="on"
 		debuglevel="lines, vars, source"
 		verbose="no">
-		<compilerarg line="-Xlint:unchecked -cp ../CostanzaLib/dist/lib/CostanzaLib.jar:."/>
+		<compilerarg line="-Xlint:unchecked -cp CostanzaLib/dist/lib/CostanzaLib.jar:."/>
 	</javac>
   </target>
 
