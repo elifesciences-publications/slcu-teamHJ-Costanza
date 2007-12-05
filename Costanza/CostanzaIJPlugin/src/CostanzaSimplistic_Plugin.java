@@ -257,7 +257,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			ImageStack imageStack = imagePlus.getStack();
 			int slices = imageStack.getSize();
       
-			Stack stack = new Stack();
+			Stack stack = new Stack(imageStack.getWidth(), imageStack.getHeight());
       
 			for (int n = 1; n <= slices; ++n) {
 				ImageProcessor sliceProcessor = imageStack.getProcessor(n);
@@ -288,7 +288,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		return image;
 	}
 
-	private void showStack(Stack stack, String name) {
+	private void showStack(Stack stack, String name) throws Exception {
 		int width = stack.getWidth();
 		int height = stack.getHeight();
     
@@ -308,7 +308,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		ip.show();
 	}
 
-	private void showPixelsInStack(Stack stack,Vector<Pixel> pixels, String name) {
+	private void showPixelsInStack(Stack stack,Vector<Pixel> pixels, String name) throws Exception {
 		int width = stack.getWidth();
 		int height = stack.getHeight();
     

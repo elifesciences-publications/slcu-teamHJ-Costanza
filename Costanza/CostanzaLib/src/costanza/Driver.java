@@ -1,7 +1,5 @@
 package costanza;
 
-import java.lang.Exception;
-
 public class Driver implements Runnable {
     /** Queue with jobs. */
     private Queue jobs;
@@ -18,6 +16,7 @@ public class Driver implements Runnable {
         this.factory = factory;
     }
     
+    @Override
     public void run() {
         try {
             jobs.run(factory, currentCase);

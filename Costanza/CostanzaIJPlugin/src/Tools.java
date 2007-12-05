@@ -9,7 +9,7 @@ public class Tools {
 	ij.ImageStack imageStack = imagePlus.getStack();
 	int slices = imageStack.getSize();
 
-	Stack stack = new Stack();
+	Stack stack = new Stack(imageStack.getWidth(), imageStack.getHeight());
 	for (int n = 1; n <= slices; ++n) {
 	    ij.process.ImageProcessor sliceProcessor = imageStack.getProcessor(n);
 	    ij.process.ImageProcessor floatProcessor = sliceProcessor.convertToFloat();

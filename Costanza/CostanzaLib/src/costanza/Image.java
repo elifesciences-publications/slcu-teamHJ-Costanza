@@ -10,7 +10,6 @@ public class Image {
     /** A BufferedImage representing a Greyscale channel. */
     BufferedImage bi;
     final int imageType = BufferedImage.TYPE_BYTE_GRAY;
-	    
 
     /** Constructor for class Image.
      * This is the constructor that should be used to create a new Image object. 
@@ -28,17 +27,18 @@ public class Image {
     public Image(java.awt.Image image) {
 	if (image instanceof BufferedImage) {
 	    this.bi = (BufferedImage) image;
-	}else{
+	} else {
 	    this.bi = new BufferedImage(image.getWidth(null), image.getHeight(null), imageType);
 	    Graphics g = bi.getGraphics();
 	    g.drawImage(image, 0, 0, null);
-	    //throw new Exception("AWT Image sent is not of BufferedImage instance.");
+	//throw new Exception("AWT Image sent is not of BufferedImage instance.");
 	}
     }
 
     /**Implementation of the Objects clone method.
      * Naturally this clones our Object.
      */
+    @Override
     public Object clone() {
 	Image newImage = new Image(bi.getWidth(), bi.getHeight());
 	WritableRaster raster = bi.copyData(null);
@@ -53,14 +53,27 @@ public class Image {
     }
 
     /** Returns the width of the image. */
-    public int getWidth() { return bi.getWidth(); }
+    public int getWidth() {
+	return bi.getWidth();
+    }
 
     /** Returns the width of the image. */
-    public int getHeight() { return bi.getHeight(); }
+    public int getHeight() {
+	return bi.getHeight();
+    }
 
     /** Returns the intensity for pixel at position (x, y). */
     public float getIntensity(int x, int y) {
-	return bi.getRaster().getSampleFloat(x, y, 0);
+	float value = 0;
+	try {
+	    value = bi.getRaster().getSampleFloat(x, y, 0);
+	} catch (Exception e) {
+	    System.out.println("Image width: " + bi.getWidth());
+	    System.out.println("Image height: " + bi.getHeight());
+	    System.out.println("X: " + x);
+	    System.out.println("Y: " + y);
+	}
+	return value;
     }
 
     /** Sets the intensity for pixel at position (x, y). */

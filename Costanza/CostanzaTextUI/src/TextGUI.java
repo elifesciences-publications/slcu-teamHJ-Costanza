@@ -29,7 +29,7 @@ public class TextGUI {
 			peakRemoverFlag=0;
 		
 		System.out.println("Creating a Stack");
-		Stack stack = new Stack();
+		Stack stack = new Stack(10,10);
 		for(int i=0; i<10; ++i){
 			Image image = new Image(10, 10);
 			setTheImageRandom(image);
