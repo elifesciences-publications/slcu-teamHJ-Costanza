@@ -22,7 +22,8 @@ public class Driver implements Runnable {
         try {
             jobs.run(factory, currentCase);
         } catch (Exception exception) {
-            java.lang.System.err.println(exception.getMessage());
+            System.err.println("Costanza Driver caught an exception: " + exception.getMessage());
+			exception.printStackTrace();
         }
     }
 }
