@@ -17,7 +17,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     private Factory factory;
     private MainFrame frame;
 
-    @Override
+	//@Override
     public void run(String arg) {
 	initFactory();
 	frame = new MainFrame(this);
@@ -83,7 +83,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     }
 
     private void displayData(Case IJCase) {
-	Data data = IJCase.getData();
+			//Data data = IJCase.getData();
 
 	ij.IJ.setColumnHeadings("Cell id\tx\ty\tsize\tintensity");
 

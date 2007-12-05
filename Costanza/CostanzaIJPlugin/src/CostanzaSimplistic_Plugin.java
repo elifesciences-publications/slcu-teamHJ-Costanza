@@ -155,13 +155,13 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			}
 			if (gdCenterOutput) {
 				// Extract data and plot if applicable
-				Collection dataC = IJCase.getData().getData(DataId.cellCenters);
+				Collection dataC = IJCase.getCellData(DataId.cellCenters);
 				Vector<Pixel> dataP = new Vector<Pixel>();
 				Iterator dataI = dataC.iterator();
 				if (dataI.hasNext()) {
 					while (dataI.hasNext()) {
 						CellCenter center = (CellCenter) dataI.next();
-						dataP.add(center.getPixel());
+						dataP.add(center);
 					}
 					showPixelsInStack(IJCase.getOriginalStack(),dataP,"Cell centers after gd");
 				}
@@ -172,7 +172,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			if (gdBoaOutput) {
 				// Extract boas
 				Vector<BOA> boa = new Vector<BOA>();
- 				Collection boaCollection = IJCase.getData().getData(DataId.cellBasinsOfAttraction);				
+ 				Collection boaCollection = IJCase.getCellData(DataId.cellBasinsOfAttraction);				
  				if (boaCollection!=null && boaCollection.iterator().hasNext()) {
 					Iterator i = boaCollection.iterator();
 					while (i.hasNext()) {
@@ -187,7 +187,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				}											
 
 			}
-			int numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
+			int numPeak = IJCase.sizeOfData(DataId.cellCenters);
 			IJ.showMessage("Costanza", "GradientDescent found "+numPeak+" peaks.");
 			
 			// PEAK REMOVER
@@ -198,7 +198,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				} catch (Exception ex) {
 					error("Error in PeakRemover: " + ex.getMessage() + "\n");
 				}
-				numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
+				numPeak = IJCase.sizeOfData(DataId.cellCenters);
 				IJ.showMessage("Costanza", "PeakRemover removed into "+numPeak+" peaks.");
 			}
 
@@ -210,19 +210,19 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				} catch (Exception ex) {
 					error("Error in PeakMerger: " + ex.getMessage() + "\n");
 				}
-				numPeak = IJCase.getData().sizeOfData(DataId.cellCenters);
+				numPeak = IJCase.sizeOfData(DataId.cellCenters);
 				IJ.showMessage("Costanza", "PeakMerger merged into "+numPeak+" peaks.");
 			}
 			
 			if (ccOutFlag) {
 				// Extract data and plot if applicable
-				Collection dataC = IJCase.getData().getData(DataId.cellCenters);
+				Collection dataC = IJCase.getCellData(DataId.cellCenters);
 				Vector<Pixel> dataP = new Vector<Pixel>();
 				Iterator dataI = dataC.iterator();
 				if (dataI.hasNext()) {
 					while (dataI.hasNext()) {
 						CellCenter center = (CellCenter) dataI.next();
-						dataP.add(center.getPixel());
+						dataP.add(center);
 					}
 					showPixelsInStack(IJCase.getOriginalStack(),dataP,"Cell centers");
 				}
@@ -233,7 +233,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			if (boaOutFlag) {
 				// Extract boas
 				Vector<BOA> boa = new Vector<BOA>();
- 				Collection boaCollection = IJCase.getData().getData(DataId.cellBasinsOfAttraction);				
+ 				Collection boaCollection = IJCase.getCellData(DataId.cellBasinsOfAttraction);				
  				if (boaCollection!=null && boaCollection.iterator().hasNext()) {
 					Iterator i = boaCollection.iterator();
 					while (i.hasNext()) {

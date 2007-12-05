@@ -165,11 +165,13 @@ public class GradientDescent extends Processor {
                 }
             }
         }
+				System.out.println("Test attach0.5");
         //Save the basins of attraction
         Vector<BOA> boa = new Vector<BOA>();
         for (int i=0; i<max.size(); ++i) {
             boa.add(new BOA(i));
         }
+				System.out.println("Test attach0.5");
         for (int x=0; x<width; ++x) {
             for (int y=0; y<height; ++y) {
                 for (int z=0; z<depth; ++z) {
@@ -187,10 +189,12 @@ public class GradientDescent extends Processor {
         for (int i=0; i<numCellCenter; ++i) {
             cc.add(new CellCenter(i,max.get(i)));
         }
+				System.out.println("Test attach1");
         c.attachDataCollection(DataId.cellCenters,cc);
-        
+				System.out.println("Test attach2");
         // Deliver the boas to the data in the case.
         c.attachDataCollection(DataId.cellBasinsOfAttraction,boa);
+				System.out.println("Test attach3");
         
         /** @todo Expand the background appropriately.
          */

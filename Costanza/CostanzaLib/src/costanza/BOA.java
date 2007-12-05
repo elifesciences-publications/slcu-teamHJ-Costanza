@@ -1,12 +1,12 @@
 package costanza;
 
 import java.util.Collection;
-import java.util.TreeSet;
+import java.util.Vector;
 
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
  * extends TreeSet<Pixel>, implements CellId
  */
-public class BOA extends TreeSet<Pixel> implements CellId{
+public class BOA extends Vector<Pixel> implements CellId{
     
     /**Id of the cell that data corresponds to*/
     int cellId;

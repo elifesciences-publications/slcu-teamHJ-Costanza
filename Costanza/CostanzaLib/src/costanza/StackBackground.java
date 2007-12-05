@@ -1,9 +1,9 @@
 package costanza;
 
 import java.util.Collection;
-import java.util.TreeSet;
+import java.util.Vector;
 
-public class StackBackground extends TreeSet<Pixel>{
+public class StackBackground extends Vector<Pixel>{
     
     /** Creates a new instance of StackBackground */
     public StackBackground(){}

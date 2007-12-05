@@ -17,11 +17,11 @@ public class Driver implements Runnable {
     }
     
     public void run() {
-        try {
-            jobs.run(factory, currentCase);
-        } catch (Exception exception) {
-            System.err.println("Costanza Driver caught an exception: " + exception.getMessage());
+		try {
+			jobs.run(factory, currentCase);
+		} catch (Exception exception) {
+			System.err.println("Costanza Driver caught an exception: " + exception.getMessage());
 			exception.printStackTrace();
-        }
-    }
+		}
+	}
 }
