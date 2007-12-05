@@ -335,14 +335,14 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		int depth = is2.getSize();
 		int [][] ipix = new int [depth][dimension];
 		IJ.showMessage("Costanza", "New stack num " + depth + ".");		
-
 		for (int z=0; z<depth; ++z) {
-			int [] tmp;
+			float [] tmp;
 			IJ.showMessage("Slice " + z + "before extraction");
-			tmp = (int []) is2.getPixels(z+1);
+			tmp = (float[]) is2.getPixels(z+1);
+				
 			IJ.showMessage("Slice " + z);
 			for (int d=0; d<dimension; ++d) {
-				ipix[z][d] = tmp[d];
+				ipix[z][d] = (int) tmp[d];
 			}
 		}
 		int numPixel=pixels.size();
