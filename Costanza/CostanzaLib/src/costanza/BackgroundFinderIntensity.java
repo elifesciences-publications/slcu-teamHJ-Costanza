@@ -24,7 +24,7 @@ public class BackgroundFinderIntensity extends Processor {
 		}
 		
 		// Create vector with pixels that stores the background
-		Vector<Pixel> bgPixel = new Vector<Pixel>();
+		StackBackground bgPixel = new StackBackground();
 		
 		int width = c.getStack().getWidth();
 		int height = c.getStack().getHeight();
