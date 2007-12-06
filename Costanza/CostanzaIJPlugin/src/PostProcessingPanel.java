@@ -1,10 +1,32 @@
 
+import costanza.Job;
+import costanza.Options;
+import costanza.Queue;
+
 public class PostProcessingPanel extends java.awt.Panel {
+
 	MainPanel mainPanel;
-	
+
 	PostProcessingPanel(MainPanel mainPanel) {
 		initComponents();
 		this.mainPanel = mainPanel;
+	}
+
+	void addPeakMerger(Queue jobs) throws Exception {
+		if (peakMergerCheckbox.getState() == true) {
+			Options options = new Options();
+			options.addOption("radius", new Float(radiusTextField.getText()));
+			jobs.addJob(new Job("peakmerger", options));
+		}
+	}
+
+	void addPeakRemover(Queue jobs) throws Exception {
+		if (peakRemoverCheckbox.getState() == true) {
+			Options options = new Options();
+			options.addOption("sizeThreshold", new Float(sizeThresholdTextField.getText()));
+			options.addOption("intensityThreshold", new Float(intensityThresholdTextField.getText()));
+			jobs.addJob(new Job("peakremover", options));
+		}
 	}
 
 	/** This method is called from within the constructor to
@@ -14,10 +36,121 @@ public class PostProcessingPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        setBackground(java.awt.Color.gray);
-        setLayout(new java.awt.BorderLayout());
+        peakRemoverCheckbox = new java.awt.Checkbox();
+        sizeThresholdLabel = new java.awt.Label();
+        sizeThresholdTextField = new java.awt.TextField();
+        intensityThresholdLabel = new java.awt.Label();
+        intensityThresholdTextField = new java.awt.TextField();
+        peakMergerCheckbox = new java.awt.Checkbox();
+        radiusLabel = new java.awt.Label();
+        radiusTextField = new java.awt.TextField();
+
+        setBackground(java.awt.Color.white);
+        setLayout(new java.awt.GridBagLayout());
+
+        peakRemoverCheckbox.setLabel("Remove peaks.");
+        peakRemoverCheckbox.setState(true);
+        peakRemoverCheckbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                peakRemoverCheckboxItemStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(peakRemoverCheckbox, gridBagConstraints);
+
+        sizeThresholdLabel.setAlignment(java.awt.Label.RIGHT);
+        sizeThresholdLabel.setText("Size threshold:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(sizeThresholdLabel, gridBagConstraints);
+
+        sizeThresholdTextField.setText("10");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(sizeThresholdTextField, gridBagConstraints);
+
+        intensityThresholdLabel.setAlignment(java.awt.Label.RIGHT);
+        intensityThresholdLabel.setText("Intensity threshold:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        add(intensityThresholdLabel, gridBagConstraints);
+
+        intensityThresholdTextField.setText("0.1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(intensityThresholdTextField, gridBagConstraints);
+
+        peakMergerCheckbox.setLabel("Merge peaks.");
+        peakMergerCheckbox.setState(true);
+        peakMergerCheckbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                peakMergerCheckboxItemStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(peakMergerCheckbox, gridBagConstraints);
+
+        radiusLabel.setAlignment(java.awt.Label.RIGHT);
+        radiusLabel.setText("Radius:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(radiusLabel, gridBagConstraints);
+
+        radiusTextField.setText("5.0");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 4;
+        add(radiusTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+	private void peakRemoverCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_peakRemoverCheckboxItemStateChanged
+		if (peakRemoverCheckbox.getState() == true) {
+			sizeThresholdLabel.setEnabled(true);
+			sizeThresholdTextField.setEnabled(true);
+			intensityThresholdLabel.setEnabled(true);
+			intensityThresholdTextField.setEnabled(true);
+		} else {
+			sizeThresholdLabel.setEnabled(false);
+			sizeThresholdTextField.setEnabled(false);
+			intensityThresholdLabel.setEnabled(false);
+			intensityThresholdTextField.setEnabled(false);
+		}
+	}//GEN-LAST:event_peakRemoverCheckboxItemStateChanged
+
+	private void peakMergerCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_peakMergerCheckboxItemStateChanged
+		if (peakMergerCheckbox.getState() == true) {
+			radiusLabel.setEnabled(true);
+			radiusTextField.setEnabled(true);
+		} else {
+			radiusLabel.setEnabled(false);
+			radiusTextField.setEnabled(false);
+		}
+	}//GEN-LAST:event_peakMergerCheckboxItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Label intensityThresholdLabel;
+    private java.awt.TextField intensityThresholdTextField;
+    private java.awt.Checkbox peakMergerCheckbox;
+    private java.awt.Checkbox peakRemoverCheckbox;
+    private java.awt.Label radiusLabel;
+    private java.awt.TextField radiusTextField;
+    private java.awt.Label sizeThresholdLabel;
+    private java.awt.TextField sizeThresholdTextField;
     // End of variables declaration//GEN-END:variables
 }

@@ -1,14 +1,17 @@
 
 import costanza.Case;
+import costanza.CellCenter;
+import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
-import costanza.Job;
-import costanza.Options;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn {
 
@@ -22,7 +25,11 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		frame.setVisible(true);
 		pluginIsRunning = true;
 		while (pluginIsRunning == true) {
-		// Wait for plugin to finish...
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		}
 	}
 
@@ -41,6 +48,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("invert", costanza.Inverter.class);
 		factory.register("meanfilter", costanza.MeanFilter.class);
 		factory.register("null", costanza.NullProcessor.class);
+		factory.register("gradientdescent", costanza.GradientDescent.class);
+		factory.register("peakremover", costanza.PeakRemover.class);
+		factory.register("peakmerger", costanza.PeakMerger.class);
 	}
 
 	public void start(MainPanel panel) {
@@ -57,10 +67,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			Case IJCase = new Case(stack);
 
 			Queue jobs = new Queue();
-			
-			// Add inverter.
-			jobs.addJob(panel.getInvertJob());
-				
+			panel.addJobs(jobs);
+
 			Driver driver = new Driver(jobs, IJCase, factory);
 			driver.run();
 
@@ -77,12 +85,17 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private void displayData(Case IJCase) {
-//		Data data = IJCase.getData();
-
-		ij.IJ.setColumnHeadings("Cell id\tx\ty\tsize\tintensity");
-
-		ij.IJ.write("1\t1.0\t2.3\t45\t0.12");
-		ij.IJ.write("2\t1.4\t1.3\t23\t0.7");
+		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz");
+		
+		Object[] cellCenters = IJCase.getCellData(DataId.cellCenters).toArray();
+		
+		for (int i = 0; i < cellCenters.length; ++i) {
+			String line = new String();
+			line += i + "\t";
+			CellCenter cellCenter = (CellCenter) cellCenters[i];
+			line += cellCenter.getX() + "\t" + cellCenter.getY() + "\t" + cellCenter.getZ();
+			ij.IJ.write(line);
+		}
 	}
 }
 

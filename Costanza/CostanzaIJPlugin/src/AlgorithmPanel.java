@@ -1,6 +1,7 @@
 
 import costanza.Job;
 import costanza.Options;
+import costanza.Queue;
 
 public class AlgorithmPanel extends java.awt.Panel {
 
@@ -11,16 +12,12 @@ public class AlgorithmPanel extends java.awt.Panel {
 		this.mainPanel = mainPanel;
 	}
 
-	Job getInvertJob() {
-		String processorId;
+	void addInverterJob(Queue jobs) throws Exception {
 		if (invertCheckbox.getState() == true) {
-			processorId = "invert";
-		} else {
-			processorId = "null";
+			jobs.addJob(new Job("invert", null));
 		}
-		return new Job(processorId, null);
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -30,48 +27,15 @@ public class AlgorithmPanel extends java.awt.Panel {
     private void initComponents() {
 
         invertCheckbox = new java.awt.Checkbox();
-        panel1 = new java.awt.Panel();
-        cancelButton = new java.awt.Button();
-        startButton = new java.awt.Button();
 
-        setLayout(new java.awt.BorderLayout());
-
+        invertCheckbox.setBackground(java.awt.Color.white);
         invertCheckbox.setLabel("Invert image(s) before processing.");
-        add(invertCheckbox, java.awt.BorderLayout.CENTER);
-
-        cancelButton.setLabel("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonActionPerformed(evt);
-            }
-        });
-        panel1.add(cancelButton);
-
-        startButton.setLabel("Start");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonActionPerformed(evt);
-            }
-        });
-        panel1.add(startButton);
-
-        add(panel1, java.awt.BorderLayout.SOUTH);
+        add(invertCheckbox);
     }// </editor-fold>//GEN-END:initComponents
-
-	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-		mainPanel.startButtonPressed();
-	}//GEN-LAST:event_startButtonActionPerformed
-
-	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		mainPanel.cancelButtonPressed();
-	}//GEN-LAST:event_cancelButtonActionPerformed
 	
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Button cancelButton;
     private java.awt.Checkbox invertCheckbox;
-    private java.awt.Panel panel1;
-    private java.awt.Button startButton;
     // End of variables declaration//GEN-END:variables
 	
 }

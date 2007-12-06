@@ -1,7 +1,9 @@
 
 import costanza.Job;
+import costanza.Queue;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -18,6 +20,7 @@ public class MainPanel extends java.awt.Panel {
 	public MainPanel(Costanza_Plugin plugin) {
 		this.plugin = plugin;
 		setLayout(new BorderLayout(10, 10));
+		setBackground(new java.awt.Color(255, 255, 255));
 
 		// Add Choice to MainPanel.
 		mainChoice = new java.awt.Choice();
@@ -39,14 +42,47 @@ public class MainPanel extends java.awt.Panel {
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
 		cardPanel.add(preProcessingPanel = new PreProcessingPanel(this), "PreProcessingPanel");
 		cardPanel.add(postProcessingPanel = new PostProcessingPanel(this), "PostProcessingPanel");
-		add(cardPanel, java.awt.BorderLayout.SOUTH);
+		add(cardPanel, java.awt.BorderLayout.CENTER);
+		
+		// Add button Panel.
+		java.awt.Panel buttonPanel = new java.awt.Panel();
+		buttonPanel.setBackground(new java.awt.Color(255, 255, 255));
+		
+		java.awt.Button cancelButton = new java.awt.Button();
+		java.awt.Button startButton = new java.awt.Button();
+		
+        cancelButton.setLabel("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonPressed();
+            }
+        });
+		buttonPanel.add(cancelButton);
+
+        startButton.setLabel("Start");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonPressed();
+            }
+        });
+        buttonPanel.add(startButton);
+
+        add(buttonPanel, java.awt.BorderLayout.SOUTH);
 	}
 
-	void cancelButtonPressed() {
+	void addJobs(Queue jobs) throws Exception {
+		algorithmPanel.addInverterJob(jobs);
+		preProcessingPanel.addMeanFilterJob(jobs);
+		jobs.addJob(new Job("gradientdescent", null));
+		postProcessingPanel.addPeakRemover(jobs);
+		postProcessingPanel.addPeakMerger(jobs);
+	}
+
+	private void cancelButtonPressed() {
 		plugin.stop();
 	}
 
-	void startButtonPressed() {
+	private void startButtonPressed() {
 		plugin.start(this);
 	}
 
@@ -61,9 +97,5 @@ public class MainPanel extends java.awt.Panel {
 		} else {
 			Utility.printError("Unexpected error in menuChanged()");
 		}
-	}
-	
-	public Job getInvertJob() {
-		return algorithmPanel.getInvertJob();
 	}
 }

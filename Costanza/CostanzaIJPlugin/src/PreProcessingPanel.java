@@ -1,4 +1,8 @@
 
+import costanza.Job;
+import costanza.Options;
+import costanza.Queue;
+
 public class PreProcessingPanel extends java.awt.Panel {
 
 	MainPanel mainPanel;
@@ -11,6 +15,18 @@ public class PreProcessingPanel extends java.awt.Panel {
 		this.mainPanel = mainPanel;
 	}
 
+	void addMeanFilterJob(Queue jobs) throws Exception {
+		if (meanFilterCheckbox.getState() == true) {
+			Float radius = new Float(radiusTextField.getText());
+			int repeat = new Integer(repeatTextField.getText()).intValue();
+			for (int i = 0; i < repeat; ++i) {
+				Options options = new Options();
+				options.addOption("radius", radius);
+				jobs.addJob(new Job("meanfilter", options));
+			}
+		}
+	}
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -19,9 +35,64 @@ public class PreProcessingPanel extends java.awt.Panel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(java.awt.Color.green);
-        setLayout(new java.awt.BorderLayout());
+        meanFilterCheckbox = new java.awt.Checkbox();
+        meanFilterPanel = new java.awt.Panel();
+        radiusLabel = new java.awt.Label();
+        radiusTextField = new java.awt.TextField();
+        repeatLabel = new java.awt.Label();
+        repeatTextField = new java.awt.TextField();
+
+        setBackground(java.awt.Color.white);
+        setForeground(java.awt.Color.black);
+        setLayout(new java.awt.GridLayout(2, 1));
+
+        meanFilterCheckbox.setLabel("Smooth image before processing.");
+        meanFilterCheckbox.setState(true);
+        meanFilterCheckbox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                meanFilterCheckboxItemStateChanged(evt);
+            }
+        });
+        add(meanFilterCheckbox);
+
+        meanFilterPanel.setLayout(new java.awt.GridLayout(2, 2));
+
+        radiusLabel.setAlignment(java.awt.Label.RIGHT);
+        radiusLabel.setText("Radius:");
+        meanFilterPanel.add(radiusLabel);
+
+        radiusTextField.setText("5.0");
+        meanFilterPanel.add(radiusTextField);
+
+        repeatLabel.setAlignment(java.awt.Label.RIGHT);
+        repeatLabel.setText("Number of times to repeat:");
+        meanFilterPanel.add(repeatLabel);
+
+        repeatTextField.setText("2");
+        meanFilterPanel.add(repeatTextField);
+
+        add(meanFilterPanel);
     }// </editor-fold>//GEN-END:initComponents
+	private void meanFilterCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_meanFilterCheckboxItemStateChanged
+		if (meanFilterCheckbox.getState() == true) {
+			radiusLabel.setEnabled(true);
+			radiusTextField.setEnabled(true);
+			repeatLabel.setEnabled(true);
+			repeatTextField.setEnabled(true);
+		} else {
+			radiusLabel.setEnabled(false);
+			radiusTextField.setEnabled(false);
+			repeatLabel.setEnabled(false);
+			repeatTextField.setEnabled(false);
+		}
+}//GEN-LAST:event_meanFilterCheckboxItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Checkbox meanFilterCheckbox;
+    private java.awt.Panel meanFilterPanel;
+    private java.awt.Label radiusLabel;
+    private java.awt.TextField radiusTextField;
+    private java.awt.Label repeatLabel;
+    private java.awt.TextField repeatTextField;
     // End of variables declaration//GEN-END:variables
 }
