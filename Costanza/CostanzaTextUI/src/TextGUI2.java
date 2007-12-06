@@ -26,18 +26,19 @@ public class TextGUI2 {
 
     /** Creates a new instance of TextGUI */
     public TextGUI2(String baseName) throws Exception {
-	final int invertFlag = 1;
-	final int meanFilterFlag = 1;
-	final int gradientDescentFlag = 1;
-	final int intensityFinderFlag = 1;
-	final int peakMergerFlag = 0;
-	final int peakRemoverFlag = 0;
-
+	final boolean invertFlag = true;
+	final boolean meanFilterFlag = true;
+	final boolean gradientDescentFlag = true;
+	final boolean intensityFinderFlag = true;
+	final boolean peakMergerFlag = false;
+	final boolean peakRemoverFlag = false;
+	final boolean randomImages = (baseName.length() > 0) ? false : true;
+	    
 	System.out.println("Creating a Stack");
-	Stack stack = getImageStack(baseName);
+	Stack stack = readImageStack(baseName, 20, randomImages);
 	Case myCase = new Case(stack);
 
-	if (invertFlag != 0) {
+	if (invertFlag) {
 	    System.out.println("### Applying Invert ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -47,7 +48,7 @@ public class TextGUI2 {
 	    myCase = inverter.process(myCase, options);
 	    System.out.println("Done!\n");
 	}
-	if (meanFilterFlag != 0) {
+	if (meanFilterFlag) {
 	    System.out.println("### Applying MeanFilter ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -58,7 +59,7 @@ public class TextGUI2 {
 	    myCase = meanFilter.process(myCase, options);
 	    System.out.println("Done!\n");
 	}
-	if (gradientDescentFlag != 0) {
+	if (gradientDescentFlag) {
 	    System.out.println("### Applying GradientDescent ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -68,7 +69,7 @@ public class TextGUI2 {
 	    myCase = gradientDescent.process(myCase, options);
 	    System.out.println("Done!\n");
 	}
-	if (intensityFinderFlag != 0) {
+	if (intensityFinderFlag) {
 	    System.out.println("### Applying IntensityFinder ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -78,7 +79,7 @@ public class TextGUI2 {
 	    myCase = intensityFinder.process(myCase, options);
 	    System.out.println("Done!\n");
 	}
-	if (peakMergerFlag != 0) {
+	if (peakMergerFlag) {
 	    System.out.println("### Applying PeakMerger ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -89,7 +90,7 @@ public class TextGUI2 {
 	    myCase = peakMerger.process(myCase, options);
 	    System.out.println("Done!\n");
 	}
-	if (peakRemoverFlag != 0) {
+	if (peakRemoverFlag) {
 	    System.out.println("### Applying PeakRemover ###");
 	    System.out.println("Creating options");
 	    Options options = new Options();
@@ -105,43 +106,100 @@ public class TextGUI2 {
 
 	System.out.println("FINAL RESULT\n\n");
 	System.out.println("Saving the images.");
-	saveImageStack(baseName, myCase.getStack());
+	writeImageStack(baseName, myCase.getStack());
 
     }
 
-    private Stack getImageStack(String baseName) throws Exception {
+    private Stack readImageStack(String baseName, int numImages, boolean randomImages) throws Exception {
 	Stack stack = new Stack();
-	String fname = "";
-	for (int i = 0; i < 20; ++i) {
+	if (randomImages) {
+	    for (int i = 0; i < numImages; ++i) {
+		stack.addImage(createRandomImage(10, 10));
+	    }
+	} else {
+	    String fname = "";
+	    for (int i = 0; i < numImages; ++i) {
+		if (i < 10) {
+		    fname = baseName + "0" + i + ".jpg";
+		} else {
+		    fname = baseName + i + ".jpg";
+		}
+		System.out.println("Opening image: " + fname);
+		Image image = readImage(fname);
+		stack.addImage(image);
+	    }
+	}
+	return stack;
+    }
+
+    private Image readImage(String baseName) throws IOException {
+	BufferedImage bi = null;
+	bi = ImageIO.read(new File(baseName));
+	Image image = new Image(bi);
+	return image;
+    }
+
+    private void writeImageStack(String baseName, Stack stack) {
+	for (int i = 0; i < stack.getDepth(); i++) {
+	    Image image = stack.getImage(i);
+	    String fname = "";
 	    if (i < 10) {
 		fname = baseName + "0" + i + ".jpg";
 	    } else {
 		fname = baseName + i + ".jpg";
 	    }
-	    System.out.println("Opening image: " + fname);
-	    Image image = getImage(fname);
-	    stack.addImage(image);
+	    try {
+		ImageIO.write(image.getImage(), "jpg", new File(fname));
+	    } catch (IOException e) {
+		System.err.println("Error: Could not write to file: " + e.getMessage());
+	    }
 	}
-	return stack;
     }
 
-    private Image getImage(String baseName) {
-	BufferedImage bi = null;
-	try {
-	    bi = ImageIO.read(new File(baseName));
-	} catch (IOException e) {
-	    System.out.println("Couldn't read file " + baseName + ": " + e.getMessage());
-	}
-	int w = bi.getWidth(null);
-	int h = bi.getHeight(null);
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param w the width of the created image to use.
+     * @param h the height of the created image to use.
+     */
+    private Image createSinglePixelImage(int w, int h) {
 	Image image = new Image(w, h);
-	for (int i = 0; i < w; i++) {
-	    for (int j = 0; j < h; j++) {
-		image.setIntensity(i, j, bi.getRaster().getSampleFloat(i, j, 0));
-	    //System.out.println("Setting intensity: "+image.getIntensity(i,j));
+	if (w < 6 || h < 6) {
+	    return image;
+	}
+	for (int i = 0; i < image.getWidth(); ++i) {
+	    for (int j = 0; j < image.getHeight(); ++j) {
+		image.setIntensity(i, j, (i == 5 && j == 5) ? 1 : 0);
 	    }
 	}
 	return image;
+    }
+
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param w the width of the created image to use.
+     * @param h the height of the created image to use.
+     */
+    private Image createRandomImage(int w, int h) {
+	Image image = new Image(w, h);
+	for (int i = 0; i < image.getWidth(); ++i) {
+	    for (int j = 0; j < image.getHeight(); ++j) {
+		image.setIntensity(i, j, (float) Math.random() * 255);
+	    }
+	}
+	return image;
+    }
+
+    /**
+     * Print an Image to the terminal.
+     * @param image the image to print
+     */
+    private void printImage(Image image) {
+	for (int i = 0; i < image.getHeight(); ++i) {
+	    for (int j = 0; j < image.getWidth(); ++j) {
+		System.out.print(image.getIntensity(j, i) + " ");
+	    }
+	    System.out.println();
+	}
     }
 
     private float[] handlepixels(BufferedImage img, int x, int y, int w, int h) {
@@ -151,11 +209,11 @@ public class TextGUI2 {
 	try {
 	    pg.grabPixels();
 	} catch (InterruptedException e) {
-	    System.err.println("interrupted waiting for pixels!");
+	    System.err.println("Interrupted waiting for pixels!");
 	    return null;
 	}
 	if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
-	    System.err.println("image fetch aborted or errored");
+	    System.err.println("Image fetch aborted or errored");
 	    return null;
 	}
 	for (int j = 0; j < h; j++) {
@@ -175,40 +233,12 @@ public class TextGUI2 {
 	return (float) (red);
     }
 
-    private void saveImageStack(String baseName, Stack stack) {
-	for (int i = 0; i < stack.getDepth(); i++) {
-	    Image image = stack.getImage(i);
-	    String fname = "";
-	    if (i < 10) {
-		fname = baseName + "0" + i + ".jpg";
-	    } else {
-		fname = baseName + i + ".jpg";
-	    }
-	    try {
-		BufferedImage bi = image.getImage();//toAwtImage(image); // retrieve image
-		ImageIO.write(bi, "jpg", new File(fname));
-	    } catch (IOException e) {
-	    }
-	}
-    }
-
-    private BufferedImage toAwtImage(Image image) {
-	BufferedImage bi = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
-	for (int i = 0; i < image.getWidth(); i++) {
-	    for (int j = 0; j < image.getHeight(); j++) {
-		float intensity = image.getIntensity(i, j) * 255;
-		bi.getRaster().setSample(i, j, 0, intensity);
-	    }
-	}
-	return bi;
-    }
-
     public static void main(String[] argv) {
 	try {
-	    new TextGUI2(argv[0]);
+	    new TextGUI2(argv.length > 0 ? argv[0] : "");
 	} catch (Exception e) {
-	    System.out.print("Error: ");
-	    System.out.println(e.getMessage());
+	    System.err.println("Error: " + e.getMessage());
+	    e.printStackTrace();
 	}
     }
 }
