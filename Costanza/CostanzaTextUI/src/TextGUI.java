@@ -33,7 +33,7 @@ public class TextGUI {
 	final boolean peakMergerFlag = false;
 	final boolean peakRemoverFlag = false;
 	final boolean randomImages = (baseName.length() > 0) ? false : true;
-	    
+
 	System.out.println("Creating a Stack");
 	Stack stack = readImageStack(baseName, 20, randomImages);
 	Case myCase = new Case(stack);
@@ -233,9 +233,21 @@ public class TextGUI {
 	return (float) (red);
     }
 
+    private static void tryConversion() throws IOException {
+	File file = new File("/home/whitman/michael/projects/imageProcessing/data/43SmallZoom/jpg/009.jpg");
+	BufferedImage bi = ImageIO.read(file);
+	for (int i = 0; i < 1000; i++) {
+	    Image image = new Image(bi);
+	    Image imageClone = (Image) image.clone();
+	    bi = imageClone.getImage();
+	}
+	ImageIO.write(bi, "jpg", new File("apa.jpg"));
+    }
+
     public static void main(String[] argv) {
 	try {
-	    new TextGUI(argv.length > 0 ? argv[0] : "");
+	    //new TextGUI(argv.length > 0 ? argv[0] : "");
+	    tryConversion();
 	} catch (Exception e) {
 	    System.err.println("Error: " + e.getMessage());
 	    e.printStackTrace();
