@@ -1,6 +1,5 @@
 package costanza;
 
-import java.awt.Graphics;
 import java.awt.image.WritableRaster;
 import java.awt.image.BufferedImage;
 
@@ -29,9 +28,7 @@ public class Image {
 	    this.bi = (BufferedImage) image;
 	} else {
 	    this.bi = new BufferedImage(image.getWidth(null), image.getHeight(null), imageType);
-	    Graphics g = bi.getGraphics();
-	    g.drawImage(image, 0, 0, null);
-	//throw new Exception("AWT Image sent is not of BufferedImage instance.");
+	    bi.getGraphics().drawImage(image, 0, 0, null);
 	}
     }
 
