@@ -1,176 +1,244 @@
 
 import costanza.Image;
 import costanza.Stack;
+import costanza.Inverter;
 import costanza.Case;
 import costanza.Options;
-import costanza.Inverter;
-import costanza.BackgroundFinderIntensity;
 import costanza.MeanFilter;
 import costanza.GradientDescent;
 import costanza.IntensityFinder;
 import costanza.PeakMerger;
 import costanza.PeakRemover;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.PixelGrabber;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 /**
  * The Text version of our GUI.
  * @author michael
  */
 public class TextGUI {
-	
-	/** Creates a new instance of TextGUI */
-	public TextGUI() throws Exception {
-		
-		int invertFlag=1, 
-			backgroundFlag=1,
-			meanFilterFlag=1, 
-			gradientDescentFlag=1, 
-			intensityFinderFlag=1, 
-			peakMergerFlag=0, 
-			peakRemoverFlag=0;
-		
-		System.out.println("Creating a Stack");
-		Stack stack = new Stack(10,10);
-		for(int i=0; i<10; ++i){
-			Image image = new Image(10, 10);
-			setTheImageRandom(image);
-			stack.addImage(image);
-		}
-		System.out.println("Creating a Case");
-		Case myCase = new Case(stack);
-		
-		// Test the available processes
-		if (invertFlag!=0) {
-			System.out.println("### Applying Invert ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			System.out.println("Creating Processor");
-			Inverter inverter = new Inverter();
-			System.out.println("Running Processor");
-			myCase = inverter.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (backgroundFlag!=0) {
-			System.out.println("### Applying BackgroundFinderIntensity ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			options.addOption("threshold", new Float(20));
-			System.out.println("Creating Processor");
-			BackgroundFinderIntensity background = new BackgroundFinderIntensity();
-			System.out.println("Running Processor");
-			myCase = background.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (meanFilterFlag!=0) {
-			System.out.println("### Applying MeanFilter ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			options.addOption("radius", new Float(3));
-			System.out.println("Creating Processor");
-			MeanFilter meanFilter = new MeanFilter();
-			System.out.println("Running Processor");
-			myCase = meanFilter.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (gradientDescentFlag!=0) {
-			System.out.println("### Applying GradientDescent ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			System.out.println("Creating Processor");
-			GradientDescent gradientDescent = new GradientDescent();
-			System.out.println("Running Processor");
-			myCase = gradientDescent.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (intensityFinderFlag!=0) {
-			System.out.println("### Applying IntensityFinder ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			System.out.println("Creating Processor");
-			IntensityFinder intensityFinder = new IntensityFinder();
-			System.out.println("Running Processor");
-			myCase = intensityFinder.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (peakMergerFlag!=0) {
-			System.out.println("### Applying PeakMerger ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			options.addOption("radius", new Float(1));
-			System.out.println("Creating Processor");
-			PeakMerger peakMerger = new PeakMerger();
-			System.out.println("Running Processor");
-			myCase = peakMerger.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-		if (peakRemoverFlag!=0) {
-			System.out.println("### Applying PeakRemover ###");
-			System.out.println("Creating options");
-			Options options = new Options();
-			options.addOption("sizeThreshold", new Float(10));
-			options.addOption("intensityThreshold", new Float(10));
-			System.out.println("Creating Processor");
-			PeakRemover peakRemover = new PeakRemover();
-			System.out.println("Running Processor");
-			myCase = peakRemover.process(myCase, options);
-			System.out.println("Done!\n");
-		}
-				
-		System.out.println("FINAL RESULT\n\n");				
-		//for(int i=0; i<myCase.getStack().getDepth(); ++i){
-		//  printImage(myCase.getStack().getImage(i));
-		//}
+
+    /** Creates a new instance of TextGUI */
+    public TextGUI(String baseName) throws Exception {
+	final boolean invertFlag = true;
+	final boolean meanFilterFlag = true;
+	final boolean gradientDescentFlag = true;
+	final boolean intensityFinderFlag = true;
+	final boolean peakMergerFlag = false;
+	final boolean peakRemoverFlag = false;
+	final boolean randomImages = (baseName.length() > 0) ? false : true;
+	    
+	System.out.println("Creating a Stack");
+	Stack stack = readImageStack(baseName, 20, randomImages);
+	Case myCase = new Case(stack);
+
+	if (invertFlag) {
+	    System.out.println("### Applying Invert ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    System.out.println("Creating Processor");
+	    Inverter inverter = new Inverter();
+	    System.out.println("Running Processor");
+	    myCase = inverter.process(myCase, options);
+	    System.out.println("Done!\n");
 	}
-  
-	/**
-	 * Simple method for setting an initial image to a diagonal matrix.
-	 * @param image the image to set
-	 */
-	private void setTheImage(Image image){
-		System.out.println("Image: " + image);
-		for(int i=0; i<image.getWidth(); ++i){
-			//System.out.println("Inside first loop");
-			for(int j=0; j<image.getHeight(); ++j){
-				//System.out.println("Inside second loop");
-				image.setIntensity(i, j, (i == 5 && j == 5) ? 1 : 0);
-			}
-		}
+	if (meanFilterFlag) {
+	    System.out.println("### Applying MeanFilter ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    options.addOption("radius", new Float(3));
+	    System.out.println("Creating Processor");
+	    MeanFilter meanFilter = new MeanFilter();
+	    System.out.println("Running Processor");
+	    myCase = meanFilter.process(myCase, options);
+	    System.out.println("Done!\n");
 	}
-  
-	/**
-	 * Simple method for setting an initial image to a diagonal matrix.
-	 * @param image the image to set
-	 */
-	private void setTheImageRandom(Image image){
-		System.out.println("Image: " + image);
-		for(int i=0; i<image.getWidth(); ++i){
-			//System.out.println("Inside first loop");
-			for(int j=0; j<image.getHeight(); ++j){
-				//System.out.println("Inside second loop");
-				image.setIntensity(i, j, (float)Math.random()*255);
-			}
-		}
+	if (gradientDescentFlag) {
+	    System.out.println("### Applying GradientDescent ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    System.out.println("Creating Processor");
+	    GradientDescent gradientDescent = new GradientDescent();
+	    System.out.println("Running Processor");
+	    myCase = gradientDescent.process(myCase, options);
+	    System.out.println("Done!\n");
 	}
-  
-	/**
-	 * Print an Image to the terminal.
-	 * @param image the image to print
-	 */
-	private void printImage(Image image){
-		System.out.println("Image: " + image);
-		for(int i=0; i<image.getHeight(); ++i){
-			for(int j=0; j<image.getWidth(); ++j){
-				System.out.print(image.getIntensity(j,i) + " ");
-			}
-			System.out.println();
-		}
+	if (intensityFinderFlag) {
+	    System.out.println("### Applying IntensityFinder ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    System.out.println("Creating Processor");
+	    IntensityFinder intensityFinder = new IntensityFinder();
+	    System.out.println("Running Processor");
+	    myCase = intensityFinder.process(myCase, options);
+	    System.out.println("Done!\n");
 	}
-  
-	public static void main(String[] argv){
-		try{
-			new TextGUI();
-		}catch(Exception e){
-			System.out.print("Error: ");
-			System.out.println(e.getMessage());
-		}
+	if (peakMergerFlag) {
+	    System.out.println("### Applying PeakMerger ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    options.addOption("radius", new Float(1));
+	    System.out.println("Creating Processor");
+	    PeakMerger peakMerger = new PeakMerger();
+	    System.out.println("Running Processor");
+	    myCase = peakMerger.process(myCase, options);
+	    System.out.println("Done!\n");
 	}
+	if (peakRemoverFlag) {
+	    System.out.println("### Applying PeakRemover ###");
+	    System.out.println("Creating options");
+	    Options options = new Options();
+	    options.addOption("sizeThreshold", new Float(10));
+	    options.addOption("intensityThreshold", new Float(10));
+	    System.out.println("Creating Processor");
+	    PeakRemover peakRemover = new PeakRemover();
+	    System.out.println("Running Processor");
+	    myCase = peakRemover.process(myCase, options);
+	    System.out.println("Done!\n");
+	}
+
+
+	System.out.println("FINAL RESULT\n\n");
+	System.out.println("Saving the images.");
+	writeImageStack(baseName, myCase.getStack());
+
+    }
+
+    private Stack readImageStack(String baseName, int numImages, boolean randomImages) throws Exception {
+	Stack stack = new Stack();
+	if (randomImages) {
+	    for (int i = 0; i < numImages; ++i) {
+		stack.addImage(createRandomImage(10, 10));
+	    }
+	} else {
+	    String fname = "";
+	    for (int i = 0; i < numImages; ++i) {
+		if (i < 10) {
+		    fname = baseName + "0" + i + ".jpg";
+		} else {
+		    fname = baseName + i + ".jpg";
+		}
+		System.out.println("Opening image: " + fname);
+		Image image = readImage(fname);
+		stack.addImage(image);
+	    }
+	}
+	return stack;
+    }
+
+    private Image readImage(String baseName) throws IOException {
+	BufferedImage bi = null;
+	bi = ImageIO.read(new File(baseName));
+	Image image = new Image(bi);
+	return image;
+    }
+
+    private void writeImageStack(String baseName, Stack stack) {
+	for (int i = 0; i < stack.getDepth(); i++) {
+	    Image image = stack.getImage(i);
+	    String fname = "";
+	    if (i < 10) {
+		fname = baseName + "0" + i + ".jpg";
+	    } else {
+		fname = baseName + i + ".jpg";
+	    }
+	    try {
+		ImageIO.write(image.getImage(), "jpg", new File(fname));
+	    } catch (IOException e) {
+		System.err.println("Error: Could not write to file: " + e.getMessage());
+	    }
+	}
+    }
+
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param w the width of the created image to use.
+     * @param h the height of the created image to use.
+     */
+    private Image createSinglePixelImage(int w, int h) {
+	Image image = new Image(w, h);
+	if (w < 6 || h < 6) {
+	    return image;
+	}
+	for (int i = 0; i < image.getWidth(); ++i) {
+	    for (int j = 0; j < image.getHeight(); ++j) {
+		image.setIntensity(i, j, (i == 5 && j == 5) ? 1 : 0);
+	    }
+	}
+	return image;
+    }
+
+    /**
+     * Simple method for setting an initial image to a diagonal matrix.
+     * @param w the width of the created image to use.
+     * @param h the height of the created image to use.
+     */
+    private Image createRandomImage(int w, int h) {
+	Image image = new Image(w, h);
+	for (int i = 0; i < image.getWidth(); ++i) {
+	    for (int j = 0; j < image.getHeight(); ++j) {
+		image.setIntensity(i, j, (float) Math.random() * 255);
+	    }
+	}
+	return image;
+    }
+
+    /**
+     * Print an Image to the terminal.
+     * @param image the image to print
+     */
+    private void printImage(Image image) {
+	for (int i = 0; i < image.getHeight(); ++i) {
+	    for (int j = 0; j < image.getWidth(); ++j) {
+		System.out.print(image.getIntensity(j, i) + " ");
+	    }
+	    System.out.println();
+	}
+    }
+
+    private float[] handlepixels(BufferedImage img, int x, int y, int w, int h) {
+	int[] pixels = new int[w * h];
+	float[] floatPixels = new float[w * h];
+	PixelGrabber pg = new PixelGrabber(img, x, y, w, h, pixels, 0, w);
+	try {
+	    pg.grabPixels();
+	} catch (InterruptedException e) {
+	    System.err.println("Interrupted waiting for pixels!");
+	    return null;
+	}
+	if ((pg.getStatus() & ImageObserver.ABORT) != 0) {
+	    System.err.println("Image fetch aborted or errored");
+	    return null;
+	}
+	for (int j = 0; j < h; j++) {
+	    for (int i = 0; i < w; i++) {
+		floatPixels[j * w + i] = handlesinglepixel(pixels[j * w + i]);
+	    }
+	}
+	return floatPixels;
+    }
+
+    public float handlesinglepixel(int pixel) {
+	int alpha = (pixel >> 24) & 0xff;
+	int red = (pixel >> 16) & 0xff;
+	int green = (pixel >> 8) & 0xff;
+	int blue = (pixel) & 0xff;
+
+	return (float) (red);
+    }
+
+    public static void main(String[] argv) {
+	try {
+	    new TextGUI(argv.length > 0 ? argv[0] : "");
+	} catch (Exception e) {
+	    System.err.println("Error: " + e.getMessage());
+	    e.printStackTrace();
+	}
+    }
 }
