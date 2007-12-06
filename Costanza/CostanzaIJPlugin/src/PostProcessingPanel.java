@@ -66,14 +66,14 @@ public class PostProcessingPanel extends java.awt.Panel {
         sizeThresholdLabel.setAlignment(java.awt.Label.RIGHT);
         sizeThresholdLabel.setText("Size threshold:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(sizeThresholdLabel, gridBagConstraints);
 
         sizeThresholdTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(sizeThresholdTextField, gridBagConstraints);
@@ -81,13 +81,14 @@ public class PostProcessingPanel extends java.awt.Panel {
         intensityThresholdLabel.setAlignment(java.awt.Label.RIGHT);
         intensityThresholdLabel.setText("Intensity threshold:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(intensityThresholdLabel, gridBagConstraints);
 
         intensityThresholdTextField.setText("0.1");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(intensityThresholdTextField, gridBagConstraints);
@@ -108,15 +109,16 @@ public class PostProcessingPanel extends java.awt.Panel {
         radiusLabel.setAlignment(java.awt.Label.RIGHT);
         radiusLabel.setText("Radius:");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(radiusLabel, gridBagConstraints);
 
         radiusTextField.setText("5.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(radiusTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void peakRemoverCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_peakRemoverCheckboxItemStateChanged

@@ -34,9 +34,9 @@ public class PreProcessingPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         meanFilterCheckbox = new java.awt.Checkbox();
-        meanFilterPanel = new java.awt.Panel();
         radiusLabel = new java.awt.Label();
         radiusTextField = new java.awt.TextField();
         repeatLabel = new java.awt.Label();
@@ -44,7 +44,7 @@ public class PreProcessingPanel extends java.awt.Panel {
 
         setBackground(java.awt.Color.white);
         setForeground(java.awt.Color.black);
-        setLayout(new java.awt.GridLayout(2, 1));
+        setLayout(new java.awt.GridBagLayout());
 
         meanFilterCheckbox.setLabel("Smooth image before processing.");
         meanFilterCheckbox.setState(true);
@@ -53,25 +53,40 @@ public class PreProcessingPanel extends java.awt.Panel {
                 meanFilterCheckboxItemStateChanged(evt);
             }
         });
-        add(meanFilterCheckbox);
-
-        meanFilterPanel.setLayout(new java.awt.GridLayout(2, 2));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        add(meanFilterCheckbox, gridBagConstraints);
 
         radiusLabel.setAlignment(java.awt.Label.RIGHT);
         radiusLabel.setText("Radius:");
-        meanFilterPanel.add(radiusLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(radiusLabel, gridBagConstraints);
 
         radiusTextField.setText("5.0");
-        meanFilterPanel.add(radiusTextField);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(radiusTextField, gridBagConstraints);
 
         repeatLabel.setAlignment(java.awt.Label.RIGHT);
         repeatLabel.setText("Number of times to repeat:");
-        meanFilterPanel.add(repeatLabel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(repeatLabel, gridBagConstraints);
 
         repeatTextField.setText("2");
-        meanFilterPanel.add(repeatTextField);
-
-        add(meanFilterPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        add(repeatTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void meanFilterCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_meanFilterCheckboxItemStateChanged
 		if (meanFilterCheckbox.getState() == true) {
@@ -89,7 +104,6 @@ public class PreProcessingPanel extends java.awt.Panel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox meanFilterCheckbox;
-    private java.awt.Panel meanFilterPanel;
     private java.awt.Label radiusLabel;
     private java.awt.TextField radiusTextField;
     private java.awt.Label repeatLabel;
