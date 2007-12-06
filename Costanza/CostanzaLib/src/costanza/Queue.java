@@ -1,8 +1,5 @@
 package costanza;
 
-import java.lang.Exception;
-import java.util.Vector;
-
 public class Queue {
     /** Queue containing the job queue. */
     private java.util.LinkedList<Job> jobs;

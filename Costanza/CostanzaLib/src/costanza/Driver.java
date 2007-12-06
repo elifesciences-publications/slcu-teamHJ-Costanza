@@ -8,9 +8,9 @@ public class Driver implements Runnable {
     private Case currentCase;
     
     /** Factory for Processor creation. */
-    private Factory factory;
+    private Factory<Processor> factory;
     
-    public Driver(Queue jobs, Case currentCase, Factory factory) {
+    public Driver(Queue jobs, Case currentCase, Factory<Processor> factory) {
         this.jobs = jobs;
         this.currentCase = currentCase;
         this.factory = factory;
