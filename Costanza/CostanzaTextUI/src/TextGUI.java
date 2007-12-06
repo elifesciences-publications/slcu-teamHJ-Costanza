@@ -3,6 +3,7 @@ import costanza.Image;
 import costanza.Stack;
 import costanza.Inverter;
 import costanza.Case;
+import costanza.DataId;
 import costanza.Options;
 import costanza.MeanFilter;
 import costanza.GradientDescent;
@@ -30,7 +31,7 @@ public class TextGUI {
 	final boolean meanFilterFlag = true;
 	final boolean gradientDescentFlag = true;
 	final boolean intensityFinderFlag = true;
-	final boolean peakMergerFlag = false;
+	final boolean peakMergerFlag = true;
 	final boolean peakRemoverFlag = false;
 	final boolean randomImages = (baseName.length() > 0) ? false : true;
 
@@ -67,6 +68,8 @@ public class TextGUI {
 	    GradientDescent gradientDescent = new GradientDescent();
 	    System.out.println("Running Processor");
 	    myCase = gradientDescent.process(myCase, options);
+	    System.out.println("CellCenters: " + myCase.sizeOfData(DataId.cellCenters));
+	    System.out.println("BOAs: " + myCase.sizeOfData(DataId.cellBasinsOfAttraction));
 	    System.out.println("Done!\n");
 	}
 	if (intensityFinderFlag) {
@@ -77,6 +80,8 @@ public class TextGUI {
 	    IntensityFinder intensityFinder = new IntensityFinder();
 	    System.out.println("Running Processor");
 	    myCase = intensityFinder.process(myCase, options);
+	    System.out.println("CellCenters: " + myCase.sizeOfData(DataId.cellCenters));
+	    System.out.println("BOAs: " + myCase.sizeOfData(DataId.cellBasinsOfAttraction));
 	    System.out.println("Done!\n");
 	}
 	if (peakMergerFlag) {
@@ -88,6 +93,8 @@ public class TextGUI {
 	    PeakMerger peakMerger = new PeakMerger();
 	    System.out.println("Running Processor");
 	    myCase = peakMerger.process(myCase, options);
+	    System.out.println("CellCenters: " + myCase.sizeOfData(DataId.cellCenters));
+	    System.out.println("BOAs: " + myCase.sizeOfData(DataId.cellBasinsOfAttraction));
 	    System.out.println("Done!\n");
 	}
 	if (peakRemoverFlag) {
@@ -100,6 +107,8 @@ public class TextGUI {
 	    PeakRemover peakRemover = new PeakRemover();
 	    System.out.println("Running Processor");
 	    myCase = peakRemover.process(myCase, options);
+	    System.out.println("CellCenters: " + myCase.sizeOfData(DataId.cellCenters));
+	    System.out.println("BOAs: " + myCase.sizeOfData(DataId.cellBasinsOfAttraction));
 	    System.out.println("Done!\n");
 	}
 
@@ -139,20 +148,19 @@ public class TextGUI {
 	return image;
     }
 
-    private void writeImageStack(String baseName, Stack stack) {
+    private void writeImageStack(String baseName, Stack stack) throws IOException {
 	for (int i = 0; i < stack.getDepth(); i++) {
 	    Image image = stack.getImage(i);
+	    System.out.println("W: " + image.getWidth() + " H: " + image.getHeight());
+	    System.out.println("Pixel(5,5): " + image.getIntensity(5, 5));
 	    String fname = "";
 	    if (i < 10) {
 		fname = baseName + "0" + i + ".jpg";
 	    } else {
 		fname = baseName + i + ".jpg";
 	    }
-	    try {
-		ImageIO.write(image.getImage(), "jpg", new File(fname));
-	    } catch (IOException e) {
-		System.err.println("Error: Could not write to file: " + e.getMessage());
-	    }
+	    boolean write = ImageIO.write(image.getImage(), "jpg", new File(fname));
+	    System.out.println("Write success: " + write);
 	}
     }
 
@@ -246,8 +254,8 @@ public class TextGUI {
 
     public static void main(String[] argv) {
 	try {
-	    //new TextGUI(argv.length > 0 ? argv[0] : "");
-	    tryConversion();
+	    new TextGUI(argv.length > 0 ? argv[0] : "");
+	//tryConversion();
 	} catch (Exception e) {
 	    System.err.println("Error: " + e.getMessage());
 	    e.printStackTrace();
