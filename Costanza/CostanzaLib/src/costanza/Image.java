@@ -8,7 +8,7 @@ public class Image {
 
     /** A BufferedImage representing a Greyscale channel. */
     BufferedImage bi;
-    final int imageType = BufferedImage.TYPE_BYTE_GRAY;
+    final int imageType = BufferedImage.TYPE_USHORT_GRAY;
 
     /** Constructor for class Image.
      * This is the constructor that should be used to create a new Image object. 
