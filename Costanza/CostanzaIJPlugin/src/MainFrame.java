@@ -9,8 +9,4 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
 		pack();
 		setResizable(false);
 	}
-
-//    MainPanel getPanel() {
-//	return panel;
-	//  }
 }

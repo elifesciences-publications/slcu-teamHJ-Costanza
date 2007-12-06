@@ -3,20 +3,18 @@ import costanza.Image;
 import costanza.Stack;
 
 /** Utility class for the Costanza Plugin. */
-public class Utility {
+public class Tools {
 
 	/** Create new Stack object from ij.ImagePlus object. */
 	static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
 		ij.ImageStack imageStack = imagePlus.getStack();
 		int slices = imageStack.getSize();
 
-		Stack stack = new Stack();
+		Stack stack = new Stack(imageStack.getWidth(), imageStack.getHeight());
 		for (int n = 1; n <= slices; ++n) {
 			ij.process.ImageProcessor sliceProcessor = imageStack.getProcessor(n);
 			ij.process.ImageProcessor floatProcessor = sliceProcessor.convertToFloat();
-			stack.addImage(new Image(sliceProcessor.createImage()));
-//			stack.addImage(new Image(floatProcessor.createImage()));
-
+			stack.addImage(new Image(floatProcessor.createImage()));
 		}
 		return stack;
 	}
@@ -43,13 +41,5 @@ public class Utility {
 			throw new Exception("Unexpected error in Tools.getImageProcessorFromImage()");
 		}
 		return stack.getProcessor(1);
-	}
-
-	static public void printWarning(String string) {
-		ij.IJ.showMessage("Costanza Plugin", "Warning: " + string + "\n");
-	}
-
-	static public void printError(String string) {
-		ij.IJ.showMessage("Costanza Plugin", "Error: " + string + "\n");
 	}
 }

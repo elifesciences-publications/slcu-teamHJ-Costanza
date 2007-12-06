@@ -1,20 +1,18 @@
 
 import costanza.Case;
-import costanza.Data;
 import costanza.Driver;
 import costanza.Factory;
 import costanza.Job;
 import costanza.Options;
+import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
 import ij.IJ;
 import ij.ImagePlus;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn {
 
-	private Factory factory;
+	private Factory<Processor> factory;
 	private MainFrame frame;
 	private boolean pluginIsRunning;
 
@@ -39,18 +37,19 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private void initFactory() {
-		factory = new Factory();
+		factory = new Factory<Processor>();
 		factory.register("invert", costanza.Inverter.class);
 		factory.register("meanfilter", costanza.MeanFilter.class);
+		factory.register("null", costanza.NullProcessor.class);
 	}
 
-	public void start(float radius, int repeat, boolean invert) {
+	public void start(MainPanel panel) {
 		try {
 			ImagePlus imagePlus;
 			try {
 				imagePlus = IJ.getImage();
 			} catch (Exception exception) {
-				Utility.printWarning("Unable to retrieve image(s) from ImageJ.");
+				// Do nothing as we assume ImageJ is displaying a message about this exception.
 				return;
 			}
 
@@ -58,17 +57,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			Case IJCase = new Case(stack);
 
 			Queue jobs = new Queue();
-
-			for (int i = 0; i < repeat; ++i) {
-				Options option = new Options();
-				option.addOption("radius", new Float(radius));
-				jobs.addJob(new Job("meanfilter", option));
-			}
-
-			if (invert == true) {
-				jobs.addJob(new Job("invert", null));
-			}
-
+			
+			// Add inverter.
+			jobs.addJob(panel.getInvertJob());
+				
 			Driver driver = new Driver(jobs, IJCase, factory);
 			driver.run();
 

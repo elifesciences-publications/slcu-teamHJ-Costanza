@@ -1,3 +1,7 @@
+
+import costanza.Job;
+import costanza.Options;
+
 public class AlgorithmPanel extends java.awt.Panel {
 
 	MainPanel mainPanel;
@@ -7,8 +11,14 @@ public class AlgorithmPanel extends java.awt.Panel {
 		this.mainPanel = mainPanel;
 	}
 
-	public boolean getInvertCheckboxState() {
-		return invertCheckbox.getState();
+	Job getInvertJob() {
+		String processorId;
+		if (invertCheckbox.getState() == true) {
+			processorId = "invert";
+		} else {
+			processorId = "null";
+		}
+		return new Job(processorId, null);
 	}
 	
 	/** This method is called from within the constructor to

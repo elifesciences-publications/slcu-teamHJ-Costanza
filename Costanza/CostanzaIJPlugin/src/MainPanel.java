@@ -1,4 +1,5 @@
 
+import costanza.Job;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ItemEvent;
@@ -46,8 +47,7 @@ public class MainPanel extends java.awt.Panel {
 	}
 
 	void startButtonPressed() {
-		boolean invert = algorithmPanel.getInvertCheckboxState();
-		plugin.start(5.0f, 1, invert);
+		plugin.start(this);
 	}
 
 	private void menuChanged() {
@@ -61,5 +61,9 @@ public class MainPanel extends java.awt.Panel {
 		} else {
 			Utility.printError("Unexpected error in menuChanged()");
 		}
+	}
+	
+	public Job getInvertJob() {
+		return algorithmPanel.getInvertJob();
 	}
 }
