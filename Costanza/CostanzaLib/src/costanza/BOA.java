@@ -12,14 +12,15 @@ public class BOA extends Vector<Pixel> implements CellId{
     int cellId;
  
     /**Constructs empty BOA with id.
-     *@param int id
+     *@param id int
      */
     public BOA( int id ){
         cellId = id;
     }
     
     /**Constructs BOA including Pixels in Collection c with id.
-     *@param int id, Collection<Pixel> c
+     * @param id int
+     * @param c Collection<Pixel>
      */
     public BOA( int id, Collection<Pixel> c ) {
         super(c);
@@ -27,14 +28,14 @@ public class BOA extends Vector<Pixel> implements CellId{
     }
     
     /**adds Pixel to the BOA.
-     *@param Pixel p to be inserted into the BOA
+     *@param p Pixel to be inserted into the BOA
      */
     public void addPixel( Pixel p ) {
         add(p);
     }
     
     /**adds Pixels from the Collection to the BOA.
-     *@param Collection<Pixel> which content is to be inserted into the BOA
+     *@param c Collection<Pixel> which content is to be inserted into the BOA
      */
     public void addPixels( Collection<Pixel> c ) {
         addAll(c);

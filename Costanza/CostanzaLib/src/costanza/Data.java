@@ -43,7 +43,7 @@ public class Data {
     }
 
     /**Gives the size of the data of given type
-     *@param DataId id
+     *@param id DataId
      */
     public int sizeOfData(DataId id) {
         if (dataKeys.contains(id)) {
@@ -57,7 +57,8 @@ public class Data {
     }
 
     /**Attaches data Object to a dataId
-     *@param String id, Object o
+     *@param id String id, 
+		 *@param o Object
      */
     public void attachData(DataId id, Object o) throws Exception {
 
@@ -96,7 +97,8 @@ public class Data {
     }
 
     /**Attaches all the data Objects contained in the Collection to the dataId
-     *@param String id, Collection c
+     *@param id String
+		 *@param c Collection
      */
     public void attachDataCollection(DataId id, Collection<?> c) throws Exception {
 
@@ -142,7 +144,8 @@ public class Data {
     }
 
     /**Removes data object o from Data set with id DataId
-     *@param DataId id, Object o
+     *@param id DataId id
+		 *@param o Object
      */
     public void removeData(DataId id, Object o) {
         if (dataKeys.contains(id)) {
@@ -154,7 +157,7 @@ public class Data {
     }
 
     /**Removes all data from Data set with id DataId
-     *@param DataId id
+     *@param id DataId 
      */
     public void clearData(DataId id) {
         if (dataKeys.contains(id)) {

@@ -23,6 +23,7 @@ public class GradientDescent extends Processor {
 	/**
 	 * Implementation of the Gradient descent algorithm.
 	 * @param c a Case to work on.
+	 * @param o Options related to the Processor.
 	 * @return a modified Case.
 	 * @todo Recursively add plateau pixels.
 	 * @todo Expand the background appropriately.

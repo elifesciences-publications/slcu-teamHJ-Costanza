@@ -16,7 +16,7 @@ public class Case extends CellDataManipulator{
     /**
      * Case constructor.
      *
-     * @param Stack s
+     * @param s Stack
      */
     public Case(Stack s) {
 	//System.out.println("Case: Original Stack 1: " + s.getDepth());
@@ -63,7 +63,7 @@ public class Case extends CellDataManipulator{
     /**
      * Set method for working copy of the Stack.
      *
-     * @param Stack s
+     * @param s Stack
      */
     public void setStack(Stack s) {
 	mStack = s;

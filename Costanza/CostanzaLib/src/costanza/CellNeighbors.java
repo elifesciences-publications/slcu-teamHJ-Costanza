@@ -19,7 +19,8 @@ public class CellNeighbors extends TreeSet<Integer> implements CellId{
     }
     
     /**Constructs BOA including id Strings in Collection c and with id.
-     *@param int id, Collection<String> c
+     *@param id int
+     *@param c Collection<String>
      */
     public CellNeighbors( int id, Collection<Integer> c ) {
         super(c);
@@ -27,14 +28,14 @@ public class CellNeighbors extends TreeSet<Integer> implements CellId{
     }
     
     /**adds Neighbor to CellNeighbors.
-     *@param int s neighbor id to be inserted
+     *@param n int neighbor id to be inserted
      */
     public void addNeighbor( int n ) {
         add(n);
     }
     
     /**adds Neighbors from the Collection.
-     *@param Collection<Int> which content is to be inserted
+     *@param c Collection<Int> which content is to be inserted
      */
     public void addNeighbors( Collection<Integer> c ) {
         addAll(c);

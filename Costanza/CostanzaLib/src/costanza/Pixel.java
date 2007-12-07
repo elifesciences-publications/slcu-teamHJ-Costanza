@@ -11,7 +11,9 @@ public class Pixel {
     public Pixel(){}
     
     /**Create Pixel with indices x, y and z
-     *@param int x, int y, int z
+     *@param x int
+     *@param y int
+     *@param z int
      */
     public Pixel( int x,  int y, int z ) {
         this.x = x;
@@ -49,21 +51,21 @@ public class Pixel {
     }
     
     /**Gets Pixel index in x direction.
-     *@param int
+     *@param x int
      **/
     public void setX( int x ){
         this.x = x;
     }
     
     /**Sets Pixel index in y direction.
-     *@param int
+     *@param y int
      **/
     public void setY( int y ){
         this.y = y;
     }
     
     /**Get Pixel index in z direction.
-     *@param int
+     *@param z int
      **/
     public void setZ( int z ){
         this.z = z;

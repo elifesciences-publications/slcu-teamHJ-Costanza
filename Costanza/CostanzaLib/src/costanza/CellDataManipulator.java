@@ -16,7 +16,9 @@ public class CellDataManipulator extends Data {
 	}
 
 	/**Reads data of given DataId to the file
-	 *@param DataId id, String fileName, Options opt
+	 *@param id DataId
+	 *@param fileName String
+	 *@param opt Options
 	 */
 	public void readData(DataId id, String fileName, Options opt) throws Exception {
 		Collection coll = getCellData(id);
@@ -120,7 +122,9 @@ public class CellDataManipulator extends Data {
 	}
 
 	/**Writes data of given DataId to the file
-	 *@param DataId id, String fileName, Options opt
+	 *@param id DataId
+	 *@param fileName String
+	 *@param opt Options
 	 */
 	public void writeData(DataId id, String fileName, Options opt) throws Exception {
 		Collection coll = getCellData(id);
@@ -166,7 +170,9 @@ public class CellDataManipulator extends Data {
 	}
 
 	/**Merges all
-	 *@param int c1Id, int c2Id, int newCellId
+	 *@param c1Id int
+	 *@param c2Id int
+	 *@param newCellId int
 	 */
 	public void mergeAllData(int c1Id, int c2Id, int newCellId) throws Exception {
 
@@ -182,7 +188,10 @@ public class CellDataManipulator extends Data {
 	}
 
 	/**Merges data of given type for cells identified with cell ids and assigns new cell id to merged cell.
-	 *@param DataId id, int c1Id, int c2Id, int newCellId
+	 *@param id DataId id
+	 *@param c1Id int
+	 *@param c2Id int
+	 *@param newCellId int
 	 */
 	public void merge(DataId id, int c1Id, int c2Id, int newCellId) throws Exception {
 		Collection cells = getCellData(id);

@@ -11,7 +11,8 @@ public abstract class Processor {
 
 	/** 
 	 * Abstract method for running the implemented process.
-	 * @param case the Case the the Processor will work on.
+	 * @param c the Case the the Processor will work on.
+	 * @param options Options for the processor
 	 * @return the processed Case.
 	 */
 	public abstract Case process(Case c, Options options) throws Exception;

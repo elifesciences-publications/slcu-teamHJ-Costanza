@@ -10,14 +10,15 @@ public class CellIntensity extends Vector<Float> implements CellId{
     int cellId;
     
     /**Constructs uninitialized CellIntensity with id.
-     *@param int id
+     *@param id int
      */
     public CellIntensity( int id ){
         cellId = id;
     }
     
     /**Constructs CellIntensity with specified intensity and with id.
-     *@param int id, float
+     *@param id int
+     *@param intens float
      */
     public CellIntensity( int id, float intens ) {
         super();
@@ -26,7 +27,8 @@ public class CellIntensity extends Vector<Float> implements CellId{
        
     }
     /**Constructs CellIntensity with specified intensities and with id.
-     *@param int id, Colllection<Float>
+     *@param id
+     *@param intens Colllection<Float>
      */
     public CellIntensity( int id, Collection<Float> intens ) {
         super(intens);
@@ -34,7 +36,7 @@ public class CellIntensity extends Vector<Float> implements CellId{
     }
     
     /**Adds/appends new intensity to the CellIntensity
-     *@param float intensity
+     *@param intens float
      */
     public void addIntensity( float intens ){
        add(intens);

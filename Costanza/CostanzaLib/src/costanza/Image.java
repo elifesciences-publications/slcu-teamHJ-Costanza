@@ -21,7 +21,7 @@ public class Image {
     /** Constructor for class Image from an AWT Image.
      * Note that this does NOT copy the BufferedImage! Any changes made 
      * to Image will affect the BufferedImage as well.
-     * @param bi the BufferedImage to construct our Image from.
+     * @param image the BufferedImage to construct our Image from.
      */
     public Image(java.awt.Image image) {
 	if (image instanceof BufferedImage) {
