@@ -55,6 +55,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("gradientdescent", costanza.GradientDescent.class);
 		factory.register("peakremover", costanza.PeakRemover.class);
 		factory.register("peakmerger", costanza.PeakMerger.class);
+		factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
 	}
 
 	public void start(MainPanel panel) {

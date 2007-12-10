@@ -46,8 +46,6 @@ public class OptionPanel extends java.awt.Panel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(removeButton, gridBagConstraints);
-
-        optionPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;

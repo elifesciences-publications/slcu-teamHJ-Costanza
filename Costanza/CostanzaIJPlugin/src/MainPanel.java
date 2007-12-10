@@ -41,6 +41,8 @@ public class MainPanel extends java.awt.Panel {
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
 		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
 		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
+		preProcessorMenuPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
+		preProcessorMenuPanel.addOptionPanel("Background extraction");
 		preProcessorMenuPanel.addOptionPanel("Smoothing");
 		cardPanel.add(preProcessorMenuPanel, "PreProcessingPanel");
 		add(cardPanel, java.awt.BorderLayout.CENTER);
