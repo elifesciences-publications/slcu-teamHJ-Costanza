@@ -8,16 +8,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class MainPanel extends java.awt.Panel {
-
+	private ProcessorMenuPanel preProcessorMenuPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.Choice mainChoice;
 	private java.awt.Panel cardPanel;
 	private java.awt.CardLayout cardLayout;
 	private AlgorithmPanel algorithmPanel;
-	private PreProcessingPanel preProcessingPanel;
-	private PostProcessingPanel postProcessingPanel;
 
-	public MainPanel(Costanza_Plugin plugin) {
+	public MainPanel(Costanza_Plugin plugin, MainFrame frame) {
 		this.plugin = plugin;
 		setLayout(new BorderLayout(10, 10));
 		setBackground(new java.awt.Color(255, 255, 255));
@@ -40,10 +38,11 @@ public class MainPanel extends java.awt.Panel {
 		cardPanel = new java.awt.Panel();
 		cardPanel.setLayout(cardLayout = new CardLayout());
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
-		cardPanel.add(preProcessingPanel = new PreProcessingPanel(this), "PreProcessingPanel");
-		cardPanel.add(postProcessingPanel = new PostProcessingPanel(this), "PostProcessingPanel");
+		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
+		preProcessorMenuPanel.addProcessorOptionToMenu("Smoother", MeanFilterOption.class);
+		cardPanel.add(preProcessorMenuPanel, "PreProcessingPanel");
 		add(cardPanel, java.awt.BorderLayout.CENTER);
-		
+
 		// Add button Panel.
 		java.awt.Panel buttonPanel = new java.awt.Panel();
 		buttonPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -70,12 +69,14 @@ public class MainPanel extends java.awt.Panel {
         add(buttonPanel, java.awt.BorderLayout.SOUTH);
 	}
 
+
 	void addJobs(Queue jobs) throws Exception {
+		preProcessorMenuPanel.addJobs(jobs);
 		algorithmPanel.addInverterJob(jobs);
-		preProcessingPanel.addMeanFilterJob(jobs);
+//		preProcessingPanel.addMeanFilterJob(jobs);
 		jobs.addJob(new Job("gradientdescent", null));
-		postProcessingPanel.addPeakRemover(jobs);
-		postProcessingPanel.addPeakMerger(jobs);
+//		postProcessingPanel.addPeakRemover(jobs);
+//		postProcessingPanel.addPeakMerger(jobs);
 	}
 
 	private void cancelButtonPressed() {

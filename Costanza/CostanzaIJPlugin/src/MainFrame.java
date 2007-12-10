@@ -4,9 +4,14 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
 
 	MainFrame(Costanza_Plugin plugin) {
 		super("Costanza Plugin");
-		panel = new MainPanel(plugin);
+		panel = new MainPanel(plugin, this);
 		add(panel);
 		pack();
-		setResizable(false);
+//		setResizable(false);
+	}
+
+	void update() {
+		pack();
+		repaint();
 	}
 }
