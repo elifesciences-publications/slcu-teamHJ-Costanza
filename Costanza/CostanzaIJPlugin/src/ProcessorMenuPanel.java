@@ -1,6 +1,7 @@
 
 import costanza.Factory;
 import costanza.Queue;
+import java.awt.Dimension;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.LinkedList;
@@ -8,25 +9,26 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProcessorMenuPanel extends java.awt.Panel {
+
 	private LinkedList<OptionPanel> optionPanelList;
 	private MainFrame frame;
 	private Factory<ProcessorOption> factory;
-	
+
 	public ProcessorMenuPanel(MainFrame frame) {
 		this.frame = frame;
 		factory = new Factory<ProcessorOption>();
 		optionPanelList = new LinkedList<OptionPanel>();
 		initComponents();
 	}
-	
+
 	public void addProcessorOptionToMenu(String name, Class<? extends ProcessorOption> processorOptionClass) {
-		processorMenuChoice.add(name);
+		processorOptionChoice.add(name);
 		factory.register(name, processorOptionClass);
 	}
 
 	public void addJobs(Queue jobs) throws Exception {
 		Iterator<OptionPanel> iterator = optionPanelList.iterator();
-		
+
 		while (iterator.hasNext()) {
 			OptionPanel optionPanel = iterator.next();
 			ProcessorOption processorOption = optionPanel.getProcessorOption();
@@ -39,7 +41,7 @@ public class ProcessorMenuPanel extends java.awt.Panel {
 		optionPanelList.remove(optionPanel);
 		frame.update();
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -47,11 +49,10 @@ public class ProcessorMenuPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         northPanel = new java.awt.Panel();
         addButton = new java.awt.Button();
-        processorMenuChoice = new java.awt.Choice();
+        processorOptionChoice = new java.awt.Choice();
         displayPanel = new java.awt.Panel();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
@@ -65,35 +66,32 @@ public class ProcessorMenuPanel extends java.awt.Panel {
             }
         });
         northPanel.add(addButton, new java.awt.GridBagConstraints());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        northPanel.add(processorMenuChoice, gridBagConstraints);
+        northPanel.add(processorOptionChoice, new java.awt.GridBagConstraints());
 
         add(northPanel);
 
         displayPanel.setLayout(new javax.swing.BoxLayout(displayPanel, javax.swing.BoxLayout.Y_AXIS));
         add(displayPanel);
     }// </editor-fold>//GEN-END:initComponents
-
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 		try {
-			String name = processorMenuChoice.getSelectedItem();
-			OptionPanel optionPanel = new OptionPanel(this, factory.create(name));
-			displayPanel.add(optionPanel);
-			optionPanelList.add(optionPanel);
-			frame.update();
+			String name = processorOptionChoice.getSelectedItem();
+			addOptionPanel(name);
 		} catch (Exception ex) {
 			Logger.getLogger(ProcessorMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}//GEN-LAST:event_addButtonActionPerformed
-	
-	
+
+	public void addOptionPanel(String name) throws Exception {
+		OptionPanel optionPanel = new OptionPanel(this, factory.create(name));
+		displayPanel.add(optionPanel);
+		optionPanelList.add(optionPanel);
+		frame.update();
+	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button addButton;
     private java.awt.Panel displayPanel;
     private java.awt.Panel northPanel;
-    private java.awt.Choice processorMenuChoice;
+    private java.awt.Choice processorOptionChoice;
     // End of variables declaration//GEN-END:variables
-	
 }

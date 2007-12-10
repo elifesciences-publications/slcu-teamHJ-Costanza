@@ -16,7 +16,7 @@ public class MainPanel extends java.awt.Panel {
 	private java.awt.CardLayout cardLayout;
 	private AlgorithmPanel algorithmPanel;
 
-	public MainPanel(Costanza_Plugin plugin, MainFrame frame) {
+	public MainPanel(Costanza_Plugin plugin, MainFrame frame) throws Exception {
 		this.plugin = plugin;
 		setLayout(new BorderLayout(10, 10));
 		setBackground(new java.awt.Color(255, 255, 255));
@@ -41,12 +41,17 @@ public class MainPanel extends java.awt.Panel {
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
 		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
 		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
+		preProcessorMenuPanel.addOptionPanel("Smoothing");
 		cardPanel.add(preProcessorMenuPanel, "PreProcessingPanel");
 		add(cardPanel, java.awt.BorderLayout.CENTER);
 		postProcessorMenuPanel = new ProcessorMenuPanel(frame);
 		postProcessorMenuPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
 		postProcessorMenuPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
+		postProcessorMenuPanel.addOptionPanel("Peak remover");
+		postProcessorMenuPanel.addOptionPanel("Peak merger");
 		cardPanel.add(postProcessorMenuPanel, "PostProcessingPanel");
+		
+		
 
 		// Add button Panel.
 		java.awt.Panel buttonPanel = new java.awt.Panel();
@@ -73,7 +78,6 @@ public class MainPanel extends java.awt.Panel {
 
         add(buttonPanel, java.awt.BorderLayout.SOUTH);
 	}
-
 
 	void addJobs(Queue jobs) throws Exception {
 		preProcessorMenuPanel.addJobs(jobs);

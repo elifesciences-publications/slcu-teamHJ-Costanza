@@ -33,11 +33,7 @@ public class OptionPanel extends java.awt.Panel {
 
         processorNameLabel.setFont(new java.awt.Font("Dialog", 1, 12));
         processorNameLabel.setText("processorName");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(processorNameLabel, gridBagConstraints);
+        add(processorNameLabel, new java.awt.GridBagConstraints());
 
         removeButton.setLabel("Remove");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -50,10 +46,14 @@ public class OptionPanel extends java.awt.Panel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         add(removeButton, gridBagConstraints);
+
+        optionPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(optionPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed

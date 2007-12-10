@@ -20,16 +20,20 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	private boolean pluginIsRunning;
 
 	public void run(String arg) {
-		initFactory();
-		frame = new MainFrame(this);
-		frame.setVisible(true);
-		pluginIsRunning = true;
-		while (pluginIsRunning == true) {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException ex) {
-				Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+		try {
+			initFactory();
+			frame = new MainFrame(this);
+			frame.setVisible(true);
+			pluginIsRunning = true;
+			while (pluginIsRunning == true) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+				}
 			}
+		} catch (Exception ex) {
+			Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
