@@ -35,6 +35,12 @@ public class GradientDescent extends Processor {
             throw new Exception("No working stack initialised in case from gradientdescent");
         }
         
+				int extendedNeighborhoodFlag=1;
+				Integer tmpFlag = (Integer) (o.getOptionValue("extendedNeighborhood"));
+				if (tmpFlag!=null) {
+					extendedNeighborhoodFlag = tmpFlag.intValue();
+				}
+
         int depth=c.getStack().getDepth();
         int height=c.getStack().getHeight();
         int width=c.getStack().getWidth();
@@ -85,49 +91,52 @@ public class GradientDescent extends Processor {
 									newValue=value=c.getStack().getIntensity(x,y,z);
 									int xNew=x, yNew=y, zNew=z;
                   
-									//Check all pixels around a given pixel
-									for (int zz=z-1; zz<=z+1; ++zz) {
-										for (int yy=y-1; yy<=y+1; ++yy) {
-											for (int xx=x-1; xx<=x+1; ++xx) {
-												if (xx>=0 && yy>=0 && zz>=0 &&
-														xx<width && yy<height && zz<depth)
-													if (c.getStack().getIntensity(xx,yy,zz)>newValue) {
-														newValue=c.getStack().getIntensity(xx,yy,zz);
-														xNew = xx;
-														yNew = yy;
-														zNew = zz;
-													}
+									if (extendedNeighborhoodFlag!=0) {
+										//Check all pixels around a given pixel
+										for (int zz=z-1; zz<=z+1; ++zz) {
+											for (int yy=y-1; yy<=y+1; ++yy) {
+												for (int xx=x-1; xx<=x+1; ++xx) {
+													if (xx>=0 && yy>=0 && zz>=0 &&
+															xx<width && yy<height && zz<depth)
+														if (c.getStack().getIntensity(xx,yy,zz)>newValue) {
+															newValue=c.getStack().getIntensity(xx,yy,zz);
+															xNew = xx;
+															yNew = yy;
+															zNew = zz;
+														}
+												}
 											}
 										}
-									}
-                  
-									//Check nearest neighbors
-//                             for (int a=-1; a<=1; a+=2) {
-//                                 int zz = z+a;
-//                                 if (zz>=0 && zz<depth &&
-//                                         c.getStack().getIntensity(x,y,zz)>=newValue) {
-//                                     newValue = c.getStack().getIntensity(x,y,zz);
-//                                     xNew=x;
-//                                     yNew=y;
-//                                     zNew=zz;
-//                                 }
-//                                 int yy = y+a;
-//                                 if (yy>=0 && yy<height &&
-//                                         c.getStack().getIntensity(x,yy,z)>newValue) {
-//                                     newValue = c.getStack().getIntensity(x,yy,z);
-//                                     xNew=x;
-//                                     yNew=yy;
-//                                     zNew=z;
-//                                 }
-//                                 int xx = x+a;
-//                                 if (xx>=0 && xx<width &&
-//                                         c.getStack().getIntensity(xx,y,z)>newValue) {
-//                                     newValue = c.getStack().getIntensity(x,y,z);
-//                                     xNew=xx;
-//                                     yNew=y;
-//                                     zNew=z;
-//                                 }
-//                             }
+                  }
+									else {
+										//Check nearest neighbors
+										for (int a=-1; a<=1; a+=2) {
+											int zz = z+a;
+											if (zz>=0 && zz<depth &&
+													c.getStack().getIntensity(x,y,zz)>=newValue) {
+												newValue = c.getStack().getIntensity(x,y,zz);
+												xNew=x;
+												yNew=y;
+												zNew=zz;
+											}
+											int yy = y+a;
+											if (yy>=0 && yy<height &&
+													c.getStack().getIntensity(x,yy,z)>newValue) {
+												newValue = c.getStack().getIntensity(x,yy,z);
+												xNew=x;
+												yNew=yy;
+												zNew=z;
+											}
+											int xx = x+a;
+											if (xx>=0 && xx<width &&
+													c.getStack().getIntensity(xx,y,z)>newValue) {
+												newValue = c.getStack().getIntensity(x,y,z);
+												xNew=xx;
+												yNew=y;
+												zNew=z;
+											}
+										}
+									}//end else
 									x=xNew;
 									y=yNew;
 									z=zNew;
