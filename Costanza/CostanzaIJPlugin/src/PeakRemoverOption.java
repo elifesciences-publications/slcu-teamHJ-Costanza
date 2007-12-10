@@ -4,8 +4,9 @@ import costanza.Options;
 import costanza.Queue;
 import java.awt.Panel;
 
-public class MeanFilterOption extends java.awt.Panel implements ProcessorOption {
-	public MeanFilterOption() {
+public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption {
+	
+	public PeakRemoverOption() {
 		initComponents();
 	}
 	
@@ -18,60 +19,59 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        radiusLabel = new java.awt.Label();
-        radiusTextField = new java.awt.TextField();
-        repeatLabel = new java.awt.Label();
-        repeatTextField = new java.awt.TextField();
+        sizeThresholdLabel = new java.awt.Label();
+        sizeThresholdTextField = new java.awt.TextField();
+        intensityThresholdLabel = new java.awt.Label();
+        intensityThresholdTextField = new java.awt.TextField();
 
         setLayout(new java.awt.GridBagLayout());
 
-        radiusLabel.setText("Radius:");
+        sizeThresholdLabel.setText("Size threshold:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(radiusLabel, gridBagConstraints);
+        add(sizeThresholdLabel, gridBagConstraints);
 
-        radiusTextField.setText("2.0");
+        sizeThresholdTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(radiusTextField, gridBagConstraints);
+        add(sizeThresholdTextField, gridBagConstraints);
 
-        repeatLabel.setText("Number of times:");
+        intensityThresholdLabel.setText("Intensity threshold:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(repeatLabel, gridBagConstraints);
+        add(intensityThresholdLabel, gridBagConstraints);
 
-        repeatTextField.setText("2");
+        intensityThresholdTextField.setText("0.2");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(repeatTextField, gridBagConstraints);
+        add(intensityThresholdTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-	
-	
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Label radiusLabel;
-    private java.awt.TextField radiusTextField;
-    private java.awt.Label repeatLabel;
-    private java.awt.TextField repeatTextField;
-    // End of variables declaration//GEN-END:variables
 
 	public Panel getPanel() {
 		return this;
 	}
 
 	public String getProcessorName() {
-		return new String("Smoothing");
+		return "Peak remover";
 	}
 
 	public void addJobs(Queue jobs) throws Exception {
 		Options options = new Options();
-		options.addOption("radius", new Float(radiusTextField.getText()));
-		int repeat = new Integer(repeatTextField.getText()).intValue();
-		for (int i = 0; i < repeat; ++i) {
-			jobs.addJob(new Job("meanfilter", options));
-		}
+		options.addOption("sizeThreshold", new Float(sizeThresholdTextField.getText()));
+		options.addOption("intensityThreshold", new Float(intensityThresholdTextField.getText()));
+		jobs.addJob(new Job("peakremover", options));
 	}
+	
+	
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Label intensityThresholdLabel;
+    private java.awt.TextField intensityThresholdTextField;
+    private java.awt.Label sizeThresholdLabel;
+    private java.awt.TextField sizeThresholdTextField;
+    // End of variables declaration//GEN-END:variables
+	
 }

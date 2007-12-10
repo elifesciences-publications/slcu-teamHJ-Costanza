@@ -49,11 +49,14 @@ public class ProcessorMenuPanel extends java.awt.Panel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        northPanel = new java.awt.Panel();
         addButton = new java.awt.Button();
         processorMenuChoice = new java.awt.Choice();
         displayPanel = new java.awt.Panel();
 
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+
+        northPanel.setLayout(new java.awt.GridBagLayout());
 
         addButton.setLabel("Add");
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -61,18 +64,16 @@ public class ProcessorMenuPanel extends java.awt.Panel {
                 addButtonActionPerformed(evt);
             }
         });
-        add(addButton, new java.awt.GridBagConstraints());
+        northPanel.add(addButton, new java.awt.GridBagConstraints());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        add(processorMenuChoice, gridBagConstraints);
+        northPanel.add(processorMenuChoice, gridBagConstraints);
+
+        add(northPanel);
 
         displayPanel.setLayout(new javax.swing.BoxLayout(displayPanel, javax.swing.BoxLayout.Y_AXIS));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        add(displayPanel, gridBagConstraints);
+        add(displayPanel);
     }// </editor-fold>//GEN-END:initComponents
 
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
@@ -91,6 +92,7 @@ public class ProcessorMenuPanel extends java.awt.Panel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button addButton;
     private java.awt.Panel displayPanel;
+    private java.awt.Panel northPanel;
     private java.awt.Choice processorMenuChoice;
     // End of variables declaration//GEN-END:variables
 	

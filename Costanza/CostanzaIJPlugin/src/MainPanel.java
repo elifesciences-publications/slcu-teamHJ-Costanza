@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 
 public class MainPanel extends java.awt.Panel {
 	private ProcessorMenuPanel preProcessorMenuPanel;
+	private ProcessorMenuPanel postProcessorMenuPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.Choice mainChoice;
 	private java.awt.Panel cardPanel;
@@ -39,9 +40,13 @@ public class MainPanel extends java.awt.Panel {
 		cardPanel.setLayout(cardLayout = new CardLayout());
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
 		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
-		preProcessorMenuPanel.addProcessorOptionToMenu("Smoother", MeanFilterOption.class);
+		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
 		cardPanel.add(preProcessorMenuPanel, "PreProcessingPanel");
 		add(cardPanel, java.awt.BorderLayout.CENTER);
+		postProcessorMenuPanel = new ProcessorMenuPanel(frame);
+		postProcessorMenuPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
+		postProcessorMenuPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
+		cardPanel.add(postProcessorMenuPanel, "PostProcessingPanel");
 
 		// Add button Panel.
 		java.awt.Panel buttonPanel = new java.awt.Panel();
@@ -73,10 +78,8 @@ public class MainPanel extends java.awt.Panel {
 	void addJobs(Queue jobs) throws Exception {
 		preProcessorMenuPanel.addJobs(jobs);
 		algorithmPanel.addInverterJob(jobs);
-//		preProcessingPanel.addMeanFilterJob(jobs);
 		jobs.addJob(new Job("gradientdescent", null));
-//		postProcessingPanel.addPeakRemover(jobs);
-//		postProcessingPanel.addPeakMerger(jobs);
+		postProcessorMenuPanel.addJobs(jobs);
 	}
 
 	private void cancelButtonPressed() {

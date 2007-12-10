@@ -4,8 +4,9 @@ import costanza.Options;
 import costanza.Queue;
 import java.awt.Panel;
 
-public class MeanFilterOption extends java.awt.Panel implements ProcessorOption {
-	public MeanFilterOption() {
+
+public class PeakMergerOption extends java.awt.Panel implements ProcessorOption {
+	public PeakMergerOption() {
 		initComponents();
 	}
 	
@@ -20,8 +21,6 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
 
         radiusLabel = new java.awt.Label();
         radiusTextField = new java.awt.TextField();
-        repeatLabel = new java.awt.Label();
-        repeatTextField = new java.awt.TextField();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -30,48 +29,30 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(radiusLabel, gridBagConstraints);
 
-        radiusTextField.setText("2.0");
+        radiusTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(radiusTextField, gridBagConstraints);
-
-        repeatLabel.setText("Number of times:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(repeatLabel, gridBagConstraints);
-
-        repeatTextField.setText("2");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        add(repeatTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-	
-	
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Label radiusLabel;
-    private java.awt.TextField radiusTextField;
-    private java.awt.Label repeatLabel;
-    private java.awt.TextField repeatTextField;
-    // End of variables declaration//GEN-END:variables
 
 	public Panel getPanel() {
 		return this;
 	}
 
 	public String getProcessorName() {
-		return new String("Smoothing");
+		return "Peak merger";
 	}
 
 	public void addJobs(Queue jobs) throws Exception {
 		Options options = new Options();
 		options.addOption("radius", new Float(radiusTextField.getText()));
-		int repeat = new Integer(repeatTextField.getText()).intValue();
-		for (int i = 0; i < repeat; ++i) {
-			jobs.addJob(new Job("meanfilter", options));
-		}
+		jobs.addJob(new Job("peakmerger", options));
 	}
+	
+	
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Label radiusLabel;
+    private java.awt.TextField radiusTextField;
+    // End of variables declaration//GEN-END:variables
+	
 }

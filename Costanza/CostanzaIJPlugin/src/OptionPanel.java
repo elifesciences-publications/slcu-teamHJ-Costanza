@@ -25,11 +25,19 @@ public class OptionPanel extends java.awt.Panel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        removeButton = new java.awt.Button();
         processorNameLabel = new java.awt.Label();
+        removeButton = new java.awt.Button();
         optionPanel = new java.awt.Panel();
 
         setLayout(new java.awt.GridBagLayout());
+
+        processorNameLabel.setFont(new java.awt.Font("Dialog", 1, 12));
+        processorNameLabel.setText("processorName");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(processorNameLabel, gridBagConstraints);
 
         removeButton.setLabel("Remove");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -37,15 +45,15 @@ public class OptionPanel extends java.awt.Panel {
                 removeButtonActionPerformed(evt);
             }
         });
-        add(removeButton, new java.awt.GridBagConstraints());
-
-        processorNameLabel.setText("processorName");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(processorNameLabel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        add(removeButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         add(optionPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
