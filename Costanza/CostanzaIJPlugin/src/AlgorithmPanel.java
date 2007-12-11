@@ -1,12 +1,11 @@
 
 import costanza.Job;
-import costanza.Options;
 import costanza.Queue;
 
 public class AlgorithmPanel extends java.awt.Panel {
 
-	MainPanel mainPanel;
-	
+	private MainPanel mainPanel;
+
 	AlgorithmPanel(MainPanel mainPanel) {
 		initComponents();
 		this.mainPanel = mainPanel;
@@ -25,17 +24,17 @@ public class AlgorithmPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         invertCheckbox = new java.awt.Checkbox();
+
+        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
 
         invertCheckbox.setBackground(java.awt.Color.white);
         invertCheckbox.setLabel("Invert image(s) before processing.");
         add(invertCheckbox);
     }// </editor-fold>//GEN-END:initComponents
-	
-	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox invertCheckbox;
     // End of variables declaration//GEN-END:variables
-	
 }

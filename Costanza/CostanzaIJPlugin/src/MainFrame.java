@@ -10,6 +10,10 @@ public class MainFrame extends ij.plugin.frame.PlugInFrame {
 		setResizable(false);
 	}
 
+	void scaleDialogCancel(ScaleDialog aThis) {
+		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
 	void update() {
 		pack();
 		repaint();
