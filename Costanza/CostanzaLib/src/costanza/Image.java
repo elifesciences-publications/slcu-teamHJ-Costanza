@@ -1,5 +1,6 @@
 package costanza;
 
+import java.awt.color.ColorSpace;
 import java.awt.image.WritableRaster;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
@@ -9,7 +10,8 @@ public class Image {
 
     /** A BufferedImage representing a Greyscale channel. */
     BufferedImage bi;
-    final int imageType = BufferedImage.TYPE_USHORT_GRAY;
+    final int imageType = BufferedImage.TYPE_INT_RGB;
+    //final int imageType = BufferedImage.TYPE_BYTE_GRAY;
 
     /** Constructor for class Image.
      * This is the constructor that should be used to create a new Image object. 
@@ -28,6 +30,9 @@ public class Image {
 	if (image instanceof BufferedImage) {
 	    this.bi = (BufferedImage) image;
 	} else {
+	    //ColorSpace cs = image.getGraphics().getColor().getColorSpace();
+	    //System.out.println("Type of image: " + cs.getType());
+	    
 	    this.bi = new BufferedImage(image.getWidth(null), image.getHeight(null), imageType);
 	    bi.getGraphics().drawImage(image, 0, 0, null);
 	}
@@ -92,6 +97,7 @@ public class Image {
      */
     public void setIntensity(int x, int y, float value) {
 	bi.getRaster().setSample(x, y, 0, value);
+	//bi.setRGB(x, y, (int)value);
     }
 
     /**Sets the Vector of pixels.
@@ -147,7 +153,7 @@ public class Image {
     public BufferedImage getImage() {
 	return bi;
     }
-    
+
     /** Create a new BufferedImage with the given pixels marked.
      * 
      * @param r the pixels that should be marked in red.
@@ -155,17 +161,17 @@ public class Image {
      * @param b the pixels that should be marked in blue.
      * @return the new marked BufferedImage.
      */
-    public BufferedImage markPixels(Collection<Pixel> r, Collection<Pixel> g, Collection<Pixel> b){
+    public BufferedImage markPixels(Collection<Pixel> r, Collection<Pixel> g, Collection<Pixel> b) {
 	BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 	return image;
     }
-    
+
     /** Convert the greyscale intensity to an RGB int.
      * 
      * @param i the intensity to use.
      * @return the intensity in RGB encoding.
      */
-    private int intensityToRgb(int i){
+    private int intensityToRgb(int i) {
 	return 0;
     }
 }
