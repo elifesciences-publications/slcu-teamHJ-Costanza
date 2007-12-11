@@ -29,9 +29,9 @@ public class TextGUI {
     public TextGUI(String baseName) throws Exception {
 	final boolean invertFlag = true;
 	final boolean meanFilterFlag = true;
-	final boolean gradientDescentFlag = true;
-	final boolean intensityFinderFlag = true;
-	final boolean peakMergerFlag = true;
+	final boolean gradientDescentFlag = false;
+	final boolean intensityFinderFlag = false;
+	final boolean peakMergerFlag = false;
 	final boolean peakRemoverFlag = false;
 	final boolean randomImages = (baseName.length() > 0) ? false : true;
 
@@ -159,8 +159,9 @@ public class TextGUI {
 	    } else {
 		fname = baseName + i + ".jpg";
 	    }
-	    boolean write = ImageIO.write(image.getImage(), "jpg", new File(fname));
+	    boolean write = ImageIO.write(image.getImage(), "jpeg", new File(fname));
 	    System.out.println("Write success: " + write);
+	    //printImage(image);
 	}
     }
 
