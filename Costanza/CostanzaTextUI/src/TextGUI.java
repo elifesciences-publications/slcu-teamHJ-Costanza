@@ -25,10 +25,14 @@ import javax.imageio.ImageIO;
  */
 public class TextGUI {
 
-    /** Creates a new instance of TextGUI */
+    /** Creates a new instance of TextGUI.
+     * 
+     * @param baseName the name to use as base for loading and saving images.
+     * @throws java.lang.Exception
+     */
     public TextGUI(String baseName) throws Exception {
 	final boolean invertFlag = true;
-	final boolean meanFilterFlag = true;
+	final boolean meanFilterFlag = false;
 	final boolean gradientDescentFlag = false;
 	final boolean intensityFinderFlag = false;
 	final boolean peakMergerFlag = false;
@@ -119,6 +123,14 @@ public class TextGUI {
 
     }
 
+    /** Read some images into a stack.
+     * 
+     * @param baseName the start of the name of the images to read.
+     * @param numImages the number of images to read.
+     * @param randomImages whether to generate random images or not.
+     * @return a stack of images.
+     * @throws java.lang.Exception
+     */
     private Stack readImageStack(String baseName, int numImages, boolean randomImages) throws Exception {
 	Stack stack = new Stack();
 	if (randomImages) {
@@ -141,6 +153,12 @@ public class TextGUI {
 	return stack;
     }
 
+    /** Read in an image.
+     * 
+     * @param baseName the name of the image to read.
+     * @return the image in our format.
+     * @throws java.io.IOException
+     */
     private Image readImage(String baseName) throws IOException {
 	BufferedImage bi = null;
 	bi = ImageIO.read(new File(baseName));
@@ -148,6 +166,12 @@ public class TextGUI {
 	return image;
     }
 
+    /** Write a stack of images to files.
+     * 
+     * @param baseName the base name of the files to write to.
+     * @param stack the stack of images to write.
+     * @throws java.io.IOException
+     */
     private void writeImageStack(String baseName, Stack stack) throws IOException {
 	for (int i = 0; i < stack.getDepth(); i++) {
 	    Image image = stack.getImage(i);
@@ -155,12 +179,12 @@ public class TextGUI {
 	    System.out.println("Pixel(5,5): " + image.getIntensity(5, 5));
 	    String fname = "";
 	    if (i < 10) {
-		fname = baseName + "0" + i + ".jpg";
+		fname = baseName + "0" + i + "New.jpg";
 	    } else {
-		fname = baseName + i + ".jpg";
+		fname = baseName + i + "New.jpg";
 	    }
 	    boolean write = ImageIO.write(image.getImage(), "jpeg", new File(fname));
-	    System.out.println("Write success: " + write);
+	    System.out.println("Writing image " + fname + ": " + write);
 	    //printImage(image);
 	}
     }
@@ -183,23 +207,24 @@ public class TextGUI {
 	return image;
     }
 
-    /**
-     * Simple method for setting an initial image to a diagonal matrix.
+    /** Simple method for setting an initial image to a diagonal matrix.
      * @param w the width of the created image to use.
      * @param h the height of the created image to use.
+     * @return a random image.
      */
     private Image createRandomImage(int w, int h) {
 	Image image = new Image(w, h);
 	for (int i = 0; i < image.getWidth(); ++i) {
 	    for (int j = 0; j < image.getHeight(); ++j) {
-		image.setIntensity(i, j, (float) Math.random() * 255);
+		int intensity = (int) (Math.random() * 255);
+		intensity = (intensity & 0xff);
+		image.setIntensity(i, j, (float) intensity);
 	    }
 	}
 	return image;
     }
 
-    /**
-     * Print an Image to the terminal.
+    /** Print an Image to the terminal.
      * @param image the image to print
      */
     private void printImage(Image image) {
