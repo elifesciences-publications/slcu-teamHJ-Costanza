@@ -2,14 +2,13 @@
 import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
-import java.awt.Panel;
-
 
 public class PeakMergerOption extends java.awt.Panel implements ProcessorOption {
+
 	public PeakMergerOption() {
 		initComponents();
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -34,8 +33,7 @@ public class PeakMergerOption extends java.awt.Panel implements ProcessorOption 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(radiusTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-	public Panel getPanel() {
+	public java.awt.Panel getPanel() {
 		return this;
 	}
 
@@ -48,11 +46,8 @@ public class PeakMergerOption extends java.awt.Panel implements ProcessorOption 
 		options.addOption("radius", new Float(radiusTextField.getText()));
 		jobs.addJob(new Job("peakmerger", options));
 	}
-	
-	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Label radiusLabel;
     private java.awt.TextField radiusTextField;
     // End of variables declaration//GEN-END:variables
-	
 }

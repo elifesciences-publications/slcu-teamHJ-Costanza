@@ -2,14 +2,13 @@
 import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
-import java.awt.Panel;
 
 public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption {
-	
+
 	public PeakRemoverOption() {
 		initComponents();
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -50,8 +49,7 @@ public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(intensityThresholdTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
-	public Panel getPanel() {
+	public java.awt.Panel getPanel() {
 		return this;
 	}
 
@@ -65,13 +63,10 @@ public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption
 		options.addOption("intensityThreshold", new Float(intensityThresholdTextField.getText()));
 		jobs.addJob(new Job("peakremover", options));
 	}
-	
-	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Label intensityThresholdLabel;
     private java.awt.TextField intensityThresholdTextField;
     private java.awt.Label sizeThresholdLabel;
     private java.awt.TextField sizeThresholdTextField;
     // End of variables declaration//GEN-END:variables
-	
 }

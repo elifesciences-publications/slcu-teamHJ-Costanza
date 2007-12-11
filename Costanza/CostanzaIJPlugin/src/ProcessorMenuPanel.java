@@ -1,23 +1,20 @@
 
 import costanza.Factory;
 import costanza.Queue;
-import java.awt.Dimension;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.LinkedList;
+import java.util.logging.Level;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ProcessorMenuPanel extends java.awt.Panel {
 
-	private LinkedList<OptionPanel> optionPanelList;
+	private java.util.LinkedList<OptionPanel> optionPanelList;
 	private MainFrame frame;
 	private Factory<ProcessorOption> factory;
 
 	public ProcessorMenuPanel(MainFrame frame) {
 		this.frame = frame;
 		factory = new Factory<ProcessorOption>();
-		optionPanelList = new LinkedList<OptionPanel>();
+		optionPanelList = new java.util.LinkedList<OptionPanel>();
 		initComponents();
 	}
 
@@ -27,7 +24,7 @@ public class ProcessorMenuPanel extends java.awt.Panel {
 	}
 
 	public void addJobs(Queue jobs) throws Exception {
-		Iterator<OptionPanel> iterator = optionPanelList.iterator();
+		java.util.Iterator<OptionPanel> iterator = optionPanelList.iterator();
 
 		while (iterator.hasNext()) {
 			OptionPanel optionPanel = iterator.next();

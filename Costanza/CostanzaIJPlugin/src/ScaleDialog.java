@@ -2,20 +2,21 @@
 import ij.measure.Calibration;
 
 public class ScaleDialog extends java.awt.Dialog {
+
 	private Costanza_Plugin plugin;
 	private Calibration calibration;
-	
+
 	public ScaleDialog(Costanza_Plugin plugin, boolean modal, ij.measure.Calibration calibration) {
 		super(plugin.getMainFrame(), "Costanza Plugin", modal);
 		this.plugin = plugin;
 		this.calibration = calibration;
-		
+
 		initComponents();
 		xScaleTextField.setText(Double.toString(calibration.pixelWidth));
 		yScaleTextField.setText(Double.toString(calibration.pixelHeight));
 		zScaleTextField.setText(Double.toString(calibration.pixelDepth));
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -116,7 +117,6 @@ public class ScaleDialog extends java.awt.Dialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-	
 	/** Closes the dialog */
 	private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
 		setVisible(false);
@@ -130,11 +130,9 @@ public class ScaleDialog extends java.awt.Dialog {
 	private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
 		calibration.pixelWidth = new Float(xScaleTextField.getText()).floatValue();
 		calibration.pixelHeight = new Float(yScaleTextField.getText()).floatValue();
-		calibration.pixelDepth= new Float(zScaleTextField.getText()).floatValue();
+		calibration.pixelDepth = new Float(zScaleTextField.getText()).floatValue();
 		plugin.scaleDialogContinue(this);
 	}//GEN-LAST:event_continueButtonActionPerformed
-	
-	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Panel buttonPanel;
     private java.awt.Button cancelButton;
@@ -148,5 +146,4 @@ public class ScaleDialog extends java.awt.Dialog {
     private java.awt.Label zScaleLabel;
     private java.awt.TextField zScaleTextField;
     // End of variables declaration//GEN-END:variables
-	
 }

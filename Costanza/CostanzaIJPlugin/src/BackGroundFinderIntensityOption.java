@@ -2,7 +2,6 @@
 import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
-import java.awt.Panel;
 
 public class BackGroundFinderIntensityOption extends java.awt.Panel implements ProcessorOption {
 	public BackGroundFinderIntensityOption() {
@@ -34,7 +33,7 @@ public class BackGroundFinderIntensityOption extends java.awt.Panel implements P
         add(intensityThresholdTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-	public Panel getPanel() {
+	public java.awt.Panel getPanel() {
 		return this;
 	}
 

@@ -1,7 +1,6 @@
 
 import costanza.Image;
 import costanza.Stack;
-import ij.measure.Calibration;
 
 /** Utility class for the Costanza Plugin. */
 public class Utility {
@@ -18,11 +17,11 @@ public class Utility {
 			stack.addImage(image);
 		}
 
-		Calibration calibration = imagePlus.getCalibration();
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
 		stack.setXScale((float) calibration.pixelWidth);
 		stack.setYScale((float) calibration.pixelHeight);
 		stack.setZScale((float) calibration.pixelDepth);
-		
+
 		return stack;
 	}
 
@@ -37,13 +36,13 @@ public class Utility {
 			Image image = stack.getImage(i);
 			imageStack.addSlice("", getImageProcessorFromImage(image));
 		}
-		
+
 		ij.ImagePlus imagePlus = new ij.ImagePlus("Costanza Image", imageStack);
-		Calibration calibration = imagePlus.getCalibration();
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
 		calibration.pixelWidth = stack.getXScale();
 		calibration.pixelHeight = stack.getYScale();
 		calibration.pixelDepth = stack.getZScale();
-		
+
 		return imagePlus;
 	}
 
@@ -56,7 +55,7 @@ public class Utility {
 		}
 		return stack.getProcessor(1);
 	}
-	
+
 	static public void printWarning(String string) {
 		ij.IJ.showMessage("Costanza Plugin", "Warning: " + string + "\n");
 	}

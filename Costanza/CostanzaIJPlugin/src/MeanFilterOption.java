@@ -5,10 +5,11 @@ import costanza.Queue;
 import java.awt.Panel;
 
 public class MeanFilterOption extends java.awt.Panel implements ProcessorOption {
+
 	public MeanFilterOption() {
 		initComponents();
 	}
-	
+
 	/** This method is called from within the constructor to
 	 * initialize the form.
 	 * WARNING: Do NOT modify this code. The content of this method is
@@ -49,15 +50,12 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(repeatTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-	
-	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Label radiusLabel;
     private java.awt.TextField radiusTextField;
     private java.awt.Label repeatLabel;
     private java.awt.TextField repeatTextField;
     // End of variables declaration//GEN-END:variables
-
 	public Panel getPanel() {
 		return this;
 	}

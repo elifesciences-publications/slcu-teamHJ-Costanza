@@ -7,8 +7,6 @@ import costanza.Factory;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
-import ij.IJ;
-import ij.ImagePlus;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,7 +16,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		status = PluginStatus.CANCEL_DIALOG;
 		dialog.setVisible(false);
 	}
-	
+
 	MainFrame getMainFrame() {
 		return frame;
 	}
@@ -29,16 +27,16 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private enum PluginStatus {
+
 		RUN_APPLICATION,
 		EXIT_APPLICATION,
 		CANCEL_DIALOG,
 		CONTINUE_DIALOG
 	}
-
 	private Factory<Processor> factory;
 	private MainFrame frame;
 	private PluginStatus status;
-	
+
 	public void run(String arg) {
 		try {
 			initFactory();
@@ -80,9 +78,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 	public void start(MainPanel panel) {
 		try {
-			ImagePlus imagePlus;
+			ij.ImagePlus imagePlus;
 			try {
-				imagePlus = IJ.getImage();
+				imagePlus = ij.IJ.getImage();
 			} catch (Exception exception) {
 				// Do nothing as we assume ImageJ is displaying a message about this exception.
 				return;
@@ -92,7 +90,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			scaleDialog.setVisible(true);
 
 			switch (status) {
-				case CANCEL_DIALOG: 
+				case CANCEL_DIALOG:
 					return;
 				case CONTINUE_DIALOG:
 					status = PluginStatus.RUN_APPLICATION;
@@ -100,7 +98,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 				default:
 					throw new Exception("Unexpected error in start()");
 			}
-			
+
 			Stack stack = Utility.createStackFromImagePlus(imagePlus);
 			Case IJCase = new Case(stack);
 
@@ -112,14 +110,12 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 			Stack result = IJCase.getStack();
 
-
-			
-			ImagePlus ip = Utility.createImagePlusFromStack(result);
+			ij.ImagePlus ip = Utility.createImagePlusFromStack(result);
 			ip.show();
 
 			displayData(IJCase);
 		} catch (Exception exception) {
-			IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
+			ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
 		}
 	}
 

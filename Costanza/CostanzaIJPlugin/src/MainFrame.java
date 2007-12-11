@@ -1,3 +1,4 @@
+
 public class MainFrame extends ij.plugin.frame.PlugInFrame {
 
 	MainPanel panel;

@@ -3,7 +3,7 @@ public class OptionPanel extends java.awt.Panel {
 
 	ProcessorMenuPanel parentPanel;
 	ProcessorOption processorOption;
-	
+
 	public OptionPanel(ProcessorMenuPanel parentPanel, ProcessorOption processorOption) {
 		this.parentPanel = parentPanel;
 		this.processorOption = processorOption;
@@ -11,7 +11,7 @@ public class OptionPanel extends java.awt.Panel {
 		optionPanel.add(processorOption.getPanel());
 		processorNameLabel.setText(processorOption.getProcessorName());
 	}
-	
+
 	public ProcessorOption getProcessorOption() {
 		return processorOption;
 	}

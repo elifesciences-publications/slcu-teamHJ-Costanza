@@ -1,13 +1,9 @@
 
 import costanza.Job;
 import costanza.Queue;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class MainPanel extends java.awt.Panel {
+
 	private ProcessorMenuPanel preProcessorMenuPanel;
 	private ProcessorMenuPanel postProcessorMenuPanel;
 	private Costanza_Plugin plugin;
@@ -16,9 +12,9 @@ public class MainPanel extends java.awt.Panel {
 	private java.awt.CardLayout cardLayout;
 	private AlgorithmPanel algorithmPanel;
 
-	public MainPanel(Costanza_Plugin plugin, MainFrame frame) throws Exception {
+	public MainPanel(Costanza_Plugin plugin, MainFrame frame) throws java.lang.Exception {
 		this.plugin = plugin;
-		setLayout(new BorderLayout(10, 10));
+		setLayout(new java.awt.BorderLayout(10, 10));
 		setBackground(new java.awt.Color(255, 255, 255));
 
 		// Add Choice to MainPanel.
@@ -27,9 +23,9 @@ public class MainPanel extends java.awt.Panel {
 		mainChoice.add("Pre-processing options");
 		mainChoice.add("Post-processing options");
 		mainChoice.addItemListener(
-				new ItemListener() {
+				new java.awt.event.ItemListener() {
 
-					public void itemStateChanged(ItemEvent event) {
+					public void itemStateChanged(java.awt.event.ItemEvent event) {
 						menuChanged();
 					}
 				});
@@ -37,7 +33,7 @@ public class MainPanel extends java.awt.Panel {
 
 		// Add CardLayout Panel.
 		cardPanel = new java.awt.Panel();
-		cardPanel.setLayout(cardLayout = new CardLayout());
+		cardPanel.setLayout(cardLayout = new java.awt.CardLayout());
 		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
 		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
 		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
@@ -52,33 +48,35 @@ public class MainPanel extends java.awt.Panel {
 		postProcessorMenuPanel.addOptionPanel("Peak remover");
 		postProcessorMenuPanel.addOptionPanel("Peak merger");
 		cardPanel.add(postProcessorMenuPanel, "PostProcessingPanel");
-		
-		
+
+
 
 		// Add button Panel.
 		java.awt.Panel buttonPanel = new java.awt.Panel();
 		buttonPanel.setBackground(new java.awt.Color(255, 255, 255));
-		
+
 		java.awt.Button cancelButton = new java.awt.Button();
 		java.awt.Button startButton = new java.awt.Button();
-		
-        cancelButton.setLabel("Cancel");
-        cancelButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelButtonPressed();
-            }
-        });
+
+		cancelButton.setLabel("Cancel");
+		cancelButton.addActionListener(new java.awt.event.ActionListener() {
+
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				cancelButtonPressed();
+			}
+		});
 		buttonPanel.add(cancelButton);
 
-        startButton.setLabel("Start");
-        startButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                startButtonPressed();
-            }
-        });
-        buttonPanel.add(startButton);
+		startButton.setLabel("Start");
+		startButton.addActionListener(new java.awt.event.ActionListener() {
 
-        add(buttonPanel, java.awt.BorderLayout.SOUTH);
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				startButtonPressed();
+			}
+		});
+		buttonPanel.add(startButton);
+
+		add(buttonPanel, java.awt.BorderLayout.SOUTH);
 	}
 
 	void addJobs(Queue jobs) throws Exception {
