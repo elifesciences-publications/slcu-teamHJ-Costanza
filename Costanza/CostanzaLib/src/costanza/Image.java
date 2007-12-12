@@ -95,8 +95,10 @@ public class Image {
      * @param value the intensity to set.
      */
     public void setIntensity(int x, int y, float value) {
-	bi.getRaster().setSample(x, y, 0, value);
-	//bi.setRGB(x, y, (int)value);
+	//bi.getRaster().setSample(x, y, 0, value);
+	int tmp = (int)value;
+	int val = ((tmp & 0xff) << 16) + ((tmp & 0xff) << 8) + (tmp & 0xff);
+	bi.setRGB(x, y, val);
     }
 
     /**Sets the Vector of pixels.
