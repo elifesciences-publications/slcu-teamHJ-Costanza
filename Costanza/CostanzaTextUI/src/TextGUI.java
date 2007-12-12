@@ -10,13 +10,13 @@ import costanza.GradientDescent;
 import costanza.IntensityFinder;
 import costanza.PeakMerger;
 import costanza.PeakRemover;
-import java.awt.*;
-import java.awt.event.*;
+import costanza.Pixel;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import javax.imageio.ImageIO;
 
 /**
@@ -277,11 +277,26 @@ public class TextGUI {
 	}
 	ImageIO.write(bi, "jpg", new File("apa.jpg"));
     }
+    
+    private static void tryRedPixels() throws IOException{
+	Vector<Pixel> reds = new Vector<Pixel>();
+	for (int i = 0; i < 10; i++) {
+	    for (int j = 0; j < 10; j++){
+		reds.add(new Pixel(i,j,0));
+	    }
+	}
+
+	File file = new File("/home/whitman/michael/projects/imageProcessing/data/43SmallZoom/jpg/009.jpg");
+	Image image = new Image(ImageIO.read(file));
+	BufferedImage bi = image.markPixels(reds, reds, reds);
+	boolean write = ImageIO.write(bi, "jpg", new File("apa.jpg"));
+    }
 
     public static void main(String[] argv) {
 	try {
 	    new TextGUI(argv.length > 0 ? argv[0] : "");
 	//tryConversion();
+	    //tryRedPixels();
 	} catch (Exception e) {
 	    System.err.println("Error: " + e.getMessage());
 	    e.printStackTrace();
