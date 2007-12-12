@@ -1,6 +1,7 @@
 
 import costanza.Case;
 import costanza.CellCenter;
+import costanza.CellIntensity;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
@@ -74,6 +75,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("peakremover", costanza.PeakRemover.class);
 		factory.register("peakmerger", costanza.PeakMerger.class);
 		factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
+		factory.register("intensityfinder", costanza.IntensityFinder.class);
 	}
 
 	public void start(MainPanel panel) {
@@ -120,15 +122,18 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private void displayData(Case IJCase) {
-		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz");
+		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tTotal cell intensity\tMean cell intensity");
 
 		Object[] cellCenters = IJCase.getCellData(DataId.cellCenters).toArray();
+		Object[] cellIntensities = IJCase.getCellData(DataId.cellIntensity).toArray();
 
 		for (int i = 0; i < cellCenters.length; ++i) {
 			String line = new String();
 			line += i + "\t";
 			CellCenter cellCenter = (CellCenter) cellCenters[i];
-			line += cellCenter.getX() + "\t" + cellCenter.getY() + "\t" + cellCenter.getZ();
+			line += cellCenter.getX() + "\t" + cellCenter.getY() + "\t" + cellCenter.getZ() + "\t";
+			CellIntensity cellIntensity = (CellIntensity) cellIntensities[i];
+			line += cellIntensity.getIntensity(0) + "\t" + cellIntensity.getIntensity(1);
 			ij.IJ.write(line);
 		}
 	}

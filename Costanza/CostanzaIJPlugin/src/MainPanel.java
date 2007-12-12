@@ -1,5 +1,6 @@
 
 import costanza.Job;
+import costanza.Options;
 import costanza.Queue;
 
 public class MainPanel extends java.awt.Panel {
@@ -82,8 +83,11 @@ public class MainPanel extends java.awt.Panel {
 	void addJobs(Queue jobs) throws Exception {
 		preProcessorMenuPanel.addJobs(jobs);
 		algorithmPanel.addInverterJob(jobs);
-		jobs.addJob(new Job("gradientdescent", null));
+		Options gradientDescentOption = new Options();
+		gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
+		jobs.addJob(new Job("gradientdescent", gradientDescentOption));
 		postProcessorMenuPanel.addJobs(jobs);
+		jobs.addJob(new Job("intensityfinder", null));
 	}
 
 	private void cancelButtonPressed() {
