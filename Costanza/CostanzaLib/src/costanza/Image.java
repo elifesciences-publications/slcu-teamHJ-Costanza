@@ -4,6 +4,7 @@ import java.awt.color.ColorSpace;
 import java.awt.image.WritableRaster;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.Vector;
 
 /** Container class for pixel information */
 public class Image {
@@ -161,9 +162,9 @@ public class Image {
      * @param b the pixels that should be marked in blue.
      * @return the new marked BufferedImage.
      */
-    public BufferedImage markPixels(Collection<Pixel> r, Collection<Pixel> g, Collection<Pixel> b) {
-	BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-	return image;
+    public BufferedImage markPixels(Vector<Pixel> r, Vector<Pixel> g, Vector<Pixel> b) {
+	PixelMarker pm = new PixelMarker(this, r, g, b);
+	return pm.markAllPixels();
     }
 
     /** Convert the greyscale intensity to an RGB int.
