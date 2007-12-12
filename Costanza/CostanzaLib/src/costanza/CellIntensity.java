@@ -63,4 +63,8 @@ public class CellIntensity extends Vector<Float> implements CellId{
     public float getIntensity( int pos ){
         return elementAt(pos);
     }  
+    
+    public float setIntensity( int pos, float value ){
+        return set(pos, value);
+    } 
 }
