@@ -1,9 +1,7 @@
 package costanza;
 
-import java.awt.color.ColorSpace;
 import java.awt.image.WritableRaster;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.Vector;
 
 /** Container class for pixel information */
