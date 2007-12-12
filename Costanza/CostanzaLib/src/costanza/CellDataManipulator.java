@@ -89,7 +89,7 @@ public class CellDataManipulator extends Data {
 	Object o = null;
 	Collection<?> v = getCellData(dId);
 	Iterator it = v.iterator();
-	System.out.println("getObject " + dId.toString() + " " + cId);
+	//System.out.println("getObject " + dId.toString() + " " + cId);
 	switch (dId) {
 	    case cellCenters: {
 		while (it.hasNext()) {
