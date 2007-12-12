@@ -56,11 +56,11 @@ public class CellIntensity extends Vector<Float> implements CellId{
 //        return intensities;
 //    }
     
-//    /**Gets the associated Intensity at position i.
-//     *@param int position
-//     *@return float intensity
-//     */
-//    public float getIntensity( int pos ){
-//        return intensities.elementAt(pos);
-//    }  
+    /**Gets the associated Intensity at position i.
+     *@param position int 
+     *@return intensity float 
+     */
+    public float getIntensity( int pos ){
+        return elementAt(pos);
+    }  
 }
