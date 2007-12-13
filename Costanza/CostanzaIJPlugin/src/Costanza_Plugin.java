@@ -122,7 +122,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private void displayData(Case IJCase) {
-		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tTotal cell intensity\tMean cell intensity");
+		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tMean cell intensity");
 
 		Object[] cellCenters = IJCase.getCellData(DataId.cellCenters).toArray();
 		Object[] cellIntensities = IJCase.getCellData(DataId.cellIntensity).toArray();
@@ -133,7 +133,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			CellCenter cellCenter = (CellCenter) cellCenters[i];
 			line += cellCenter.getX() + "\t" + cellCenter.getY() + "\t" + cellCenter.getZ() + "\t";
 			CellIntensity cellIntensity = (CellIntensity) cellIntensities[i];
-			line += cellIntensity.getIntensity(0) + "\t" + cellIntensity.getIntensity(1);
+			line += cellIntensity.getIntensity(0);
 			ij.IJ.write(line);
 		}
 	}
