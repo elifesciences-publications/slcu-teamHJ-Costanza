@@ -1,8 +1,6 @@
 package costanza;
 
 import java.util.Vector;
-import java.lang.Exception;
-import java.util.Iterator;
 
 /**
  * Costanzas representation of the stack of images.
@@ -31,7 +29,7 @@ public class Stack {
 	this.height = height;
 	myImage = new Vector<Image>();
 	myImage.setSize(0);
-	maxIntensityLimit = 255;
+	maxIntensityLimit = (float) 1.0;
     }
     
     public Stack() {
@@ -39,7 +37,7 @@ public class Stack {
 	this.height = 0;
 	myImage = new Vector<Image>();
 	myImage.setSize(0);
-	maxIntensityLimit = 255;
+	maxIntensityLimit = (float) 1.0;
     }
 
     @Override
