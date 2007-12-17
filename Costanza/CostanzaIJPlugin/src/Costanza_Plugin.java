@@ -115,9 +115,12 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			ij.ImagePlus ip = Utility.createImagePlusFromStack(result);
 			ip.show();
 
-			displayData(IJCase);
+		//	displayData(IJCase);
 		} catch (Exception exception) {
 			ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
+			exception.printStackTrace();
+			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
+			return;
 		}
 	}
 
@@ -125,15 +128,15 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tMean cell intensity");
 
 		Object[] cellCenters = IJCase.getCellData(DataId.cellCenters).toArray();
-		Object[] cellIntensities = IJCase.getCellData(DataId.cellIntensity).toArray();
+//		Object[] cellIntensities = IJCase.getCellData(DataId.cellIntensity).toArray();
 
 		for (int i = 0; i < cellCenters.length; ++i) {
 			String line = new String();
 			line += i + "\t";
 			CellCenter cellCenter = (CellCenter) cellCenters[i];
 			line += cellCenter.getX() + "\t" + cellCenter.getY() + "\t" + cellCenter.getZ() + "\t";
-			CellIntensity cellIntensity = (CellIntensity) cellIntensities[i];
-			line += cellIntensity.getIntensity(0);
+//   CellIntensity cellIntensity = (CellIntensity) cellIntensities[i];
+	//		line += cellIntensity.getIntensity(0);
 			ij.IJ.write(line);
 		}
 	}
