@@ -46,25 +46,25 @@ public class Image {
         this.height = image.getHeight(null);
         this.pixels = new float[width * height];
         int[] iArray = new int[width * height];
+        PixelGrabber pg = new PixelGrabber(image, 0, 0, width, height, iArray, 0, width);
         try {
-            PixelGrabber pg = new PixelGrabber(image, 0, 0, width, height, false);
             pg.grabPixels();
-            iArray = (int[]) pg.getPixels();
-            for (int i = 0; i < iArray.length; i++) {
-                pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
-            //int[] argb = RgbToSamples(iArray[i]);
-            //System.out.println("Float: " + (int)(pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-            }
-        /*System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
-        int[] argb = RgbToSamples(iArray[getIndex(50, 50)]);
-        System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-        argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
-        System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-         */
         } catch (InterruptedException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        //Store the red component as a float in our pixels array
+        for (int i = 0; i < iArray.length; i++) {
+            pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
+            //int[] argb = RgbToSamples(iArray[i]);
+            //System.out.println("Float: " + (int) (pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+        }
+    
+    System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
+    int[] argb = RgbToSamples(iArray[getIndex(50, 50)]);
+    System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+    /*argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+    System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+     */
     }
 
     /** Constructor for class Image from an AWT BufferedImage.
@@ -211,11 +211,11 @@ public class Image {
                 image.setRGB(i, j, intensityToRgb(pixels[getIndex(i, j)]));
             }
         }
-        /*
+        
         System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
         int[] argb = RgbToSamples(image.getRGB(50, 50));
         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-        argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+        /*argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
          */
         return image;
