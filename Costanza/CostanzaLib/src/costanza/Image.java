@@ -26,16 +26,6 @@ public class Image {
         pixels = new float[width * height];
     }
 
-    /**Convert x and y coordinate to index.
-     * 
-     * @param x the x coordinate to use.
-     * @param y the y coordinate to use.
-     * @return the index.
-     */
-    private int getIndex(int x, int y) {
-        return y * width + x;
-    }
-
     /** Constructor for class Image from an AWT Image.
      * Note that this does NOT copy the BufferedImage! Any changes made 
      * to Image will affect the BufferedImage as well.
@@ -55,14 +45,14 @@ public class Image {
         //Store the red component as a float in our pixels array
         for (int i = 0; i < iArray.length; i++) {
             pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
-            //int[] argb = RgbToSamples(iArray[i]);
-            //System.out.println("Float: " + (int) (pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+        //int[] argb = RgbToSamples(iArray[i]);
+        //System.out.println("Float: " + (int) (pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
         }
-    
+    /*
     System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
     int[] argb = RgbToSamples(iArray[getIndex(50, 50)]);
     System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-    /*argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+    argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
     System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
      */
     }
@@ -160,10 +150,10 @@ public class Image {
 
     /**Sets the Vector of intPixels.
      * 
-     * @param pixelVector The float array of intPixels we want to set
+     * @param pixels The float array of grayscales we want to set
      */
-    private void setPixelVector(float[] pixelVector) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    private void setPixels(float[] pixels) {
+        this.pixels = pixels;
     }
 
     /** Returns the maximum intensity of the image.
@@ -194,13 +184,6 @@ public class Image {
         return min;
     }
 
-    /** Sets the BufferedImage in our Image.
-     * @param bufferedImage the BufferedImage to set.
-     */
-    public void setBufferedImage(BufferedImage bufferedImage) {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     /** Returns a BufferedImage representing this Image.
      * @return a BufferedImage representation of this Image.
      */
@@ -211,11 +194,11 @@ public class Image {
                 image.setRGB(i, j, intensityToRgb(pixels[getIndex(i, j)]));
             }
         }
-        
+        /*
         System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
         int[] argb = RgbToSamples(image.getRGB(50, 50));
         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-        /*argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+        argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
          */
         return image;
@@ -231,6 +214,16 @@ public class Image {
     public BufferedImage markPixels(Vector<Pixel> r, Vector<Pixel> g, Vector<Pixel> b) {
         PixelMarker pm = new PixelMarker(this, r, g, b);
         return pm.markAllPixels();
+    }
+
+    /**Convert x and y coordinate to index.
+     * 
+     * @param x the x coordinate to use.
+     * @param y the y coordinate to use.
+     * @return the index.
+     */
+    private int getIndex(int x, int y) {
+        return y * width + x;
     }
 
     /** Convert the greyscale intensity to an RGB int.
