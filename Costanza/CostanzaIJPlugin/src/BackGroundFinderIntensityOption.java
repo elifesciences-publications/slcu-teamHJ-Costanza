@@ -27,7 +27,7 @@ public class BackGroundFinderIntensityOption extends java.awt.Panel implements P
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(intensityThresholdLabel, gridBagConstraints);
 
-        intensityThresholdTextField.setText("10");
+        intensityThresholdTextField.setText("0.1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(intensityThresholdTextField, gridBagConstraints);
