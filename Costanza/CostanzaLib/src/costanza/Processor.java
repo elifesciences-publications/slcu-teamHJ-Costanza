@@ -8,7 +8,6 @@ public abstract class Processor {
 	public Case myCase;
 	public Processor myProcessor;
 
-
 	/** 
 	 * Abstract method for running the implemented process.
 	 * @param c the Case the the Processor will work on.
