@@ -13,7 +13,7 @@ public class BoaColorizer extends Processor {
     @Override
     public Case process(Case c, Options options) throws Exception {
         // Get the basin of attractors from data in case
-        Collection boaCollection = c.getCellData(DataId.cellBasinsOfAttraction);
+        Collection boaCollection = c.getCellData(DataId.BOAS);
         if (boaCollection == null) { return c; }
         Iterator i = boaCollection.iterator();
         while (i.hasNext()) {
