@@ -3,68 +3,78 @@ package costanza;
 import java.util.Collection;
 import java.util.Vector;
 
-/**CellIntensity is a Pixel, CellId and float intensity.*/
-public class CellIntensity extends Vector<Float> implements CellId{
+/**CellIntensity is a Vector of lfoar intensity values, implements CellData_t*/
+
+public class CellIntensity extends Vector<Float> implements CellData_t{
     
-    /**Id of the cell that data corresponds to*/
-    int cellId;
+    /**Cell which owns data*/
+    Cell cell;
+    /**Constructs uninitialized CellIntensity*/
+    public CellIntensity(){}
     
-    /**Constructs uninitialized CellIntensity with id.
-     *@param id int
+    /**Constructs CellIntensity which holds specified intensity.
+     *@param float intens
      */
-    public CellIntensity( int id ){
-        cellId = id;
-    }
-    
-    /**Constructs CellIntensity with specified intensity and with id.
-     *@param id int
-     *@param intens float
-     */
-    public CellIntensity( int id, float intens ) {
+    public CellIntensity( float intens ) {
         super();
         add(intens);
-        cellId = id;
        
     }
-    /**Constructs CellIntensity with specified intensities and with id.
-     *@param id
-     *@param intens Colllection<Float>
+    /**Constructs CellIntensity with specified intensities.
+     *@param Colllection<Float> intens 
      */
-    public CellIntensity( int id, Collection<Float> intens ) {
+    public CellIntensity( Collection<Float> intens ) {
         super(intens);
-        cellId = id;
     }
     
     /**Adds/appends new intensity to the CellIntensity
-     *@param intens float
+     *@param float intens
      */
     public void addIntensity( float intens ){
        add(intens);
     }
     
-        /**Gets the id of the data's cell.
-     *@return int
-     */
-    public int getId(){
-        return cellId;
-    }
-    
-//    /**Gets the associated Intensities.
-//     *@return Vector<float>
-//     */
-//    public Vector<Float> getIntensities(){
-//        return intensities;
-//    }
-    
-    /**Gets the associated Intensity at position i.
-     *@param position int 
-     *@return intensity float 
+    /**Gets the associated intensity at position i.
+     *@param int position 
+     *@return float intensity
      */
     public float getIntensity( int pos ){
         return elementAt(pos);
     }  
     
+    /**Sets the intensity at position i to the given value.
+     *@param int position 
+     *@param float value
+     */
     public float setIntensity( int pos, float value ){
         return set(pos, value);
-    } 
+    }
+    
+   /**Gets the id of the data's cell.
+     *@return int
+     */
+    public int getCellId(){
+        return cell.getCellId();
+    }
+
+    /**Gets the id of the data.
+     *@return DataId
+     */
+    public DataId getDataId() {
+        return DataId.INTENSITIES;
+    }
+    
+    /**Sets the cell which owns the data.
+     *@param Cell cell
+     */
+    public void setCell(Cell cell) {
+        this.cell = cell;
+    }
+    
+    /**Gets the the data's cell.
+     *@return Cell
+     */
+    public Cell getCell() {
+        return cell;
+    }
 }

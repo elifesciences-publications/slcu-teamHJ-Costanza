@@ -31,17 +31,17 @@ public class PeakMerger extends Processor {
     public Case process(Case c, Options o) throws Exception {
 	float R = ((Float) o.getOptionValue("radius")).floatValue();
 	float[] scale = c.getStack().getScale();
-	Object obj[] = c.getCellData(DataId.cellCenters).toArray();
+	Object obj[] = c.getCellData(DataId.CENTERS).toArray();
 	int numObj = obj.length;
 	int i = 0;
 	for (; i < numObj; ++i) {
 	    Object o1 = obj[i];
-	    for (Object o2 : c.getCellData(DataId.cellCenters).toArray()) {
+	    for (Object o2 : c.getCellData(DataId.CENTERS).toArray()) {
 		boolean merged =
 			testForMerging(o1, o2, scale, R, c);
 		if (merged) {
 		    i=0;
-		    obj = c.getCellData(DataId.cellCenters).toArray();
+		    obj = c.getCellData(DataId.CENTERS).toArray();
 		    numObj = obj.length;
 		    break;
 		}
@@ -59,7 +59,7 @@ public class PeakMerger extends Processor {
 	    CellCenter cc2 = (CellCenter) o2;
 	    if (getDistance(cc1, cc2, scale) < R) {
 		//System.out.println("merge " + cc1.getId() + " " + cc2.getId());
-		manip.mergeAllData(cc1.getId(), cc2.getId(), bigInt++);
+		manip.mergeAllData( cc1.getCell(), cc2.getCell() );
 		//System.out.println("Done");
 		merged = true;
 	    }

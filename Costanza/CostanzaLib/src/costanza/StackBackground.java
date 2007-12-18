@@ -3,7 +3,7 @@ package costanza;
 import java.util.Collection;
 import java.util.Vector;
 
-public class StackBackground extends Vector<Pixel>{
+public class StackBackground extends Vector<Pixel> implements Data_t{
     
     /** Creates a new instance of StackBackground */
     public StackBackground(){}
@@ -35,12 +35,12 @@ public class StackBackground extends Vector<Pixel>{
     public boolean hasPixel( Pixel p ){
         return contains( p );
     }
-    
-//    /**Provides collection of Pixels in the background
-//     *@return Collection<Pixels>
-//     */
-//    public Collection<Pixel> getPixels(){
-//        return pixels;
-//    }
+
+    /**Gets the id of the data.
+     *@return DataId
+     */
+    public DataId getDataId() {
+        return DataId.BACKGROUND;
+    }
 }
 

@@ -6,25 +6,26 @@ import java.util.Vector;
 /**Basin Of Atraction defines pixels that belong to the same atraction zone.
  * extends TreeSet<Pixel>, implements CellId
  */
-public class BOA extends Vector<Pixel> implements CellId{
+public class BOA extends Vector<Pixel> implements CellData_t{
     
     /**Id of the cell that data corresponds to*/
-    int cellId;
+    //int cellId;
  
+    Cell cell;
     /**Constructs empty BOA with id.
      *@param id int
      */
-    public BOA( int id ){
-        cellId = id;
+    public BOA(){
+        //cellId = id;
     }
     
     /**Constructs BOA including Pixels in Collection c with id.
      * @param id int
      * @param c Collection<Pixel>
      */
-    public BOA( int id, Collection<Pixel> c ) {
+    public BOA( Collection<Pixel> c ) {
         super(c);
-        cellId = id;
+        //cellId = id;
     }
     
     /**adds Pixel to the BOA.
@@ -48,17 +49,31 @@ public class BOA extends Vector<Pixel> implements CellId{
         return contains( p );
     }
     
-        /**Gets the id of the data's cell.
+   /**Gets the id of the data's cell.
      *@return int
      */
-    public int getId(){
-        return cellId;
+    public int getCellId(){
+        return cell.getCellId();
+    }
+
+    /**Gets the id of the data.
+     *@return DataId
+     */
+    public DataId getDataId() {
+        return DataId.BOAS;
     }
     
-//    /**Provides collection of Pixels in the BOA
-//     *@return Collection<Pixels>
-//     */
-//    public Collection<Pixel> getPixels(){
-//        return pixels;
-//    }
+    /**Sets the cell which owns the data.
+     *@param Cell cell
+     */
+    public void setCell(Cell cell) {
+        this.cell = cell;
+    }
+    
+    /**Gets the the data's cell.
+     *@return Cell
+     */
+    public Cell getCell() {
+        return cell;
+    }
 }

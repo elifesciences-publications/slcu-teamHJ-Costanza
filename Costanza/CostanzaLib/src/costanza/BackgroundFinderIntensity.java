@@ -43,8 +43,9 @@ public class BackgroundFinderIntensity extends Processor {
 		
 		// Create background BOA and add it to data structure
 		//BOA bgBoa = new BOA(-1,bgPixel);
-		//c.getData().attachData(DataId.stackBackground,bgBoa);
-		c.attachData(DataId.stackBackground,bgPixel);
+		//c.getData().attachData(DataId.BACKGROUND,bgBoa);
+		c.attachStackData(bgPixel);
+                
 		
 		return c;
 	}

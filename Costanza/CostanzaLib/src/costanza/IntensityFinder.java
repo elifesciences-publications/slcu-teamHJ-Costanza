@@ -22,7 +22,7 @@ public class IntensityFinder extends Processor {
         }
         // Get the basin of attractors from data in case
         Vector<BOA> boa = new Vector<BOA>();
-        Collection boaCollection = c.getCellData(DataId.cellBasinsOfAttraction);
+        Collection boaCollection = c.getCellData(DataId.BOAS);
         if (boaCollection != null && boaCollection.iterator().hasNext()) {
             //int count=0;
             Iterator i = boaCollection.iterator();
@@ -64,10 +64,10 @@ public class IntensityFinder extends Processor {
             Vector<Float> tmp = new Vector<Float>();
             tmp.add(intensity.get(i));
             tmp.add(meanIntensity.get(i));
-            ciTmp.add(new CellIntensity(boa.get(i).getId(), tmp));
+            Cell cell = boa.get(i).getCell();
+            c.attachCellData(new CellIntensity(tmp), cell);
         }
-        c.attachDataCollection(DataId.cellIntensity, ciTmp);
-        System.out.println("IntensityCounter:" + c.sizeOfData(DataId.cellIntensity));
+        System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));
 
         return c;
     }

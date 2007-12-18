@@ -31,17 +31,17 @@ public class PeakRemover extends Processor {
 		float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
 		float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
 
-		Object[] centers = c.getCellData(DataId.cellCenters).toArray();
+		Object[] centers = c.getCellData(DataId.CENTERS).toArray();
 		for (int i = 0; i < centers.length; ++i) {
 			CellCenter cc = (CellCenter) centers[i];
 			int x = cc.getX();
 			int y = cc.getY();
 			int z = cc.getZ();
 			if (c.getStack().getIntensity(x, y, z) < intensityThreshold) {
-				c.removeAll(cc.getId());
+				c.removeAllCellData(cc.getCell());
 			}
 		}
-		Object[] boas = c.getCellData(DataId.cellBasinsOfAttraction).toArray();
+		Object[] boas = c.getCellData(DataId.BOAS).toArray();
 		for (int i = 0; i < boas.length; ++i) {
 			BOA boa = (BOA) boas[i];//it.next();
 			float size =
@@ -50,7 +50,7 @@ public class PeakRemover extends Processor {
 					(c.getStack().getYScale()) *
 					(c.getStack().getZScale());
 			if (size < sizeThreshold) {
-				c.removeAll(boa.getId());
+				c.removeAllCellData(boa.getCell());
 			}
 		}
 		return c;

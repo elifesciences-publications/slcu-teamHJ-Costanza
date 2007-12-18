@@ -37,7 +37,7 @@ public class MeanFilter extends Processor {
 			}
 		}
 		// Get background pixels from data and set bgFlag to -1
-		StackBackground sb = (StackBackground)c.getStackData(DataId.stackBackground);
+		StackBackground sb = (StackBackground)c.getStackData(DataId.BACKGROUND);
 		if (sb!=null) {
 			Vector<Pixel> bg = new Vector<Pixel>(sb);
 			int bgSize = bg.size();

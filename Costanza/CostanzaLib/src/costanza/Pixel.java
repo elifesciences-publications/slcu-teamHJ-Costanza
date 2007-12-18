@@ -50,7 +50,7 @@ public class Pixel {
         return z;
     }
     
-    /**Gets Pixel index in x direction.
+    /**Sets Pixel index in x direction.
      *@param x int
      **/
     public void setX( int x ){
@@ -64,10 +64,21 @@ public class Pixel {
         this.y = y;
     }
     
-    /**Get Pixel index in z direction.
+    /**Sets Pixel index in z direction.
      *@param z int
      **/
     public void setZ( int z ){
+        this.z = z;
+    }
+    
+    /**Sets Pixel indices.
+     *@param x int
+     *@param y int
+     *@param z int
+     **/
+    public void setXYZ( int x, int y, int z ){
+        this.x = x;
+        this.y = y;
         this.z = z;
     }
 }
