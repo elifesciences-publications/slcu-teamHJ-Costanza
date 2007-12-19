@@ -37,7 +37,15 @@ public class Data {
         return cells.get( cellId );
     }
     
-    /**Gets Set of keys of available data types for given DataGroup
+    /**Gives the size of cells 
+     * @return number of cells contained in the data
+     */
+    public int sizeOfCells(){
+        return cells.size();
+    }
+    
+    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+     * Gets Set of keys of available data types for given DataGroup
      * @param dg DataGroup
      * @return Set<DataId>
      * @throws java.lang.Exception
@@ -53,7 +61,8 @@ public class Data {
         }
     }
 
-    /**Gives the size of the data of given type
+    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+     * Gives the size of the data of given type
      * @param id DataId
      * @return int
      */
@@ -66,7 +75,8 @@ public class Data {
         return 0;
     }
 
-    /**Retrives cell data Collection associated with given dataId
+    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+     * Retrives cell data Collection associated with given dataId
      * @param id DataId
      * @return Collection<? extends CellData_t >, null if no data of given type found
      */
@@ -82,7 +92,32 @@ public class Data {
     public CellData_t  getCellData(DataId dId, int cId) {
         return cells.get(cId).get(dId);
     }
-
+    
+    /**Retrives cell data of given Cell associated with given dataId
+     * @param dId DataId
+     * @param c Cell
+     * @return CellData_t
+     */
+    public CellData_t  getCellData(DataId dId, Cell c) {
+        return c.get(dId);
+    }
+    
+    /**Retrives a set of cell ids stored in data. 
+     * Set is tied to cell data, so changes in the set are reflected in store cells.
+     * @return Set of cell ids
+     */
+    public Set<Integer> getCellIds(){
+        return cells.keySet();
+    }
+    
+    /**Retrives a collection of Cells stored in data. 
+     * Collection is tied to the data, so changes in either one are reflected in the other.
+     * @return Collection of Cell objects
+     */
+    public Collection<Cell> getCells(){
+        return cells.values();
+    }
+    
     /**Retrives stack data of given dataId
      * @param id DataId
      * @return Data_t
@@ -116,9 +151,9 @@ public class Data {
         attachCellData( data, cell );
     }
 
-    /**Attaches data Object to a dataId
-     *@param id String id, 
-     *@param o Object
+    /**Attaches data to given cell
+     * @param data
+     * @param cell Cell
      */
     @SuppressWarnings("unchecked")
     public <T extends CellData_t> void attachCellData(T data, Cell cell) {
@@ -131,8 +166,8 @@ public class Data {
 
     }
     
-    /**Removes data object o from Data set with id DataId
-     *@param Data_t data
+    /**Removes data from data set
+     * @param d Data_t
      */
     public void removeData(Data_t d) {
         DataId id = d.getDataId();
@@ -149,17 +184,28 @@ public class Data {
         }
     }
     
+    /**Removes data of given type form the cell
+     * @param dId DataId
+     * @param c Cell
+     */
     public void removeCellData(DataId dId, Cell c) {
         Data_t d = c.get(dId);
         cellDataMap.get(dId).remove(d);
 	c.remove(dId);
     }
     
+    /**Removes data of dgiven type from the cell with given id
+     * @param dId DataId
+     * @param cId int
+     */
     public void removeCellData(DataId dId, int cId) {
         Cell cell = cells.get(cId);
         removeCellData( dId, cell );
     }
     
+    /**Removes all the data from given cell
+     * @param c Cell
+     */
     public void removeAllCellData(Cell c){
         Iterator< Map.Entry<DataId, CellData_t> > iter = c.entrySet().iterator();
         while (iter.hasNext()) {
@@ -172,12 +218,16 @@ public class Data {
         c.clear();
     }
     
+    /** all the data from the cell with given id
+     * @param cId int
+     */
     public void removeAllCellData(int cId){
         Cell cell = cells.get(cId);
         removeAllCellData(cell);
     }
+    
     /**Removes cell and all its data
-     *@param int cId
+     *@param c cell to remove
      */
     public void removeCell(Cell c) {
 
@@ -192,13 +242,16 @@ public class Data {
         cells.remove(c.getCellId());
     }
         
+    /**Removes the cell of given id
+     * @param cId id of the cell to remove
+     */
     public void removeCell(int cId) {
         Cell cell = cells.get(cId);
         removeCell( cell );
     }
 
     /**Removes all data from Data set with id DataId
-     *@param id DataId 
+     *@param id the id of the data type to clear
      */
     public void clearData(DataId id) {
 

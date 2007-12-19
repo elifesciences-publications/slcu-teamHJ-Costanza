@@ -144,15 +144,13 @@ public class CellDataManipulator extends Data {
      * @throws java.lang.Exception
      */
     public void mergeAllData(Cell c1, Cell c2) throws Exception {
-        
-	Set<DataId> ids = getDataKeys( DataGroup.CELL );
+       
+        Set<DataId> ids = getDataKeys( DataGroup.CELL );
 	Iterator iter = ids.iterator();
 
 	while (iter.hasNext()) {
 	    DataId id = (DataId) iter.next();
-	    if (id.name().startsWith("cell")) {
-		merge(id, c1, c2);
-	    }
+            merge(id, c1, c2);
 	}
     }
     
