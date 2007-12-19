@@ -10,6 +10,7 @@ package costanza;
 
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
 
 /**
  * PeakMerger merges peaks if they are closer than some threshold.
@@ -58,7 +59,26 @@ public class PeakMerger extends Processor {
         System.out.println("Peak merger set :  " + keys );
         Iterator<Integer> iter = keys.iterator();
         while(iter.hasNext()){
-            System.out.println( c.getCell(iter.next()).getCellId() );
+            Cell cell = c.getCell(iter.next());
+            Vector<Object> dat = new Vector<Object>();
+            if(cell.get(DataId.CENTERS) != null )
+                dat.add("cent");
+            else
+                dat.add(null);
+            if(cell.get(DataId.BOAS) != null )
+                dat.add("boa ");
+            else
+                dat.add(null);
+            if(cell.get(DataId.INTENSITIES) != null )
+                dat.add("inte");
+            else
+                dat.add(null);
+            if(cell.get(DataId.NEIGHBORS) != null )
+                dat.add("neig");
+            else
+                dat.add(null);
+
+            System.out.print( cell.getCellId() + ": " + dat + "\n");
         }
 	return c;
 

@@ -192,10 +192,12 @@ public class GradientDescent extends Processor {
         
         for (int i = 0; i < numCell; ++i) {
            // cc.add(new CellCenter(max.get(i)));
+            //System.out.println(i + ":  " + max.get(i));
             c.attachCellData( new CellCenter(max.get(i)), i );
             c.attachCellData( boa.elementAt(i), i );
         }
 
+        //System.out.println("Gradient descent numCell :  " + numCell);
         int size1 = c.sizeOfCells();
         Set<Integer> keys = c.getCellIds();
         int size2 = keys.size();

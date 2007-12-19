@@ -7,6 +7,7 @@ import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.Vector;
 
 /** Class holds methods for manipulating cell data*/
 public class CellDataManipulator extends Data {
@@ -147,11 +148,16 @@ public class CellDataManipulator extends Data {
        
         Set<DataId> ids = getDataKeys( DataGroup.CELL );
 	Iterator iter = ids.iterator();
-
+        
+        int c1id = c1.getCellId();
+        int c2id = c2.getCellId();
+        
+        Vector<Integer> cfinal = new Vector<Integer>();
 	while (iter.hasNext()) {
 	    DataId id = (DataId) iter.next();
-            merge(id, c1, c2);
+            cfinal.add(merge(id, c1, c2));
 	}
+        System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
     }
     
     /**Merges all data for given cells. Final data are put in the first cell. 
