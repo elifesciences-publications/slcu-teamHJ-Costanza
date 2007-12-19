@@ -90,7 +90,7 @@ public class Data {
      * @return CellData_t
      */
     public CellData_t  getCellData(DataId dId, int cId) {
-        return cells.get(cId).get(dId);
+        return getCellData( dId, cells.get(cId) );
     }
     
     /**Retrives cell data of given Cell associated with given dataId
@@ -99,7 +99,10 @@ public class Data {
      * @return CellData_t
      */
     public CellData_t  getCellData(DataId dId, Cell c) {
-        return c.get(dId);
+        if(c == null)
+            return null;
+        else
+            return c.get(dId);
     }
     
     /**Retrives a set of cell ids stored in data. 
@@ -176,10 +179,12 @@ public class Data {
         
         if (id.getGroup() == DataGroup.CELL) {
             Collection<? extends Data_t> dColl = cellDataMap.get(id);
-            dColl.remove(d);
+            if(dColl != null)
+                dColl.remove(d);
             
             Cell cell = ((CellData_t)d).getCell();
-            cell.remove(id);
+            if(cell != null)
+                cell.remove(id);
         } 
         else if (id.getGroup() == DataGroup.STACK) {
             stackDataMap.put(id, null);
@@ -191,6 +196,8 @@ public class Data {
      * @param c Cell
      */
     public void removeCellData(DataId dId, Cell c) {
+        if(c == null)
+            return;
         Data_t d = c.get(dId);
         cellDataMap.get(dId).remove(d);
 	c.remove(dId);
@@ -209,6 +216,8 @@ public class Data {
      * @param c Cell
      */
     public void removeAllCellData(Cell c){
+        if(c == null)
+            return;
         Iterator< Map.Entry<DataId, CellData_t> > iter = c.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<DataId, CellData_t> pairs = (Map.Entry<DataId, CellData_t>) iter.next();
@@ -233,6 +242,8 @@ public class Data {
      */
     public void removeCell(Cell c) {
 
+        if(c == null)
+            return;
         Iterator< Map.Entry<DataId, CellData_t> > iter = c.entrySet().iterator();
         while (iter.hasNext()) {
             Map.Entry<DataId, CellData_t> pairs = (Map.Entry<DataId, CellData_t>) iter.next();

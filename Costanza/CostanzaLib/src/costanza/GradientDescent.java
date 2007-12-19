@@ -1,5 +1,6 @@
 package costanza;
 
+import java.util.Set;
 import java.util.Vector;
 
 /**
@@ -195,6 +196,11 @@ public class GradientDescent extends Processor {
             c.attachCellData( boa.elementAt(i), i );
         }
 
+        int size1 = c.sizeOfCells();
+        Set<Integer> keys = c.getCellIds();
+        int size2 = keys.size();
+        System.out.println("Gradient descent sizes :  " + size1 + "; " + size2 );
+        System.out.println("Gradient descent set :  " + keys );
         /** @todo Expand the background appropriately.
          */
         //System.out.println("CellcenterCounter:" + c.sizeOfData(DataId.CENTERS));
