@@ -175,18 +175,13 @@ public class CellDataManipulator extends Data {
      * @throws java.lang.Exception
      */
     private int merge(DataId id, Cell c1, Cell c2 ) throws Exception {
-
-//        if(c1 == null || c2 == null){
-//            System.out.println("one of the cells is null");
-//            return -1;
-//        }
             
 	switch (id) {
 	    case CENTERS: {
 		CellCenter e1 = (CellCenter)c1.get(id), e2 = (CellCenter)c2.get(id);
 
                 if (e1 == null || e2 == null) {
-		    System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
+		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
 		    return -1;
 		}
                 
@@ -203,7 +198,7 @@ public class CellDataManipulator extends Data {
 		CellIntensity e1 = (CellIntensity)c1.get(id), e2 = (CellIntensity)c2.get(id);
                 
                 if (e1 == null || e2 == null) {
-		    System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
+		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
 		    return -1;
 		}
 
@@ -224,7 +219,7 @@ public class CellDataManipulator extends Data {
                 BOA e1 = (BOA)c1.get(id), e2 = (BOA)c2.get(id);
 
 		if (e1 == null || e2 == null) {
-		    System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
+		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
 		    return -1;
 		}
 

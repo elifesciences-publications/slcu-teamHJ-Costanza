@@ -163,6 +163,8 @@ public class Data {
         
         Collection<T> dColl = (Collection<T>) cellDataMap.get(data.getDataId());
         dColl.add( data );
+        
+        cells.put(cell.getCellId(), cell);
 
     }
     
