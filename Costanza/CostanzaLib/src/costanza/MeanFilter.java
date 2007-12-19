@@ -1,5 +1,7 @@
 package costanza;
 
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 /**
@@ -73,7 +75,7 @@ public class MeanFilter extends Processor {
 			}
 		}
 		
-		int numIndex = zList.size();
+		int numIndex = zList.size();             
 		for (int zI = 0; zI < zSize; ++zI) {
 			for (int yI = 0; yI < ySize; ++yI) {
 				for (int xI = 0; xI < xSize; ++xI) {

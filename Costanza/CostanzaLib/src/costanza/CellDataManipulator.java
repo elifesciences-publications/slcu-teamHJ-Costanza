@@ -176,7 +176,11 @@ public class CellDataManipulator extends Data {
      */
     private int merge(DataId id, Cell c1, Cell c2 ) throws Exception {
 
-        
+//        if(c1 == null || c2 == null){
+//            System.out.println("one of the cells is null");
+//            return -1;
+//        }
+            
 	switch (id) {
 	    case CENTERS: {
 		CellCenter e1 = (CellCenter)c1.get(id), e2 = (CellCenter)c2.get(id);
@@ -229,7 +233,7 @@ public class CellDataManipulator extends Data {
 		break;
 	    }
 	}
-        removeCell(c2.getCellId());
+        removeCell(c2);
         return c1.getCellId();
     }
 
