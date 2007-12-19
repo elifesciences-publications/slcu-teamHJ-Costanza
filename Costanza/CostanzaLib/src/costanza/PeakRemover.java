@@ -20,73 +20,77 @@ import java.util.Vector;
  */
 public class PeakRemover extends Processor {
 
-	/** Creates a new instance of PeakRemover */
-	public PeakRemover() {
-	}
+    /** Creates a new instance of PeakRemover */
+    public PeakRemover() {
+    }
 
-	/**
-	 * Implements the PeakRemover algorithm.
-	 * @param c a Case 
-	 * @param o an Option containing two thresholds for size and intensity.
-	 * @return a modified Case object
-	 * @see Processor
-	 */
-	public Case process(Case c, Options o) throws Exception {
-		float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
-		float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
+    /**
+     * Implements the PeakRemover algorithm.
+     * @param c a Case 
+     * @param o an Option containing two thresholds for size and intensity.
+     * @return a modified Case object
+     * @see Processor
+     */
+    public Case process(Case c, Options o) throws Exception {
+        float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
+        float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
 
-		Object[] centers = c.getCellData(DataId.CENTERS).toArray();
-		for (int i = 0; i < centers.length; ++i) {
-			CellCenter cc = (CellCenter) centers[i];
-			int x = cc.getX();
-			int y = cc.getY();
-			int z = cc.getZ();
-			if (c.getStack().getIntensity(x, y, z) < intensityThreshold) {
-				c.removeAllCellData(cc.getCell());
-			}
-		}
-		Object[] boas = c.getCellData(DataId.BOAS).toArray();
-		for (int i = 0; i < boas.length; ++i) {
-			BOA boa = (BOA) boas[i];//it.next();
-			float size =
-					boa.size() *
-					(c.getStack().getXScale()) *
-					(c.getStack().getYScale()) *
-					(c.getStack().getZScale());
-			if (size < sizeThreshold) {
-                            c.removeCell(boa.getCell());
-				//c.removeAllCellData(boa.getCell());
-			}
-		}
-                        int size1 = c.sizeOfCells();
+        Object[] centers = c.getCellData(DataId.CENTERS).toArray();
+        for (int i = 0; i < centers.length; ++i) {
+            CellCenter cc = (CellCenter) centers[i];
+            int x = cc.getX();
+            int y = cc.getY();
+            int z = cc.getZ();
+            if (c.getStack().getIntensity(x, y, z) < intensityThreshold) {
+                //c.removeAllCellData(cc.getCell());
+                c.removeCell(cc.getCell());
+            }
+        }
+        Object[] boas = c.getCellData(DataId.BOAS).toArray();
+        for (int i = 0; i < boas.length; ++i) {
+            BOA boa = (BOA) boas[i];//it.next();
+            float size =
+                    boa.size() *
+                    (c.getStack().getXScale()) *
+                    (c.getStack().getYScale()) *
+                    (c.getStack().getZScale());
+            if (size < sizeThreshold) {
+                c.removeCell(boa.getCell());
+            //c.removeAllCellData(boa.getCell());
+            }
+        }
+        int size1 = c.sizeOfCells();
         Set<Integer> keys = c.getCellIds();
         int size2 = keys.size();
-        System.out.println("Peak remover sizes :  " + size1 + "; " + size2 );
-        System.out.println("Peak remover set :  " + keys );
+        System.out.println("Peak remover sizes :  " + size1 + "; " + size2);
+        System.out.println("Peak remover set :  " + keys);
         Iterator<Integer> iter = keys.iterator();
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             Cell cell = c.getCell(iter.next());
             Vector<Object> dat = new Vector<Object>();
-            if(cell.get(DataId.CENTERS) != null )
+            if (cell.get(DataId.CENTERS) != null) {
                 dat.add("cent");
-            else
+            } else {
                 dat.add(null);
-            if(cell.get(DataId.BOAS) != null )
+            }
+            if (cell.get(DataId.BOAS) != null) {
                 dat.add("boa ");
-            else
+            } else {
                 dat.add(null);
-            if(cell.get(DataId.INTENSITIES) != null )
+            }
+            if (cell.get(DataId.INTENSITIES) != null) {
                 dat.add("inte");
-            else
+            } else {
                 dat.add(null);
-            if(cell.get(DataId.NEIGHBORS) != null )
+            }
+            if (cell.get(DataId.NEIGHBORS) != null) {
                 dat.add("neig");
-            else
+            } else {
                 dat.add(null);
+            }
 
-            System.out.print( cell.getCellId() + ": " + dat + "\n");
+            System.out.print(cell.getCellId() + ": " + dat + "\n");
         }
-		return c;
-	}
-
+        return c;
+    }
 }
