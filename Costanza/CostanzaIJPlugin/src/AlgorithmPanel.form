@@ -25,5 +25,10 @@
         <Property name="label" type="java.lang.String" value="Invert image(s) before processing."/>
       </Properties>
     </Component>
+    <Component class="java.awt.Checkbox" name="boaColourizeCheckbox">
+      <Properties>
+        <Property name="label" type="java.lang.String" value="Display basins of attractions (BOA) after analyze."/>
+      </Properties>
+    </Component>
   </SubComponents>
 </Form>

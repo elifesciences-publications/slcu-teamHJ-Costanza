@@ -88,6 +88,7 @@ public class MainPanel extends java.awt.Panel {
 		jobs.addJob(new Job("gradientdescent", gradientDescentOption));
 		postProcessorMenuPanel.addJobs(jobs);
 		jobs.addJob(new Job("intensityfinder", null));
+		algorithmPanel.addBoaColorizerJob(jobs);
 	}
 
 	private void cancelButtonPressed() {
