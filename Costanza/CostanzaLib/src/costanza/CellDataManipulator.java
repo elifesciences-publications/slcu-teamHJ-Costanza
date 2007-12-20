@@ -157,7 +157,7 @@ public class CellDataManipulator extends Data {
 	    DataId id = (DataId) iter.next();
             cfinal.add(merge(id, c1, c2));
 	}
-        System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
+        //System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
     }
     
     /**Merges all data for given cells. Final data are put in the first cell. 

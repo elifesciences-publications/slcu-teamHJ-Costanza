@@ -198,11 +198,11 @@ public class GradientDescent extends Processor {
         }
 
         //System.out.println("Gradient descent numCell :  " + numCell);
-        int size1 = c.sizeOfCells();
-        Set<Integer> keys = c.getCellIds();
-        int size2 = keys.size();
-        System.out.println("Gradient descent sizes :  " + size1 + "; " + size2 );
-        System.out.println("Gradient descent set :  " + keys );
+//        int size1 = c.sizeOfCells();
+//        Set<Integer> keys = c.getCellIds();
+//        int size2 = keys.size();
+//        System.out.println("Gradient descent sizes :  " + size1 + "; " + size2 );
+//        System.out.println("Gradient descent set :  " + keys );
         /** @todo Expand the background appropriately.
          */
         //System.out.println("CellcenterCounter:" + c.sizeOfData(DataId.CENTERS));

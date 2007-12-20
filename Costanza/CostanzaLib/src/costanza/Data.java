@@ -44,7 +44,7 @@ public class Data {
         return cells.size();
     }
     
-    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+    /**Deprecated method. Avoid using it. It might be not supported in the next version.
      * Gets Set of keys of available data types for given DataGroup
      * @param dg DataGroup
      * @return Set<DataId>
@@ -61,7 +61,7 @@ public class Data {
         }
     }
 
-    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+    /**Deprecated method. Avoid using it. It might be not supported in the next version.
      * Gives the size of the data of given type
      * @param id DataId
      * @return int
@@ -75,7 +75,7 @@ public class Data {
         return 0;
     }
 
-    /**Depreciates method. Avoid using it. It might be not supported in the next version.
+    /**Deprecated method. Avoid using it. It might be not supported in the next version.
      * Retrives cell data Collection associated with given dataId
      * @param id DataId
      * @return Collection<? extends CellData_t >, null if no data of given type found
