@@ -15,8 +15,8 @@ public class Case extends CellDataManipulator {
     /**Original image stack contained in the Case*/
     private Stack mOriginalStack;
     //private CellDataManipulator manip;
-    /**A BufferedImage serving as a result for certain Processors.*/
-    private Vector<BufferedImage> resultImages;
+    /**A BufferedImage array serving as a result for certain Processors.*/
+    private BufferedImage[] resultImages;
 
     /**
      * Case constructor.
@@ -85,7 +85,7 @@ public class Case extends CellDataManipulator {
      * 
      * @return a BufferedImage Vector representing the result of a Processor.
      */
-    public Vector<BufferedImage> getResultImages() {
+    public BufferedImage[] getResultImages() {
         return resultImages;
     }
 
@@ -93,7 +93,7 @@ public class Case extends CellDataManipulator {
      * 
      * @param resultImage the BufferedImage you want to use as a resulting Image.
      */
-    public void setResultImages(Vector<BufferedImage> resultImages) {
+    public void setResultImages(BufferedImage[] resultImages) {
         this.resultImages = resultImages;
     }
 }

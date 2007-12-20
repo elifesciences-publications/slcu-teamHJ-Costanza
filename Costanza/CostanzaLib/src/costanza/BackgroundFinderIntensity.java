@@ -1,10 +1,6 @@
 package costanza;
-import java.util.Vector;
-import java.util.Collection;
-import java.util.Iterator;
-/**
- * Collects all pixels below a threshold intensity into the background
- *
+
+/**Collects all pixels below a threshold intensity into the background.
  *
  * @see Processor
  */
@@ -16,7 +12,6 @@ public class BackgroundFinderIntensity extends Processor {
 		// Get threshold value from options
 		Float tmpThreshold = (Float) (options.getOptionValue("threshold"));
 		float threshold = tmpThreshold.floatValue();
-
     
 		// Check that there is an working stack in case
 		if( c.getStack() == null) {
@@ -45,8 +40,7 @@ public class BackgroundFinderIntensity extends Processor {
 		//BOA bgBoa = new BOA(-1,bgPixel);
 		//c.getData().attachData(DataId.BACKGROUND,bgBoa);
 		c.attachStackData(bgPixel);
-                
-		
+                		
 		return c;
 	}
 }
