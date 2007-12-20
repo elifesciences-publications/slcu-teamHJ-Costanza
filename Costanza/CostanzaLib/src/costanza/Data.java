@@ -83,6 +83,23 @@ public class Data {
     public Collection<? extends CellData_t > getCellData(DataId id) {
         return cellDataMap.get(id);
     }
+
+    /**Deprecated method. Avoid using it. It might be not supported in the next version.
+     *Retrives cell data Collection associated with given dataId and puts it in supplayed array
+     * @param id DataId
+     * @param arr array to put data in. If array is not big enough to fit data new array is created.
+     * @return array containing the data
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends CellData_t> T[] getCellData(DataId id, T[] arr) {
+        int size = cellDataMap.get(id).size();
+        if(arr.length >= size )
+            return cellDataMap.get(id).toArray(arr);
+        else{
+            arr = (T[])java.lang.reflect.Array.newInstance(arr.getClass().getComponentType(), size);
+            return cellDataMap.get(id).toArray(arr);
+        }
+    }
     
     /**Retrives cell data of given Cell associated with given dataId
      * @param dId DataId
