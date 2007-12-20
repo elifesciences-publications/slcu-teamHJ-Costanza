@@ -52,34 +52,34 @@ public class PeakMerger extends Processor {
 	    }
 	}
         
-        int size1 = c.sizeOfCells();
-        Set<Integer> keys = c.getCellIds();
-        int size2 = keys.size();
-        System.out.println("Peak merger sizes :  " + size1 + "; " + size2 );
-        System.out.println("Peak merger set :  " + keys );
-        Iterator<Integer> iter = keys.iterator();
-        while(iter.hasNext()){
-            Cell cell = c.getCell(iter.next());
-            Vector<Object> dat = new Vector<Object>();
-            if(cell.get(DataId.CENTERS) != null )
-                dat.add("cent");
-            else
-                dat.add(null);
-            if(cell.get(DataId.BOAS) != null )
-                dat.add("boa ");
-            else
-                dat.add(null);
-            if(cell.get(DataId.INTENSITIES) != null )
-                dat.add("inte");
-            else
-                dat.add(null);
-            if(cell.get(DataId.NEIGHBORS) != null )
-                dat.add("neig");
-            else
-                dat.add(null);
-
-            System.out.print( cell.getCellId() + ": " + dat + "\n");
-        }
+//        int size1 = c.sizeOfCells();
+//        Set<Integer> keys = c.getCellIds();
+//        int size2 = keys.size();
+//        System.out.println("Peak merger sizes :  " + size1 + "; " + size2 );
+//        System.out.println("Peak merger set :  " + keys );
+//        Iterator<Integer> iter = keys.iterator();
+//        while(iter.hasNext()){
+//            Cell cell = c.getCell(iter.next());
+//            Vector<Object> dat = new Vector<Object>();
+//            if(cell.get(DataId.CENTERS) != null )
+//                dat.add("cent");
+//            else
+//                dat.add(null);
+//            if(cell.get(DataId.BOAS) != null )
+//                dat.add("boa ");
+//            else
+//                dat.add(null);
+//            if(cell.get(DataId.INTENSITIES) != null )
+//                dat.add("inte");
+//            else
+//                dat.add(null);
+//            if(cell.get(DataId.NEIGHBORS) != null )
+//                dat.add("neig");
+//            else
+//                dat.add(null);
+//
+//            System.out.print( cell.getCellId() + ": " + dat + "\n");
+//        }
 	return c;
 
     }
