@@ -39,7 +39,8 @@ public class BoaColorizer extends Processor {
             BufferedImage bufferedImage = images[p.getZ()];
             int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
             int newColor = boaColor;
-            if (!isGrayScale(prevColor)) {
+            if (isGrayScale(prevColor) == false) {
+		System.out.println("Combining colors from BOA!");
                 newColor = combine(prevColor, boaColor);
             }
             bufferedImage.setRGB(p.getX(), p.getY(), newColor);
@@ -56,7 +57,7 @@ public class BoaColorizer extends Processor {
 
     private int[] genColors(int size) {
         int[] colors = new int[size];
-        for (int i = 0; i < colors.length; i++) {
+        for (int i = 0; i < colors.length; ++i) {
             int red = (int) (Math.random() * 255);
             int green = (int) (Math.random() * 255);
             int blue = (int) (Math.random() * 255);
