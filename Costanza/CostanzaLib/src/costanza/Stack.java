@@ -16,7 +16,7 @@ public class Stack {
     /** Contains scale of image in x,y z direction.*/
     private float[] scale = {1.0f, 1.0f, 1.0f};
     /** Internal representation of the stack.*/
-    private Vector<Image> myImage;
+    private Vector<Image> images;
     /** Stores the maximal intensity in the stack*/
     private float maxIntensity;
     /** Stores the minimal intensity in the stack*/
@@ -24,42 +24,66 @@ public class Stack {
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit;
 
+    /**Creates a new empty Stack with the specified width and height.
+     * All images added to this Stack must have the same width and height.
+     * @param width the width of each image added to this Stack.
+     * @param height the height of each image added to this Stack.
+     */
     public Stack(int width, int height) {
 	this.width = width;
 	this.height = height;
-	myImage = new Vector<Image>();
-	myImage.setSize(0);
+	images = new Vector<Image>();
+	images.setSize(0);
 	maxIntensityLimit = (float) 1.0;
     }
-    
+
+    /**Creates a new empty Stack.
+     * 
+     */
     public Stack() {
 	this.width = 0;
 	this.height = 0;
-	myImage = new Vector<Image>();
-	myImage.setSize(0);
+	images = new Vector<Image>();
+	images.setSize(0);
+	maxIntensityLimit = (float) 1.0;
+    }
+
+    /**Constructs a Stack from an array of AWT Images.
+     * 
+     * @param images the array of images to create the stack from.
+     */
+    public Stack(java.awt.Image[] images) {
+	this.width = 0;
+	this.height = 0;
+	this.images = new Vector<Image>();
+	this.images.setSize(images.length);
+	for (int i = 0; i < images.length; ++i) {
+	    java.awt.Image image = images[i];
+	    this.images.add(new Image(image));
+	}
 	maxIntensityLimit = (float) 1.0;
     }
 
     @Override
     public Object clone() {
-	//System.out.println("clone: myImage.size: " + myImage.size());
+	//System.out.println("clone: images.size: " + images.size());
 	Stack tmp = new Stack(width, height);
 	tmp.setXScale(scale[0]);
 	tmp.setYScale(scale[1]);
 	tmp.setZScale(scale[2]);
 	Vector<Image> copy = new Vector<Image>();
 	//System.out.println("NumInStack: " + tmp.getDepth());
-	//System.out.println("NumInStack: " + myImage.size());
-	//copy.setSize(myImage.size());
-	for (int i = 0; i < myImage.size(); ++i) {
-	    copy.add((Image) myImage.get(i).clone());
+	//System.out.println("NumInStack: " + images.size());
+	//copy.setSize(images.size());
+	for (int i = 0; i < images.size(); ++i) {
+	    copy.add((Image) images.get(i).clone());
 	}
 	tmp.setImageVector(copy);
 	return tmp;
     }
 
     public Image getImage(int index) {
-	return myImage.get(index);
+	return images.get(index);
     }
 
     /**
@@ -67,7 +91,7 @@ public class Stack {
      * @return depth of stack
      */
     public int getDepth() {
-	return myImage.size(); //depth;
+	return images.size(); //depth;
     }
 
     /**
@@ -150,11 +174,11 @@ public class Stack {
      * @return intensity in point (x,y,z)
      */
     public float getIntensity(int x, int y, int z) {
-	if(x >= getWidth() || y >= getHeight() || z >= getDepth()){
-	    System.out.println("W: "+getWidth()+" H: "+getHeight() + " D: "+getDepth());
-	    System.out.println("X: "+x+" Y: "+y+" Z: "+z);
+	if (x >= getWidth() || y >= getHeight() || z >= getDepth()) {
+	    System.out.println("W: " + getWidth() + " H: " + getHeight() + " D: " + getDepth());
+	    System.out.println("X: " + x + " Y: " + y + " Z: " + z);
 	}
-	return myImage.elementAt(z).getIntensity(x, y);
+	return images.elementAt(z).getIntensity(x, y);
     }
 
     /**
@@ -164,7 +188,7 @@ public class Stack {
      * @param I an Image to add to the stsck.
      */
     public void addImage(Image I) throws Exception {
-	if (myImage.isEmpty()) {
+	if (images.isEmpty()) {
 	    height = I.getHeight();
 	    width = I.getWidth();
 	    maxIntensity = I.getMaxIntensity();
@@ -177,11 +201,11 @@ public class Stack {
 	    minIntensity = I.getMinIntensity();
 	}
 	/*if (maxIntensity > 1.0f && minIntensity < 0.0f) {
-	    throw new Exception("Intensity is out of range");
+	throw new Exception("Intensity is out of range");
 	}*/
-	//System.out.println("Size: " + myImage.size());
-	myImage.addElement(I);
-    //System.out.println("Size: " + myImage.size());
+	//System.out.println("Size: " + images.size());
+	images.addElement(I);
+    //System.out.println("Size: " + images.size());
     }
 
     /**
@@ -192,7 +216,7 @@ public class Stack {
      * @param value new intensity value
      */
     public void setIntensity(int x, int y, int z, float value) {
-	myImage.elementAt(z).setIntensity(x, y, value);
+	images.elementAt(z).setIntensity(x, y, value);
     }
 
     /**
@@ -240,6 +264,6 @@ public class Stack {
      * @param stack a Vector<Image>
      */
     private void setImageVector(Vector<Image> stack) {
-	myImage = stack;
+	images = stack;
     }
 }
