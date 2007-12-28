@@ -55,8 +55,8 @@ public class IntensityFinder extends Processor {
             }
         }
         for (int i = 0; i < numBoa; ++i) {
-            int numPixel = 1;//boa.get(i).size();
-            meanIntensity.set(i, intensity.get(i) / numPixel);
+					int numPixel = (boa.get(i)).size();
+					meanIntensity.set(i, intensity.get(i) / numPixel);
         }
         // Add the total and mean intensity
         Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
