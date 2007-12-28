@@ -30,6 +30,23 @@
 	</javac>
   </target>
 
+  <target name="dist" depends="compile"
+	  description="generate the distribution" >
+	  <!-- Create the distribution directory -->
+	  <mkdir dir="${dist}/lib"/>
+
+	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
+	  <jar jarfile="${dist}/CostanzaTextUI.jar"
+		  basedir="${build}"
+		  excludes="**Test.class">
+		  <manifest>
+			  <attribute name="Built-By" value="Michael Green"/>
+			  <attribute name="Main-Class" value="costanza.ui.TextGUI"/>
+			  <attribute name="Class-Path" value="lib/CostanzaLib.jar"/>
+		  </manifest>
+	  </jar>
+  </target>
+
   <target name="doc" description="document the code">
 	  <javadoc destdir="docs/api"
 		  author="true"
