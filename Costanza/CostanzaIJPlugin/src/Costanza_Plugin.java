@@ -2,6 +2,7 @@
 import costanza.Case;
 import costanza.CellCenter;
 import costanza.CellIntensity;
+import costanza.BOA;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
@@ -126,20 +127,30 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private void displayData(Case IJCase) {
+		float xScale = IJCase.getStack().getXScale();
+		float yScale = IJCase.getStack().getYScale();
+		float zScale = IJCase.getStack().getZScale();
+		float volumeScale = xScale*yScale*zScale;
+
 		String tab = "\t";
 		String newline = "\n";
-		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tMean cell intensity");
-
+		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tBoa volume\tMean cell intensity");
+		
 
 		java.util.Set<Integer> cellIds = IJCase.getCellIds();
-
 		java.util.Iterator<Integer> iterator = cellIds.iterator();
 		while (iterator.hasNext()) {
 			Integer i = iterator.next();
 			String line = "";
 			CellCenter cellCenter = (CellCenter) IJCase.getCellData(DataId.CENTERS, i);
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
-			line += i + tab + cellCenter.getX() + tab + cellCenter.getY() + tab + cellCenter.getZ() + tab + cellIntensity.getIntensity(0);
+			BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
+
+			float x = cellCenter.getX()*xScale;
+			float y = cellCenter.getY()*yScale;
+			float z = cellCenter.getZ()*zScale;
+			float volume = cellBoa.size()*volumeScale;
+			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(0);
 			ij.IJ.write(line);
 		}
 	}
