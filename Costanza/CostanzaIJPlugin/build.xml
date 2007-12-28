@@ -30,6 +30,29 @@
 	</javac>
   </target>
 
+  <target name="dist" depends="compile"
+	  description="generate the distribution" >
+	  <!-- Create the distribution directory -->
+	  <mkdir dir="${dist}"/>
+	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${dist}"/>
+	  <!--
+	  <mkdir dir="${dist}/lib"/>
+	  <mkdir dir="${build}/lib"/>
+	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${dist}/lib"/>
+	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${build}/lib"/>
+	  -->
+	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
+	  <jar jarfile="${dist}/Costanza_Plugin.jar"
+		  basedir="${build}"
+		  excludes="**Test.class">
+		  <manifest>
+			  <attribute name="Built-By" value="Michael Green"/>
+			  <attribute name="Main-Class" value=""/>
+			  <attribute name="Class-Path" value="CostanzaLib.jar"/>
+		  </manifest>
+	  </jar>
+  </target>
+
   <target name="clean"
 	  description="clean up" >
 	  <!-- Delete the ${build} and ${dist} directory trees -->

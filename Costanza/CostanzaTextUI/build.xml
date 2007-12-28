@@ -34,6 +34,7 @@
 	  description="generate the distribution" >
 	  <!-- Create the distribution directory -->
 	  <mkdir dir="${dist}/lib"/>
+	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${dist}/lib"/>
 
 	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
 	  <jar jarfile="${dist}/CostanzaTextUI.jar"

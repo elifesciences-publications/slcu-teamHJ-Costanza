@@ -10,8 +10,8 @@
 
   <target name="compile" description="Compile the source ">
 	  <ant target="dist" dir="CostanzaLib" inheritAll="false"/>
-	  <ant target="compile" dir="CostanzaTextUI" inheritAll="false"/>
-	  <ant target="compile" dir="CostanzaIJPlugin" inheritAll="false"/>
+	  <ant target="dist" dir="CostanzaTextUI" inheritAll="false"/>
+	  <ant target="dist" dir="CostanzaIJPlugin" inheritAll="false"/>
   </target>
 
   <target name="clean" description="Clean up" >
