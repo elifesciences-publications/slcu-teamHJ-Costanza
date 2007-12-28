@@ -1,19 +1,12 @@
+package costanza.ui;
 
-import costanza.BoaColorizer;
 import costanza.Image;
 import costanza.Stack;
-import costanza.Inverter;
 import costanza.Case;
-import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
 import costanza.Options;
-import costanza.MeanFilter;
-import costanza.GradientDescent;
-import costanza.IntensityFinder;
 import costanza.Job;
-import costanza.PeakMerger;
-import costanza.PeakRemover;
 import costanza.Pixel;
 import costanza.Processor;
 import costanza.Queue;
@@ -290,7 +283,7 @@ public class TextGUI {
 
     public static void main(String[] argv) {
         try {
-            new TextGUI(argv.length > 0 ? argv[0] : "");
+            new costanza.ui.TextGUI(argv.length > 0 ? argv[0] : "");
         //tryConversion();
         //tryRedPixels();
         } catch (Exception e) {
