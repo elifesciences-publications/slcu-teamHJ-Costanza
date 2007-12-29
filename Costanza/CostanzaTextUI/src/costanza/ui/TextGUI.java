@@ -174,11 +174,11 @@ public class TextGUI {
 	     */
 	    String fname = "";
 	    if (i < 10) {
-		fname = baseName + "0" + i + "New.jpg";
+		fname = baseName + "0" + i + "New.png";
 	    } else {
-		fname = baseName + i + "New.jpg";
+		fname = baseName + i + "New.png";
 	    }
-	    boolean write = ImageIO.write(image.getImage(), "jpeg", new File(fname));
+	    boolean write = ImageIO.write(image.getImage(), "png", new File(fname));
 	    System.out.println("Writing image " + fname + ": " + write);
 	//printImage(image);
 	}
@@ -317,11 +317,11 @@ public class TextGUI {
 	    BufferedImage bufferedImage = resultImages[i];
 	    String fname = "";
 	    if (i < 10) {
-		fname = baseName + "0" + i + ".jpg";
+		fname = baseName + "0" + i + ".png";
 	    } else {
-		fname = baseName + i + ".jpg";
+		fname = baseName + i + ".png";
 	    }
-	    boolean write = ImageIO.write(bufferedImage, "jpeg", new File(fname));
+	    boolean write = ImageIO.write(bufferedImage, "png", new File(fname));
 	    System.out.println("Writing image " + fname + ": " + write);
 	}
     }
