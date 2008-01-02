@@ -1,0 +1,5 @@
+env = Environment();
+env.DVI(target = 'userguide.dvi', source = 'userguide.tex');
+env.PostScript(target = 'userguide.ps', source = 'userguide.dvi');
+env.PDF(target = 'userguide.pdf', source = 'userguide.dvi');
+#env.PostScript(target = 'userguide.ps', source = 'userguide.tex');
