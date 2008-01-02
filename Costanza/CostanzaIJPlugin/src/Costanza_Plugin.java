@@ -29,7 +29,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private enum PluginStatus {
-
+		
 		RUN_APPLICATION,
 		EXIT_APPLICATION,
 		CANCEL_DIALOG,

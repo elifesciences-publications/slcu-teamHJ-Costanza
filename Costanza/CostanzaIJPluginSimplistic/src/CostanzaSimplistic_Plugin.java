@@ -67,7 +67,8 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
 			gd.addMessage("Output:");
 			gd.addCheckbox("Show cell center stack:", true);
-			gd.addCheckbox("Show boa stack:", false);
+			gd.addCheckbox("Show random boa stack:", false);
+			gd.addCheckbox("Show intensity boa stack:", false);
 
 			gd.showDialog();
 
@@ -93,14 +94,16 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			float minSize = (float) gd.getNextNumber();
 			boolean mergerFlag = (boolean) gd.getNextBoolean();
 			float mergerR = (float) gd.getNextNumber();
+			//output
 			boolean ccOutFlag = (boolean) gd.getNextBoolean();
 			boolean boaOutFlag = (boolean) gd.getNextBoolean();
-
-			Stack stack = Utility.createStackFromImagePlus(imagePlus);
+			boolean boaIntensityOutFlag = (boolean) gd.getNextBoolean();
+			
+			Stack stack = createStackFromImagePlus(imagePlus);
 			Case IJCase = new Case(stack);
 
 			IJ.showMessage("Costanza", "Stack initialization finished!");
-
+			
 			// Set the options
 			Options backgroundOptions = new Options();
 			backgroundOptions.addOption("threshold", new Float(bgThreshold));
@@ -112,7 +115,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 			peakRemoverOptions.addOption("sizeThreshold", new Float(minSize));
 			Options peakMergerOptions = new Options();
 			peakMergerOptions.addOption("radius", new Float(mergerR));
-
+			
 			// BACKGROUND EXTRACTION
 			if (bgFlag) {
 				BackgroundFinderIntensity backgroundFinder = new BackgroundFinderIntensity();
@@ -139,7 +142,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 					}
 				}
 				if (smoothOutput) {
-					ImagePlus tmp = Utility.createImagePlusFromStack(IJCase.getStack());
+					ImagePlus tmp = createImagePlusFromStack(IJCase.getStack());
 					tmp.show();
 				}
 				IJ.showMessage("Costanza", "MeanFilter with radius " + smoothR + " applied " + smoothNum + " times.");
@@ -247,18 +250,55 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		}
 	}
 
-	private Image getFloatImageFromImageProcessor(ImageProcessor imageProcessor) {
-		int width = imageProcessor.getWidth();
-		int height = imageProcessor.getHeight();
-
-		Image image = new Image(width, height);
-		for (int x = 0; x < width; ++x) {
-			for (int y = 0; y < height; ++y) {
-				float value = imageProcessor.getf(x, y);
-				image.setIntensity(x, y, value);
-			}
+	/** Create new Stack object from ij.ImagePlus object (taken from utility). */
+	static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
+		ij.ImageStack imageStack = imagePlus.getStack();
+		int slices = imageStack.getSize();
+		
+		Stack stack = new Stack();
+		for (int n = 1; n <= slices; ++n) {
+			ij.process.ImageProcessor sliceProcessor = imageStack.getProcessor(n);
+			Image image = new Image(sliceProcessor.createImage());
+			stack.addImage(image);
 		}
-		return image;
+		
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
+		stack.setXScale((float) calibration.pixelWidth);
+		stack.setYScale((float) calibration.pixelHeight);
+		stack.setZScale((float) calibration.pixelDepth);
+		
+		return stack;
+	}
+
+	/** Creates new ij.ImagePlus object from Stack (taken from utility). */
+	static public ij.ImagePlus createImagePlusFromStack(Stack stack) throws Exception {
+		int width = stack.getWidth();
+		int height = stack.getHeight();
+
+		ij.ImageStack imageStack = new ij.ImageStack(width, height);
+
+		for (int i = 0; i < stack.getDepth(); ++i) {
+			Image image = stack.getImage(i);
+			imageStack.addSlice("", getImageProcessorFromImage(image));
+		}
+
+		ij.ImagePlus imagePlus = new ij.ImagePlus("Costanza Image", imageStack);
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
+		calibration.pixelWidth = stack.getXScale();
+		calibration.pixelHeight = stack.getYScale();
+		calibration.pixelDepth = stack.getZScale();
+
+		return imagePlus;
+	}
+	
+	/** Get ij.ImageProcessor from Image. */
+	static public ij.process.ImageProcessor getImageProcessorFromImage(Image image) throws Exception {
+		ij.ImagePlus ip = new ij.ImagePlus("", image.getImage());
+		ij.ImageStack stack = ip.getImageStack();
+		if (stack.getSize() != 1) {
+			throw new Exception("Unexpected error in Tools.getImageProcessorFromImage()");
+		}
+		return stack.getProcessor(1);
 	}
 
 	private void showPixelsInStack(Stack stack, Vector<Pixel> pixels, String name) throws Exception {
