@@ -39,22 +39,8 @@ public class BoaColorizerIntensity extends Processor {
 		for (int j = 0; j < boa.size(); j++) {
 			Pixel p = boa.get(j);
 			BufferedImage bufferedImage = images[p.getZ()];
-			int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
-			int newColor = boaColor;
-			if (isGrayScale(prevColor) == false) {
-				System.out.println("Combining colors from BOA!");
-				newColor = combine(prevColor, boaColor);
-			}
-			bufferedImage.setRGB(p.getX(), p.getY(), newColor);
-		}
-		
-	}
-	
-	private int combine(int color1, int color2) {
-		int red = (((color1 >> 16) & 0xff) + ((color2 >> 16) & 0xff)) / 2;
-		int green = (((color1 >> 8) & 0xff) + ((color2 >> 8) & 0xff)) / 2;
-		int blue = (((color1) & 0xff) + ((color2) & 0xff)) / 2;
-		return (255 << 24) | (red << 16) | (green << 8) | blue;
+			bufferedImage.setRGB(p.getX(), p.getY(), boaColor);
+		}		
 	}
 	
 	private int[] genColors(Case c, int size) {
@@ -75,6 +61,10 @@ public class BoaColorizerIntensity extends Processor {
 			}
 			++count;
 		}
+		System.out.println("Size: " + size);
+		System.out.println("Count: " + size);
+		System.out.println("Min: " + min);
+		System.out.println("Max: " + max);
 		for (int i = 0; i < value.length; ++i) {
 			value[i] = (value[i]-min)/(max-min);
 		}
@@ -114,6 +104,7 @@ public class BoaColorizerIntensity extends Processor {
 			//g = ((frac1+2.0f*frac)-value)/frac;
 			red_ = 1.0f;
 		}
+		System.out.println(value+" "+red_+" "+green_+" "+blue_);
 		int red = (int) (red_* 255);
 		int green = (int) (green_ * 255);
 		int blue = (int) (blue_ * 255);

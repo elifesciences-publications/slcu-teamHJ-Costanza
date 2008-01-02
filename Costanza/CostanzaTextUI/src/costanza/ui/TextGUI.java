@@ -31,14 +31,15 @@ public class TextGUI {
      */
     public TextGUI(String baseName) throws Exception {
 	final boolean invertFlag = false;
-	final boolean meanFilterFlag = false;
+	final boolean meanFilterFlag = true;
 	final boolean gradientDescentFlag = true;
 	final boolean backgroundFinderIntensityFlag = true;
 	final boolean intensityFinderFlag = true;
 	final boolean peakRemoverFlag = false;
 	final boolean peakMergerFlag = false;
 	final boolean boaColorizerFlag = false;
-	final boolean cellCenterMarkerFlag = true;
+	final boolean boaColorizerIntensityFlag = true;
+	final boolean cellCenterMarkerFlag = false;
 	final boolean randomImages = (baseName.length() > 0) ? false : true;
 
 	System.out.println("Creating a Stack");
@@ -52,17 +53,17 @@ public class TextGUI {
 	    Options options = new Options();
 	    queue.addJob(new Job("invert", options));
 	}
-	if (meanFilterFlag) {
-	    System.out.println("### Applying MeanFilter ###");
-	    Options options = new Options();
-	    options.addOption("radius", new Float(1));
-	    queue.addJob(new Job("meanfilter", options));
-	}
 	if (backgroundFinderIntensityFlag) {
 	    System.out.println("### Applying BackGroundFinderIntesity ###");
 	    Options options = new Options();
 	    options.addOption("threshold", new Float(0.1));
 	    queue.addJob(new Job("backgroundextractor", options));
+	}
+	if (meanFilterFlag) {
+	    System.out.println("### Applying MeanFilter ###");
+	    Options options = new Options();
+	    options.addOption("radius", new Float(2));
+	    queue.addJob(new Job("meanfilter", options));
 	}
 	if (gradientDescentFlag) {
 	    System.out.println("### Applying GradientDescent ###");
@@ -93,6 +94,11 @@ public class TextGUI {
 	    Options options = new Options();
 	    queue.addJob(new Job("boacolorize", options));
 	}
+	if (boaColorizerIntensityFlag) {
+	    System.out.println("### Applying BoaColorizerIntensity ###");
+	    Options options = new Options();
+	    queue.addJob(new Job("boacolorizeintensity", options));
+	}
 	if (cellCenterMarkerFlag) {
 	    System.out.println("### Applying CellCenterMarker ###");
 	    Options options = new Options();
@@ -119,8 +125,8 @@ public class TextGUI {
 	Stack stack = new Stack();
 	if (randomImages) {
 	    for (int i = 0; i < numImages; ++i) {
-		//stack.addImage(createRandomImage(100, 100));
-		stack.addImage(createSinglePixelImage(100, 100));
+				stack.addImage(createRandomImage(100, 100));
+				//stack.addImage(createSinglePixelImage(100, 100));
 	    }
 	} else {
 	    String fname = "";
@@ -308,6 +314,7 @@ public class TextGUI {
 	factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
 	factory.register("intensityfinder", costanza.IntensityFinder.class);
 	factory.register("boacolorize", costanza.BoaColorizer.class);
+	factory.register("boacolorizeintensity", costanza.BoaColorizerIntensity.class);
 	factory.register("cellcentermarker", costanza.CellCenterMarker.class);
 	return factory;
     }

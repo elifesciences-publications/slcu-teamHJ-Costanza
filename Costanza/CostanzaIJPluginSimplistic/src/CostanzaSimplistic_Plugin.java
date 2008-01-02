@@ -13,6 +13,10 @@ import costanza.CellCenter;
 import costanza.DataId;
 import costanza.BOA;
 import costanza.StackBackground;
+import costanza.CellCenterMarker;
+import costanza.BoaColorizer;
+import costanza.BoaColorizerIntensity;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -20,6 +24,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ij.process.ImageConverter;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 import java.util.Collection;
 import java.util.Iterator;
@@ -156,36 +161,30 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				error("Error in GradientDescent: " + ex.getMessage() + "\n");
 			}
 			if (gdCenterOutput) {
-				// Extract data and plot if applicable
-				Collection dataC = IJCase.getCellData(DataId.CENTERS);
-				Vector<Pixel> dataP = new Vector<Pixel>();
-				Iterator dataI = dataC.iterator();
-				if (dataI.hasNext()) {
-					while (dataI.hasNext()) {
-						CellCenter center = (CellCenter) dataI.next();
-						dataP.add(center);
-					}
-					showPixelsInStack(IJCase.getOriginalStack(), dataP, "Cell centers after gd");
-				} else {
-					IJ.showMessage("Costanza", "No centers found for plotting.");
+				// Run process for generating red pixels in current cell centers
+				Options tmpOptions = new Options();
+				CellCenterMarker cellCenterMarker = new CellCenterMarker();
+				try {
+					cellCenterMarker.process(IJCase, tmpOptions);
+				} catch (Exception ex) {
+					error("Error in cellCenterMarker: " + ex.getMessage() + "\n");
 				}
+				// Plot the result
+				ImagePlus ipTmp = createImagePlusFromResultStack(IJCase,"Cell centers after gd");
+				ipTmp.show();
 			}
 			if (gdBoaOutput) {
-				// Extract boas
-				Vector<BOA> boa = new Vector<BOA>();
-				Collection boaCollection = IJCase.getCellData(DataId.BOAS);
-				if (boaCollection != null && boaCollection.iterator().hasNext()) {
-					Iterator i = boaCollection.iterator();
-					while (i.hasNext()) {
-						BOA boaTmp = (BOA) i.next();
-						boa.add(boaTmp);
-					}
-					// Plot boas
-					showBoasInStack(IJCase.getOriginalStack(), boa, "BOAs after gd");
-				} else {//No boas found, nothing to do for this function
-					IJ.showMessage("Costanza", "No boas found for plotting.");
+				// Process for generating random colored boas
+				Options tmpOptions = new Options();
+				BoaColorizer boaColorizer = new BoaColorizer();
+				try {
+					boaColorizer.process(IJCase, tmpOptions);
+				} catch (Exception ex) {
+					error("Error in boaColorizer: " + ex.getMessage() + "\n");
 				}
-
+				// Plot boas
+				ImagePlus ipTmp = createImagePlusFromResultStack(IJCase,"BOAs after gd");
+				ipTmp.show();				
 			}
 			int numPeak = IJCase.sizeOfData(DataId.CENTERS);
 			IJ.showMessage("Costanza", "GradientDescent found " + numPeak + " peaks.");
@@ -214,42 +213,51 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 				IJ.showMessage("Costanza", "PeakMerger merged into " + numPeak + " peaks.");
 			}
 
+			// FINAL OUTPUT
 			if (ccOutFlag) {
-				// Extract data and plot if applicable
-				Collection dataC = IJCase.getCellData(DataId.CENTERS);
-				Vector<Pixel> dataP = new Vector<Pixel>();
-				Iterator dataI = dataC.iterator();
-				if (dataI.hasNext()) {
-					while (dataI.hasNext()) {
-						CellCenter center = (CellCenter) dataI.next();
-						dataP.add(center);
-					}
-					showPixelsInStack(IJCase.getOriginalStack(), dataP, "Cell centers");
-				} else {
-					IJ.showMessage("Costanza", "No centers found for plotting.");
+				// Run process for generating red pixels in current cell centers
+				Options tmpOptions = new Options();
+				CellCenterMarker cellCenterMarker = new CellCenterMarker();
+				try {
+					cellCenterMarker.process(IJCase, tmpOptions);
+				} catch (Exception ex) {
+					error("Error in cellCenterMarker: " + ex.getMessage() + "\n");
 				}
+				// Plot the result
+				ImagePlus ipTmp = createImagePlusFromResultStack(IJCase,"Cell centers");
+				ipTmp.show();
 			}
 			if (boaOutFlag) {
-				// Extract boas
-				Vector<BOA> boa = new Vector<BOA>();
-				Collection boaCollection = IJCase.getCellData(DataId.BOAS);
-				if (boaCollection != null && boaCollection.iterator().hasNext()) {
-					Iterator i = boaCollection.iterator();
-					while (i.hasNext()) {
-						BOA boaTmp = (BOA) i.next();
-						boa.add(boaTmp);
-					}
-					// Plot boas
-					showBoasInStack(IJCase.getOriginalStack(), boa, "BOAs");
-				} else {//No boas found, nothing to do for this function
-					IJ.showMessage("Costanza", "No boas found for plotting.");
+				// Process for generating random colored boas
+				Options tmpOptions = new Options();
+				BoaColorizer boaColorizer = new BoaColorizer();
+				try {
+					boaColorizer.process(IJCase, tmpOptions);
+				} catch (Exception ex) {
+					error("Error in boaColorizer: " + ex.getMessage() + "\n");
 				}
+				// Plot boas
+				ImagePlus ipTmp = createImagePlusFromResultStack(IJCase,"BOAs");
+				ipTmp.show();				
+			}
+			if (boaIntensityOutFlag) {
+				// Process for generating random colored boas
+				Options tmpOptions = new Options();
+				BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
+				try {
+					boaColorizer.process(IJCase, tmpOptions);
+				} catch (Exception ex) {
+					error("Error in boaColorizerIntensity: " + ex.getMessage() + "\n");
+				}
+				// Plot boas
+				ImagePlus ipTmp = createImagePlusFromResultStack(IJCase,"Intensity in BOAs");
+				ipTmp.show();				
 			}
 		} catch (Exception exception) {
 			error(exception.getMessage());
 		}
 	}
-
+	
 	/** Create new Stack object from ij.ImagePlus object (taken from utility). */
 	static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
 		ij.ImageStack imageStack = imagePlus.getStack();
@@ -288,6 +296,38 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 		calibration.pixelHeight = stack.getYScale();
 		calibration.pixelDepth = stack.getZScale();
 
+		return imagePlus;
+	}
+
+	/** Creates new ij.ImagePlus object from Stack (taken from utility). */
+	static public ij.ImagePlus createImagePlusFromResultStack(Case c, String name) throws Exception {
+		int width = c.getStack().getWidth();
+		int height = c.getStack().getHeight();
+		int depth = c.getStack().getDepth();
+		
+		ij.ImageStack imageStack = new ij.ImageStack(width, height);
+		
+		BufferedImage[] resultImage = c.getResultImages();
+		
+		for (int i = 0; i < depth; ++i) {
+			ij.ImagePlus ipTmp = new ij.ImagePlus("", resultImage[i]);
+			ij.ImageStack stackTmp = ipTmp.getImageStack();
+			if (stackTmp.getSize() != 1) {
+				throw new Exception("Unexpected error in getImagePlusFromResultStack()");
+			}
+			imageStack.addSlice("", stackTmp.getProcessor(1));
+			
+			
+			//Image image = (Image) resultImage[i];
+			//	imageStack.addSlice("", getImageProcessorFromImage(image));
+		}
+		
+		ij.ImagePlus imagePlus = new ij.ImagePlus(name, imageStack);
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
+		calibration.pixelWidth = c.getStack().getXScale();
+		calibration.pixelHeight = c.getStack().getYScale();
+		calibration.pixelDepth = c.getStack().getZScale();
+		
 		return imagePlus;
 	}
 	
