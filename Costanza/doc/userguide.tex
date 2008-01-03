@@ -14,10 +14,19 @@
 
 %\abstract 
 
-\section{Preface}
+\section{Introduction}
 
 This document describes how to use COnfocal STack ANalyZer Application
-(Costanza), an ImageJ\cite{Abramoff2004} plugin for analyzing confocal stacks.
+(Costanza), an ImageJ\cite{Abramoff2004} plugin for analyzing confocal
+stacks. The main purpose of Costanza is to segment nuclei marked cells
+in three dimensions, making available quantitative measures such as
+positions, sizes, and average intensities of GFP markers for the
+segmented compartments. The main algorithm is independent of intensity
+thresholds, allowing for segmentation of data of varying intensity.
+
+Costanza assumes a greyscale stack of images as input, and work with
+real length units and x, y, and z scales should be provided either via
+ImageJ, or set by the user.
 
 \section{Installation instructions}
 
@@ -26,6 +35,75 @@ In order to use Costanza you must have ImageJ
 Costanza archive in the plugins directory of your ImageJ installation. Next
 time you start ImageJ the plugin will show up as Costanza in the Plugins drop
 down menu.
+
+\section{Algorithms}
+
+The algorithms privided in Costanza can be divided into the main
+segmenter algorithm, preprocessing, and postprocessing.
+
+\subsection{Steepest gradient descent for segmentation}
+
+
+
+\subsection{Preprocessing}
+
+\subsubsection{Intensity inversion}
+
+Costanza assumes bright objects in a dark background. If the objects
+are dark in a bright surrounding, the stack should be inverted. This
+algorithm replaces each voxel intensity $I$ with its inverted value
+$I_{max}-I$, where $I_{max}$ is the maximal value allowed in the
+greyscale images. This algorithm does not require any user provided
+parameter values.
+
+\subsubsection{Background extraction by thresholding}
+
+It may be benficial to remove voxels from treatment by the
+segmentation algorithm. Both to remove uninteresting regions of the
+stack, and for speeding up the algorithms. The background can be
+extracted via a threshold filter, that assigns all voxels with
+intensity $I$ less than a threshold value $I_{threshold}$ to belong to
+the background, and will not be treated in the algorithms. The user
+has to provide a value for the parameter $I_{threshold}$.
+
+\subsubsection{Mean filter for smoothing}
+
+Important for the segmentation to work is that the intensity noise is
+low and the stack provided is smooth. This can be done by different
+filters in ImageJ, but Costanza also provides a 3D filter for
+smoothing. It uses a spherical XXX and replaces each voxel intensity
+$I$ by an average calculated from all voxels with a center positioned
+within a radius $R_{max}$ measured in real length. Since it can be
+beneficial to run the filter multiple times with smaller $R_{max}$,
+the user shopuld provide the two parameters, $R_{max}$ and the number
+of times to run the filtering.
+
+\subsection{Postprocessing}
+
+\subsubsection{Peak removal}
+
+\subsubsection{Peak merging}
+
+\section{User interface}
+
+\section{Examples}
+
+The performance of the Costanza application is dependent on the
+parameters given to the different algorithms used. Here we provide
+some examples of applications where also the parameter values used are
+presented to guide users into setting reasonable parameter values.
+
+\subsection{Low resolution plant SAM nuclei data in 3D}
+
+\subsection{High resolution plant SAM nuclei data in 3D}
+
+\subsection{High resolution plant SAM membrane data in 2D}
+
+\subsection{High resolution mouse XXX nuclei data in 3D}
+
+\subsection{Low resolution \textem{E coli} cell data in 2D}
+
+\subsection{High resolution plant root membrane data in 2D}
 
 \bibliographystyle{abbrv}
 \bibliography{references}
