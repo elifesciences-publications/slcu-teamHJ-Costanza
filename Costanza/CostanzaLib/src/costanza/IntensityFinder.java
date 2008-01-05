@@ -61,11 +61,17 @@ public class IntensityFinder extends Processor {
         // Add the total and mean intensity
         Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
         for (int i = 0; i < numBoa; ++i) {
-            Vector<Float> tmp = new Vector<Float>();
-            tmp.add(intensity.get(i));
-            tmp.add(meanIntensity.get(i));
+//            Vector<Float> tmp = new Vector<Float>();
+//            tmp.add(intensity.get(i));
+//            tmp.add(meanIntensity.get(i));
+
+            CellIntensity intens = new CellIntensity();
+            intens.addIntensity("total", intensity.get(i));
+            intens.addIntensity("mean", meanIntensity.get(i));
+            
             Cell cell = boa.get(i).getCell();
-            c.attachCellData(new CellIntensity(tmp), cell);
+//            c.attachCellData(new CellIntensity(tmp), cell);
+            c.attachCellData(intens, cell);
         }
         System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));
 

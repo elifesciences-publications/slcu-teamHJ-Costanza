@@ -85,7 +85,7 @@ public class Data {
     }
 
     /**Deprecated method. Avoid using it. It might be not supported in the next version.
-     *Retrives cell data Collection associated with given dataId and puts it in supplayed array
+     *Retrives cell data associated with given dataId and puts it in supplayed array
      * @param id DataId
      * @param arr array to put data in. If array is not big enough to fit data new array is created.
      * @return array containing the data
