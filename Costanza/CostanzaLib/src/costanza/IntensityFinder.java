@@ -17,8 +17,20 @@ public class IntensityFinder extends Processor {
         //System.out.println("IntensityFinder::process");
 
         // Check that there is an original stack in case
-        if (c.getOriginalStack() == null) {
-            throw new Exception("No original stack available in case");
+//        if (c.getOriginalStack() == null) {
+//            throw new Exception("No original stack available in case");
+//        }
+        Stack stack;
+        String stackTag = "";
+        if(options.hasOption("OverrideStack")){
+            stack = (Stack)options.getOptionValue("OverrideStack");
+            stackTag = (String)options.getOptionValue("StackTag");
+        }
+        else{
+            stack = c.getOriginalStack();
+        }
+        if(stack == null){
+            throw new Exception("No stack available");
         }
         // Get the basin of attractors from data in case
         Vector<BOA> boa = new Vector<BOA>();
@@ -51,7 +63,7 @@ public class IntensityFinder extends Processor {
                 int y = pixels.get(j).getY();
                 int z = pixels.get(j).getZ();
                 intensity.set(i, intensity.get(i) +
-                        c.getOriginalStack().getIntensity(x, y, z));
+                        stack.getIntensity(x, y, z));
             }
         }
         for (int i = 0; i < numBoa; ++i) {
@@ -66,8 +78,8 @@ public class IntensityFinder extends Processor {
 //            tmp.add(meanIntensity.get(i));
 
             CellIntensity intens = new CellIntensity();
-            intens.addIntensity("total", intensity.get(i));
-            intens.addIntensity("mean", meanIntensity.get(i));
+            intens.addIntensity(stackTag + "total", intensity.get(i));
+            intens.addIntensity(stackTag + "mean", meanIntensity.get(i));
             
             Cell cell = boa.get(i).getCell();
 //            c.attachCellData(new CellIntensity(tmp), cell);

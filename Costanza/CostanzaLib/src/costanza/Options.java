@@ -12,6 +12,9 @@ public class Options {
         options = new HashMap<String, Object>();
     }
 
+    public boolean hasOption(String key){
+        return options.containsKey(key);
+    }
     /** Returns option value. */
     public Object getOptionValue(String key) throws Exception {
         if (!options.containsKey(key)) {
