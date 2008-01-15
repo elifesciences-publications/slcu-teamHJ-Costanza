@@ -18,6 +18,7 @@ import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
 
+import costanza.CellIntensity;
 import costanza.MeanFilter2;
 import ij.IJ;
 import ij.ImagePlus;
@@ -254,7 +255,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 ipTmp.show();
             }
             if (boaIntensityOutFlag) {
-                // Process for generating random colored boas
+                // Process for generating intensity colored boas
                 Options tmpOptions = new Options();
                 BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
                 try {
@@ -280,19 +281,32 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         ImagePlus imp = ij.IJ.getImage();
                         int sz = imp.getImageStackSize();
                         String imName = imp.getTitle();
-                        
+
                         Stack intensStack = createStackFromImagePlus(imp);
-                       
+
                         ++counter;
-                        String stackTag = "UserStack" + counter;
+                        //String stackTag = "UserStack" + counter;
                         Options op = new Options();
                         op.addOption("OverrideStack", intensStack);
-                        op.addOption("StackTag", stackTag);
-                                
+                        //op.addOption("StackTag", stackTag);
+
                         IntensityFinder intFinder = new IntensityFinder();
                         intFinder.process(IJCase, op);
-                                
-                        System.out.println(sz + ", " + imName);
+
+                        System.out.println( CellIntensity.getTagSet() );
+                        //System.out.println(sz + ", " + imName);
+
+                        // Process for generating intensity colored boas
+                        
+                        BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
+                        try {
+                            boaColorizer.process(IJCase, op);
+                        } catch (Exception ex) {
+                            error("Error in boaColorizerIntensity: " + ex.getMessage() + "\n");
+                        }
+                        // Plot boas
+                        ImagePlus ipTmp = createImagePlusFromStack( intensStack );
+                        ipTmp.show();
                     }
                     else{
                         cont = false;

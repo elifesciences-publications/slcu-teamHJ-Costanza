@@ -23,7 +23,10 @@ public class Stack {
     private float minIntensity;
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit;
-
+    /**unique id for stack object*/
+    private int id;
+    private static int numbOfInst = 0;
+    
     /**Creates a new empty Stack with the specified width and height.
      * All images added to this Stack must have the same width and height.
      * @param width the width of each image added to this Stack.
@@ -35,6 +38,7 @@ public class Stack {
 	images = new Vector<Image>();
 	images.setSize(0);
 	maxIntensityLimit = (float) 1.0;
+        id = numbOfInst++;
     }
 
     /**Creates a new empty Stack.
@@ -46,6 +50,7 @@ public class Stack {
 	images = new Vector<Image>();
 	images.setSize(0);
 	maxIntensityLimit = (float) 1.0;
+        id = numbOfInst++;
     }
 
     /**Constructs a Stack from an array of AWT Images.
@@ -65,6 +70,7 @@ public class Stack {
 	    this.images.add(new Image(image));
 	}
 	maxIntensityLimit = (float) 1.0;
+        id = numbOfInst++;
     }
 	
 	/** Constructs a Stack from an array of BufferedImage images.
@@ -96,6 +102,14 @@ public class Stack {
 	return tmp;
     }
 
+    /**
+     * Member function returning the id of the stack
+     * @return int unique id of the stack
+     */
+    public int getId(){
+        return id;
+    }
+    
     public Image getImage(int index) {
 	return images.get(index);
     }

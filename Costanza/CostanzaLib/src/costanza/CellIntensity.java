@@ -12,7 +12,8 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     private Cell cell;
     /**Maps intensity tag to position in vector*/
     //private static Map<String, Integer> tag_map = new TreeMap<String, Integer>();
-    private static Map<String, Integer> tag_map = new TreeMap<String, Integer>();   
+    private static Map<String, Integer> tag_map = new TreeMap<String, Integer>();
+
     /**Constructs uninitialized CellIntensity*/
     public CellIntensity() {
     }
@@ -23,14 +24,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     //public CellIntensity(String tag, float intens) {
     public CellIntensity(String tag, float intens) {
         super();
-        Integer pos = tag_map.get(tag);
-        if (pos != null) {
-            add(pos, intens);
-        } else {
-            pos = size();
-            tag_map.put(tag, pos);
-            add(intens);
-        }
+        addIntensity(tag, intens);
 
     }
 
@@ -40,13 +34,21 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
 //    public CellIntensity(Collection<Float> intens) {
 //        super(intens);
 //    }
-    
     /**Gets the set of used intensity tags
      * @return Set<String> intensity tags
      */
     //public Set<String> getTagSet() {
-    public Set<String> getTagSet() {
+    public static Set<String> getTagSet() {
         return tag_map.keySet();
+    }
+
+    /**
+     * Checks if tag is already in the map
+     * @param tag to check for
+     * @return true if given tag is already definned, false otherwise
+     */
+    public static boolean hasTag(String tag) {
+        return tag_map.containsKey(tag);
     }
 
     /**Adds/appends new intensity to the CellIntensity
@@ -55,13 +57,20 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     //public void addIntensity(String tag, float intens) {
     public void addIntensity(String tag, float intens) {
         Integer pos = tag_map.get(tag);
+        //if ( tag_map.containsKey(tag) ) {
         if (pos != null) {
-            add(pos, intens);
+            if (pos >= size()) {
+                setSize(pos + 1);
+            }
+            set(pos, intens);
+            //System.out.println(size() + "Adding existing intensity: " + tag + " at position " + pos);
         } else {
-            pos = size();
+            pos = tag_map.size();
             tag_map.put(tag, pos);
             add(intens);
+            //System.out.println(size() + "Adding new intensity: " + tag + " at position " + pos);
         }
+
     }
 
     /**Gets the position of intensity associated with a tag.
@@ -69,7 +78,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
      *@return float intensity
      */
     //public int getIndex(String tag) throws Exception {
-    public int getIndex(String tag) throws Exception {
+    public static int getIndex(String tag) throws Exception {
         Integer pos = tag_map.get(tag);
         if (pos == null) {
             throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
