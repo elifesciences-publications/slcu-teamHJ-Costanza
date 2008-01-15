@@ -75,7 +75,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	private void initFactory() {
 		factory = new Factory<Processor>();
 		factory.register("invert", costanza.Inverter.class);
-		factory.register("meanfilter", costanza.MeanFilter.class);
+		factory.register("meanfilter", costanza.MeanFilter2.class);
 		factory.register("null", costanza.NullProcessor.class);
 		factory.register("gradientdescent", costanza.GradientDescent.class);
 		factory.register("peakremover", costanza.PeakRemover.class);
