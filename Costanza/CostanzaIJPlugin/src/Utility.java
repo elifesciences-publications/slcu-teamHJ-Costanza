@@ -26,7 +26,7 @@ public class Utility {
 	}
 
 	/** Creates new ij.ImagePlus object from Stack. */
-	static public ij.ImagePlus createImagePlusFromStack(Stack stack) throws Exception {
+	static public ij.ImagePlus createImagePlusFromStack(Stack stack, String name) throws Exception {
 		int width = stack.getWidth();
 		int height = stack.getHeight();
 
@@ -37,7 +37,7 @@ public class Utility {
 			imageStack.addSlice("", getImageProcessorFromImage(image));
 		}
 
-		ij.ImagePlus imagePlus = new ij.ImagePlus("Costanza Image", imageStack);
+		ij.ImagePlus imagePlus = new ij.ImagePlus(name, imageStack);
 		ij.measure.Calibration calibration = imagePlus.getCalibration();
 		calibration.pixelWidth = stack.getXScale();
 		calibration.pixelHeight = stack.getYScale();

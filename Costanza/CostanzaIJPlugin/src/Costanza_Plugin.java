@@ -120,7 +120,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 			Stack result = IJCase.getStack();
 
-			ij.ImagePlus ip = Utility.createImagePlusFromStack(result);
+			ij.ImagePlus ip = Utility.createImagePlusFromStack(result, "Costanza - Working stack");
 			ip.show();
 
 			processResultRequests(IJCase, panel, factory);
@@ -139,21 +139,21 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 		if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
 			Job job = new Job("boacolorize", null);
-			displayResult(job, IJCase, factory);
+			displayResult("Costanza - Basins of attractions (BOA)", job, IJCase, factory);
 		}
 		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
 			Job job = new Job("cellmarker", null);
-			displayResult(job, IJCase, factory);
+			displayResult("Costanza - Cell centers", job, IJCase, factory);
 		}
 	}
 
-	private void displayResult(Job job, Case IJCase, Factory factory) throws Exception {
+	private void displayResult(String name, Job job, Case IJCase, Factory factory) throws Exception {
 		Queue jobs = new Queue();
 		jobs.addJob(job);
 		Driver driver = new Driver(jobs, IJCase, factory);
 		driver.run();
 		Stack result = new Stack(IJCase.getResultImages());
-		ij.ImagePlus imagePlus = Utility.createImagePlusFromStack(result);
+		ij.ImagePlus imagePlus = Utility.createImagePlusFromStack(result, name);
 		imagePlus.show();
 	}
 
