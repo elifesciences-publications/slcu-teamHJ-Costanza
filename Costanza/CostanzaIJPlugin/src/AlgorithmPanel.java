@@ -1,6 +1,6 @@
-
 import costanza.Job;
 import costanza.Queue;
+import org.omg.PortableServer.REQUEST_PROCESSING_POLICY_ID;
 
 public class AlgorithmPanel extends java.awt.Panel {
 
@@ -17,10 +17,15 @@ public class AlgorithmPanel extends java.awt.Panel {
 		}
 	}
 	
-	void addBoaColorizerJob(Queue jobs) throws Exception {
+	int getResultRequest() {
+		int request = 0;
 		if (boaColourizeCheckbox.getState() == true) {
-			jobs.addJob(new Job("boacolorize", null));
+			request = request | Costanza_Plugin.REQUEST_BOA_COLORIZER;
 		}
+		if (cellCenterMarkerOption.getState() == true) {
+			request = request | Costanza_Plugin.REQUEST_CELL_MARKER;
+		}
+		return request;
 	}
 
 	/** This method is called from within the constructor to
@@ -30,21 +35,57 @@ public class AlgorithmPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         invertCheckbox = new java.awt.Checkbox();
         boaColourizeCheckbox = new java.awt.Checkbox();
+        label1 = new java.awt.Label();
+        outputOptionsLabel = new java.awt.Label();
+        cellCenterMarkerOption = new java.awt.Checkbox();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+        setLayout(new java.awt.GridBagLayout());
 
         invertCheckbox.setBackground(java.awt.Color.white);
         invertCheckbox.setLabel("Invert image(s) before processing.");
-        add(invertCheckbox);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(invertCheckbox, gridBagConstraints);
 
-        boaColourizeCheckbox.setLabel("Display basins of attractions (BOA) after analyze.");
-        add(boaColourizeCheckbox);
+        boaColourizeCheckbox.setLabel("Display basins of attractions (BOA).");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(boaColourizeCheckbox, gridBagConstraints);
+
+        label1.setFont(new java.awt.Font("Dialog", 1, 12));
+        label1.setText("Input options");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(label1, gridBagConstraints);
+
+        outputOptionsLabel.setFont(new java.awt.Font("Dialog", 1, 12));
+        outputOptionsLabel.setText("Output options");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(outputOptionsLabel, gridBagConstraints);
+
+        cellCenterMarkerOption.setLabel("Mark cell centers.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(cellCenterMarkerOption, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox boaColourizeCheckbox;
+    private java.awt.Checkbox cellCenterMarkerOption;
     private java.awt.Checkbox invertCheckbox;
+    private java.awt.Label label1;
+    private java.awt.Label outputOptionsLabel;
     // End of variables declaration//GEN-END:variables
 }

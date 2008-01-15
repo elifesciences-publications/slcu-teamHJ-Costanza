@@ -6,6 +6,8 @@ import costanza.BOA;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
+import costanza.Image;
+import costanza.Job;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
@@ -13,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn {
+
+	public static int REQUEST_BOA_COLORIZER = 1;
+	public static int REQUEST_CELL_MARKER = 2;
 
 	void scaleDialogCancel(ScaleDialog dialog) {
 		status = PluginStatus.CANCEL_DIALOG;
@@ -29,7 +34,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private enum PluginStatus {
-		
+
 		RUN_APPLICATION,
 		EXIT_APPLICATION,
 		CANCEL_DIALOG,
@@ -78,6 +83,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
 		factory.register("intensityfinder", costanza.IntensityFinder.class);
 		factory.register("boacolorize", costanza.BoaColorizer.class);
+		factory.register("cellmarker", costanza.CellCenterMarker.class);
 	}
 
 	public void start(MainPanel panel) {
@@ -117,6 +123,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			ij.ImagePlus ip = Utility.createImagePlusFromStack(result);
 			ip.show();
 
+			processResultRequests(IJCase, panel, factory);
+
 			displayData(IJCase);
 		} catch (Exception exception) {
 			ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
@@ -126,16 +134,39 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		}
 	}
 
+	private void processResultRequests(Case IJCase, MainPanel mainPanel, Factory factory) throws Exception {
+		int request = mainPanel.getResultRequest();
+
+		if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
+			Job job = new Job("boacolorize", null);
+			displayResult(job, IJCase, factory);
+		}
+		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
+			Job job = new Job("cellmarker", null);
+			displayResult(job, IJCase, factory);
+		}
+	}
+
+	private void displayResult(Job job, Case IJCase, Factory factory) throws Exception {
+		Queue jobs = new Queue();
+		jobs.addJob(job);
+		Driver driver = new Driver(jobs, IJCase, factory);
+		driver.run();
+		Stack result = new Stack(IJCase.getResultImages());
+		ij.ImagePlus imagePlus = Utility.createImagePlusFromStack(result);
+		imagePlus.show();
+	}
+
 	private void displayData(Case IJCase) {
 		float xScale = IJCase.getStack().getXScale();
 		float yScale = IJCase.getStack().getYScale();
 		float zScale = IJCase.getStack().getZScale();
-		float volumeScale = xScale*yScale*zScale;
+		float volumeScale = xScale * yScale * zScale;
 
 		String tab = "\t";
 		String newline = "\n";
 		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tBoa volume\tMean cell intensity");
-		
+
 
 		java.util.Set<Integer> cellIds = IJCase.getCellIds();
 		java.util.Iterator<Integer> iterator = cellIds.iterator();
@@ -146,10 +177,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
 			BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
 
-			float x = cellCenter.getX()*xScale;
-			float y = cellCenter.getY()*yScale;
-			float z = cellCenter.getZ()*zScale;
-			float volume = cellBoa.size()*volumeScale;
+			float x = cellCenter.getX() * xScale;
+			float y = cellCenter.getY() * yScale;
+			float z = cellCenter.getZ() * zScale;
+			float volume = cellBoa.size() * volumeScale;
 			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(0);
 			ij.IJ.write(line);
 		}

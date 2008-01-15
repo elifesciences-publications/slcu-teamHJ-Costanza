@@ -87,8 +87,12 @@ public class MainPanel extends java.awt.Panel {
 		gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
 		jobs.addJob(new Job("gradientdescent", gradientDescentOption));
 		postProcessorMenuPanel.addJobs(jobs);
-		jobs.addJob(new Job("intensityfinder", null));
-		algorithmPanel.addBoaColorizerJob(jobs);
+		Options intensityFinderOption = new Options();
+		jobs.addJob(new Job("intensityfinder", intensityFinderOption));
+	}
+
+	int getResultRequest() {
+		return algorithmPanel.getResultRequest();
 	}
 
 	private void cancelButtonPressed() {
