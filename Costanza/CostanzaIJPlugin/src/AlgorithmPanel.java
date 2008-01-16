@@ -1,14 +1,9 @@
 import costanza.Job;
 import costanza.Queue;
-import org.omg.PortableServer.REQUEST_PROCESSING_POLICY_ID;
 
 public class AlgorithmPanel extends java.awt.Panel {
-
-	private MainPanel mainPanel;
-
-	AlgorithmPanel(MainPanel mainPanel) {
+	public AlgorithmPanel() {
 		initComponents();
-		this.mainPanel = mainPanel;
 	}
 
 	void addInverterJob(Queue jobs) throws Exception {
@@ -45,7 +40,6 @@ public class AlgorithmPanel extends java.awt.Panel {
 
         setLayout(new java.awt.GridBagLayout());
 
-        invertCheckbox.setBackground(java.awt.Color.white);
         invertCheckbox.setLabel("Invert image(s) before processing.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

@@ -1,10 +1,10 @@
 
 public class OptionPanel extends java.awt.Panel {
 
-	ProcessorMenuPanel parentPanel;
+	ProcessorOptionPanel parentPanel;
 	ProcessorOption processorOption;
 
-	public OptionPanel(ProcessorMenuPanel parentPanel, ProcessorOption processorOption) {
+	public OptionPanel(ProcessorOptionPanel parentPanel, ProcessorOption processorOption) {
 		this.parentPanel = parentPanel;
 		this.processorOption = processorOption;
 		initComponents();

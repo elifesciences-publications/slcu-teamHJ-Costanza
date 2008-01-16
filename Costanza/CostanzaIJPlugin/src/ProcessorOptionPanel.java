@@ -5,13 +5,13 @@ import java.util.logging.Level;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ProcessorMenuPanel extends java.awt.Panel {
+public class ProcessorOptionPanel extends java.awt.Panel {
 
 	private java.util.LinkedList<OptionPanel> optionPanelList;
 	private MainFrame frame;
 	private Factory<ProcessorOption> factory;
 
-	public ProcessorMenuPanel(MainFrame frame) {
+	public ProcessorOptionPanel(MainFrame frame) {
 		this.frame = frame;
 		factory = new Factory<ProcessorOption>();
 		optionPanelList = new java.util.LinkedList<OptionPanel>();
@@ -75,7 +75,7 @@ public class ProcessorMenuPanel extends java.awt.Panel {
 			String name = processorOptionChoice.getSelectedItem();
 			addOptionPanel(name);
 		} catch (Exception ex) {
-			Logger.getLogger(ProcessorMenuPanel.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(ProcessorOptionPanel.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}//GEN-LAST:event_addButtonActionPerformed
 

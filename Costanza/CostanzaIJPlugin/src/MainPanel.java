@@ -5,8 +5,8 @@ import costanza.Queue;
 
 public class MainPanel extends java.awt.Panel {
 
-	private ProcessorMenuPanel preProcessorMenuPanel;
-	private ProcessorMenuPanel postProcessorMenuPanel;
+	private ProcessorOptionPanel preProcessorMenuPanel;
+	private ProcessorOptionPanel postProcessorMenuPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.Choice mainChoice;
 	private java.awt.Panel cardPanel;
@@ -35,15 +35,15 @@ public class MainPanel extends java.awt.Panel {
 		// Add CardLayout Panel.
 		cardPanel = new java.awt.Panel();
 		cardPanel.setLayout(cardLayout = new java.awt.CardLayout());
-		cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
-		preProcessorMenuPanel = new ProcessorMenuPanel(frame);
+		//cardPanel.add(algorithmPanel = new AlgorithmPanel(this), "AlgorithmPanel");
+		preProcessorMenuPanel = new ProcessorOptionPanel(frame);
 		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
 		preProcessorMenuPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
 		preProcessorMenuPanel.addOptionPanel("Background extraction");
 		preProcessorMenuPanel.addOptionPanel("Smoothing");
 		cardPanel.add(preProcessorMenuPanel, "PreProcessingPanel");
 		add(cardPanel, java.awt.BorderLayout.CENTER);
-		postProcessorMenuPanel = new ProcessorMenuPanel(frame);
+		postProcessorMenuPanel = new ProcessorOptionPanel(frame);
 		postProcessorMenuPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
 		postProcessorMenuPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
 		postProcessorMenuPanel.addOptionPanel("Peak remover");
@@ -100,7 +100,7 @@ public class MainPanel extends java.awt.Panel {
 	}
 
 	private void startButtonPressed() {
-		plugin.start(this);
+//		plugin.start(this);
 	}
 
 	private void menuChanged() {

@@ -6,7 +6,6 @@ import costanza.BOA;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
-import costanza.Image;
 import costanza.Job;
 import costanza.Processor;
 import costanza.Queue;
@@ -34,12 +33,12 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	private enum PluginStatus {
-
 		RUN_APPLICATION,
 		EXIT_APPLICATION,
 		CANCEL_DIALOG,
 		CONTINUE_DIALOG
 	}
+	
 	private Factory<Processor> factory;
 	private MainFrame frame;
 	private PluginStatus status;
@@ -86,7 +85,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("cellmarker", costanza.CellCenterMarker.class);
 	}
 
-	public void start(MainPanel panel) {
+	public void start() {
 		try {
 			ij.ImagePlus imagePlus;
 			try {
@@ -113,7 +112,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			Case IJCase = new Case(stack);
 
 			Queue jobs = new Queue();
-			panel.addJobs(jobs);
+			frame.addJobs(jobs);
 
 			Driver driver = new Driver(jobs, IJCase, factory);
 			driver.run();
@@ -123,19 +122,19 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			ij.ImagePlus ip = Utility.createImagePlusFromStack(result, "Costanza - Working stack");
 			ip.show();
 
-			processResultRequests(IJCase, panel, factory);
+			processResultRequests(IJCase);
 
 			displayData(IJCase);
 		} catch (Exception exception) {
-			ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
 			exception.printStackTrace();
+			ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
 			return;
 		}
 	}
 
-	private void processResultRequests(Case IJCase, MainPanel mainPanel, Factory factory) throws Exception {
-		int request = mainPanel.getResultRequest();
+	private void processResultRequests(Case IJCase) throws Exception {
+		int request = frame.getResultRequest();
 
 		if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
 			Job job = new Job("boacolorize", null);
