@@ -13,7 +13,7 @@ import java.util.Vector;
  */
 public class CellCenterMarker extends Processor {
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
 	Collection<CellCenter> cellCenters = (Collection<CellCenter>) c.getCellData(DataId.CENTERS);

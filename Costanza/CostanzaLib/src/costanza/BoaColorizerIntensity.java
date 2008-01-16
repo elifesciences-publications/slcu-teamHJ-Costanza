@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  */
 public class BoaColorizerIntensity extends Processor {
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
         // Get the basin of attractors from data in case
         Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
@@ -68,7 +68,7 @@ public class BoaColorizerIntensity extends Processor {
         float min = 0.0f;
         float max = 0.0f;
 
-        int index = CellIntensity.getIndex(stackTag);
+        int index = c.getIntensityIndex(stackTag);
         //System.out.println("Intensity for stack: " + stackTag + " = " + index );
         while (iterator.hasNext() && count < size) {
             Integer i = iterator.next();

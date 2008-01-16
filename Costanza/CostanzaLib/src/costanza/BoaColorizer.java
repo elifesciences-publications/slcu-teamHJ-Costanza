@@ -11,7 +11,7 @@ import java.util.Vector;
  */
 public class BoaColorizer extends Processor {
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
         // Get the basin of attractors from data in case
         Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);

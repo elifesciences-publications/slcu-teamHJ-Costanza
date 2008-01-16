@@ -16,9 +16,12 @@ public class Data {
     private Map<DataId, Data_t> stackDataMap;
     private Map<DataId, Collection<? extends CellData_t>> cellDataMap;
     private Map<Integer, Cell> cells;
+    /**Maps intensity tag to position in vector*/
+    private Map<String, Integer> tag_map;
 
     public Data() {
 
+        tag_map = new TreeMap<String, Integer>();
         cells = new TreeMap<Integer, Cell>();
         stackDataMap = new EnumMap<DataId, Data_t>(DataId.class);
         stackDataMap.put(DataId.BACKGROUND, null);
@@ -28,7 +31,16 @@ public class Data {
         cellDataMap.put(DataId.NEIGHBORS, new Vector<CellNeighbors>());
         cellDataMap.put(DataId.INTENSITIES, new Vector<CellIntensity>());
     }
+    
+    /**
+     * 
+     * @return map asociating intensity string tags with intensity position
+     */
 
+    public Map<String, Integer> getIntensityTagMap(){
+        return tag_map;
+    }
+    
     /**Returns Cell with given id
      * @param cellId int
      * @return Cell
@@ -296,6 +308,38 @@ public class Data {
         } else if (id.getGroup() == DataGroup.STACK) {
             stackDataMap.put(id, null);
         }
+        if(id == DataId.INTENSITIES){
+            tag_map.clear();
+        }
+    }
     
+    /**Gets the set of used intensity tags
+     * @return Set<String> intensity tags
+     */
+    //public Set<String> getTagSet() {
+    public Set<String> getIntensityTagSet() {
+        return tag_map.keySet();
+    }
+
+    /**
+     * Checks if tag is already in the map
+     * @param tag to check for
+     * @return true if given tag is already definned, false otherwise
+     */
+    public boolean hasIntensityTag(String tag) {
+        return tag_map.containsKey(tag);
+    }
+    
+    /**
+     * Gets the position of intensity associated with a tag.
+     *@param int position 
+     *@return float intensity
+     */
+    public int getIntensityIndex(String tag) throws Exception {
+        Integer pos = tag_map.get(tag);
+        if (pos == null) {
+            throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
+        }
+        return pos;
     }
 }

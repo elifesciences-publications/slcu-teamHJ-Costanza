@@ -293,7 +293,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         IntensityFinder intFinder = new IntensityFinder();
                         intFinder.process(IJCase, op);
 
-                        System.out.println( CellIntensity.getTagSet() );
+                        System.out.println( IJCase.getIntensityTagSet() );
                         //System.out.println(sz + ", " + imName);
 
                         // Process for generating intensity colored boas

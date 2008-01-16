@@ -83,7 +83,7 @@ public class IntensityFinder extends Processor {
             CellIntensity intens = (CellIntensity)cell.get(DataId.INTENSITIES);
                     
             if( intens == null ){
-                intens = new CellIntensity();
+                intens = new CellIntensity(c);
                 c.attachCellData(intens, cell);
             }
             
