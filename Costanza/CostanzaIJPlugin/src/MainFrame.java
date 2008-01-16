@@ -7,22 +7,8 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class MainFrame extends java.awt.Frame {
-	void addJobs(Queue jobs) throws Exception {
-		algorithmPanel.addInverterJob(jobs);
-		preProcessorMenuPanel.addJobs(jobs);
-		Options gradientDescentOption = new Options();
-		gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
-		jobs.addJob(new Job("gradientdescent", gradientDescentOption));
-		postProcessorMenuPanel.addJobs(jobs);
-		Options intensityFinderOption = new Options();
-		jobs.addJob(new Job("intensityfinder", intensityFinderOption));
-	}
-
-	int getResultRequest() {
-		return algorithmPanel.getResultRequest();
-	}
-
 	private enum PanelId {
+
 		IO,
 		PRE_PROCESSING,
 		POST_PROCESSING
@@ -35,12 +21,12 @@ public class MainFrame extends java.awt.Frame {
 	private Font menuFont;
 	private Font font;
 	private Color backgroundColor;
-	
+
 	public MainFrame(Costanza_Plugin plugin) throws Exception {
 		menuFont = ij.Menus.getFont();
 		font = ij.ImageJ.SansSerif12;
 		backgroundColor = ij.ImageJ.backgroundColor;
-		
+
 		initComponents();
 		this.plugin = plugin;
 		initOptionPanels();
@@ -180,7 +166,20 @@ public class MainFrame extends java.awt.Frame {
 	}//GEN-LAST:event_postProcessorMenuItemActionPerformed
 
 	private void startMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMenuItemActionPerformed
-		plugin.start();
+		Queue jobs = new Queue();
+		try {
+			algorithmPanel.addInverterJob(jobs);
+			preProcessorMenuPanel.addJobs(jobs);
+			Options gradientDescentOption = new Options();
+			gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
+			jobs.addJob(new Job("gradientdescent", gradientDescentOption));
+			postProcessorMenuPanel.addJobs(jobs);
+			Options intensityFinderOption = new Options();
+			jobs.addJob(new Job("intensityfinder", intensityFinderOption));
+		} catch (Exception exception) {
+			Costanza_Plugin.displayExceptionMessage(exception);
+		}
+		plugin.start(jobs, algorithmPanel.getResultRequest());
 	}//GEN-LAST:event_startMenuItemActionPerformed
 
 	private void quitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitMenuItemActionPerformed
