@@ -13,9 +13,9 @@ public class MainFrame extends java.awt.Frame {
 		PRE_PROCESSING,
 		POST_PROCESSING
 	}
-	private AlgorithmPanel algorithmPanel;
-	private ProcessorOptionPanel preProcessorMenuPanel;
-	private ProcessorOptionPanel postProcessorMenuPanel;
+	private IOOptionPanel ioOptionPanel;
+	private ProcessorOptionPanel preProcessorOptionPanel;
+	private ProcessorOptionPanel postProcessorOptionPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.CardLayout cardLayout;
 	private Font menuFont;
@@ -38,24 +38,24 @@ public class MainFrame extends java.awt.Frame {
 		cardLayout = new CardLayout();
 		panel.setLayout(cardLayout);
 
-		algorithmPanel = new AlgorithmPanel(this);
-		panel.add(algorithmPanel, "AlgorithmPanel");
+		ioOptionPanel = new IOOptionPanel(this);
+		panel.add(ioOptionPanel, "IOOptionPanel");
 
-		preProcessorMenuPanel = new ProcessorOptionPanel(this);
-		preProcessorMenuPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
-		preProcessorMenuPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
-		preProcessorMenuPanel.addOptionPanel("Background extraction");
-		preProcessorMenuPanel.addOptionPanel("Smoothing");
-		panel.add(preProcessorMenuPanel, "PreProcessorMenuPanel");
+		preProcessorOptionPanel = new ProcessorOptionPanel(this);
+		preProcessorOptionPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
+		preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
+		preProcessorOptionPanel.addOptionPanel("Background extraction");
+		preProcessorOptionPanel.addOptionPanel("Smoothing");
+		panel.add(preProcessorOptionPanel, "PreProcessorOptionPanel");
 
-		postProcessorMenuPanel = new ProcessorOptionPanel(this);
-		postProcessorMenuPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
-		postProcessorMenuPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
-		postProcessorMenuPanel.addOptionPanel("Peak remover");
-		postProcessorMenuPanel.addOptionPanel("Peak merger");
-		panel.add(postProcessorMenuPanel, "PostProcessorMenuPanel");
+		postProcessorOptionPanel = new ProcessorOptionPanel(this);
+		postProcessorOptionPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
+		postProcessorOptionPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
+		postProcessorOptionPanel.addOptionPanel("Peak remover");
+		postProcessorOptionPanel.addOptionPanel("Peak merger");
+		panel.add(postProcessorOptionPanel, "PostProcessorOptionPanel");
 
-		cardLayout.show(panel, "AlgorithmPanel");
+		cardLayout.show(panel, "IOOptionPanel");
 	}
 
 	public void update() {
@@ -168,18 +168,18 @@ public class MainFrame extends java.awt.Frame {
 	private void startMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMenuItemActionPerformed
 		Queue jobs = new Queue();
 		try {
-			algorithmPanel.addInverterJob(jobs);
-			preProcessorMenuPanel.addJobs(jobs);
+			ioOptionPanel.addInverterJob(jobs);
+			preProcessorOptionPanel.addJobs(jobs);
 			Options gradientDescentOption = new Options();
 			gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
 			jobs.addJob(new Job("gradientdescent", gradientDescentOption));
-			postProcessorMenuPanel.addJobs(jobs);
+			postProcessorOptionPanel.addJobs(jobs);
 			Options intensityFinderOption = new Options();
 			jobs.addJob(new Job("intensityfinder", intensityFinderOption));
 		} catch (Exception exception) {
 			Costanza_Plugin.displayExceptionMessage(exception);
 		}
-		plugin.start(jobs, algorithmPanel.getResultRequest());
+		plugin.start(jobs, ioOptionPanel.getResultRequest());
 	}//GEN-LAST:event_startMenuItemActionPerformed
 
 	private void quitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitMenuItemActionPerformed
@@ -189,15 +189,15 @@ public class MainFrame extends java.awt.Frame {
 	private void setActivePanel(PanelId id) {
 		switch (id) {
 			case IO:
-				cardLayout.show(panel, "AlgorithmPanel");
+				cardLayout.show(panel, "IOOptionPanel");
 				update();
 				break;
 			case PRE_PROCESSING:
-				cardLayout.show(panel, "PreProcessorMenuPanel");
+				cardLayout.show(panel, "PreProcessorOptionPanel");
 				update();
 				break;
 			case POST_PROCESSING:
-				cardLayout.show(panel, "PostProcessorMenuPanel");
+				cardLayout.show(panel, "PostProcessorOptionPanel");
 				update();
 				break;
 			default:
