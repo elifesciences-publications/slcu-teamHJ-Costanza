@@ -27,7 +27,7 @@ public class BackGroundFinderIntensityOption extends java.awt.Panel implements P
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(intensityThresholdLabel, gridBagConstraints);
 
-        intensityThresholdTextField.setText("0.1");
+        intensityThresholdTextField.setText("50");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(intensityThresholdTextField, gridBagConstraints);
@@ -43,7 +43,9 @@ public class BackGroundFinderIntensityOption extends java.awt.Panel implements P
 
 	public void addJobs(Queue jobs) throws Exception {
 		Options options = new Options();
-		options.addOption("threshold", new Float(intensityThresholdTextField.getText()));
+		float threshold = new Float(intensityThresholdTextField.getText()).floatValue();
+		threshold = threshold / 255.0f;
+		options.addOption("threshold", new Float(threshold));
 		jobs.addJob(new Job("backgroundextractor", options));
 	}
 	
