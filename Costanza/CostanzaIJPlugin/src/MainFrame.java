@@ -3,6 +3,8 @@ import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
 
 public class MainFrame extends java.awt.Frame {
 	void addJobs(Queue jobs) throws Exception {
@@ -30,8 +32,15 @@ public class MainFrame extends java.awt.Frame {
 	private ProcessorOptionPanel postProcessorMenuPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.CardLayout cardLayout;
-
+	private Font menuFont;
+	private Font font;
+	private Color backgroundColor;
+	
 	public MainFrame(Costanza_Plugin plugin) throws Exception {
+		menuFont = ij.Menus.getFont();
+		font = ij.ImageJ.SansSerif12;
+		backgroundColor = ij.ImageJ.backgroundColor;
+		
 		initComponents();
 		this.plugin = plugin;
 		initOptionPanels();
@@ -43,7 +52,7 @@ public class MainFrame extends java.awt.Frame {
 		cardLayout = new CardLayout();
 		panel.setLayout(cardLayout);
 
-		algorithmPanel = new AlgorithmPanel();
+		algorithmPanel = new AlgorithmPanel(this);
 		panel.add(algorithmPanel, "AlgorithmPanel");
 
 		preProcessorMenuPanel = new ProcessorOptionPanel(this);
@@ -86,6 +95,7 @@ public class MainFrame extends java.awt.Frame {
         preProcessorMenuItem = new java.awt.MenuItem();
         postProcessorMenuItem = new java.awt.MenuItem();
 
+        setBackground(backgroundColor);
         setName("Costanza Plugin"); // NOI18N
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -94,8 +104,11 @@ public class MainFrame extends java.awt.Frame {
             }
         });
 
+        panel.setFont(font);
         panel.setLayout(new java.awt.CardLayout());
         add(panel, java.awt.BorderLayout.CENTER);
+
+        menuBar.setFont(menuFont);
 
         mainMenu.setLabel("Main");
 
@@ -106,7 +119,7 @@ public class MainFrame extends java.awt.Frame {
             }
         });
         mainMenu.add(startMenuItem);
-        mainMenu.addSeparator();
+
         quitMenuItem.setLabel("Close plugin");
         quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,7 +164,7 @@ public class MainFrame extends java.awt.Frame {
     }// </editor-fold>//GEN-END:initComponents
 	/** Exit the Application */
 	private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
-		System.exit(0);
+		plugin.stop();
 	}//GEN-LAST:event_exitForm
 
 	private void ioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ioMenuItemActionPerformed

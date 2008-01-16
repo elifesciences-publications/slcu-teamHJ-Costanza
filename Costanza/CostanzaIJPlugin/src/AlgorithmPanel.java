@@ -2,7 +2,9 @@ import costanza.Job;
 import costanza.Queue;
 
 public class AlgorithmPanel extends java.awt.Panel {
-	public AlgorithmPanel() {
+	private MainFrame frame;
+	public AlgorithmPanel(MainFrame mainFrame) {
+		frame = mainFrame;
 		initComponents();
 	}
 
