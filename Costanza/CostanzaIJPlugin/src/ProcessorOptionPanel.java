@@ -1,6 +1,7 @@
 
 import costanza.Factory;
 import costanza.Queue;
+import java.awt.GridBagConstraints;
 import java.util.logging.Level;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,13 +47,14 @@ public class ProcessorOptionPanel extends java.awt.Panel {
 	 */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         northPanel = new java.awt.Panel();
         addButton = new java.awt.Button();
         processorOptionChoice = new java.awt.Choice();
         displayPanel = new java.awt.Panel();
 
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
+        setLayout(new java.awt.GridBagLayout());
 
         northPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -65,10 +67,18 @@ public class ProcessorOptionPanel extends java.awt.Panel {
         northPanel.add(addButton, new java.awt.GridBagConstraints());
         northPanel.add(processorOptionChoice, new java.awt.GridBagConstraints());
 
-        add(northPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(northPanel, gridBagConstraints);
 
-        displayPanel.setLayout(new javax.swing.BoxLayout(displayPanel, javax.swing.BoxLayout.Y_AXIS));
-        add(displayPanel);
+        displayPanel.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(displayPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 		try {
@@ -81,7 +91,10 @@ public class ProcessorOptionPanel extends java.awt.Panel {
 
 	public void addOptionPanel(String name) throws Exception {
 		OptionPanel optionPanel = new OptionPanel(this, factory.create(name));
-		displayPanel.add(optionPanel);
+		java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
+		gridBagConstraints.gridx = 0;
+		gridBagConstraints.anchor = GridBagConstraints.WEST;
+		displayPanel.add(optionPanel, gridBagConstraints);
 		optionPanelList.add(optionPanel);
 		frame.update();
 	}

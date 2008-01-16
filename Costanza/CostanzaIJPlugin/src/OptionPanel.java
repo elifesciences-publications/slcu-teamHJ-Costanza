@@ -33,7 +33,9 @@ public class OptionPanel extends java.awt.Panel {
 
         processorNameLabel.setFont(new java.awt.Font("Dialog", 1, 12));
         processorNameLabel.setText("processorName");
-        add(processorNameLabel, new java.awt.GridBagConstraints());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(processorNameLabel, gridBagConstraints);
 
         removeButton.setLabel("Remove");
         removeButton.addActionListener(new java.awt.event.ActionListener() {
@@ -50,7 +52,6 @@ public class OptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(optionPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
