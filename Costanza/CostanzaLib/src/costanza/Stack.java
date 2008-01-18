@@ -13,15 +13,15 @@ public class Stack {
     private int height;
     /**Width of the image, taken from Image class.*/
     private int width;
-    /** Contains scale of image in x,y z direction.*/
+    /**Contains scale of image in x,y z direction.*/
     private float[] scale = {1.0f, 1.0f, 1.0f};
-    /** Internal representation of the stack.*/
+    /**Internal representation of the stack.*/
     private Vector<Image> images;
-    /** Stores the maximal intensity in the stack*/
+    /**Stores the maximal intensity in the stack*/
     private float maxIntensity;
-    /** Stores the minimal intensity in the stack*/
+    /**Stores the minimal intensity in the stack*/
     private float minIntensity;
-    /** Stores the maximal allowed intensity, default is 1.0*/
+    /**Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit;
     /**Unique id for stack object*/
     private int id;
