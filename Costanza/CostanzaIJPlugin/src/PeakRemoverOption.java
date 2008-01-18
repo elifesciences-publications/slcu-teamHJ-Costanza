@@ -42,7 +42,7 @@ public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(intensityThresholdLabel, gridBagConstraints);
 
-        intensityThresholdTextField.setText("0.2");
+        intensityThresholdTextField.setText("10");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -60,7 +60,9 @@ public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption
 	public void addJobs(Queue jobs) throws Exception {
 		Options options = new Options();
 		options.addOption("sizeThreshold", new Float(sizeThresholdTextField.getText()));
-		options.addOption("intensityThreshold", new Float(intensityThresholdTextField.getText()));
+		float threshold = new Float(intensityThresholdTextField.getText()).floatValue();
+		threshold /= 255.0f;
+		options.addOption("intensityThreshold", new Float(threshold));
 		jobs.addJob(new Job("peakremover", options));
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
