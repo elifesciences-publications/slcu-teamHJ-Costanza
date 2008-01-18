@@ -53,6 +53,7 @@ public class ProcessorOptionPanel extends java.awt.Panel {
         addButton = new java.awt.Button();
         processorOptionChoice = new java.awt.Choice();
         displayPanel = new java.awt.Panel();
+        label1 = new java.awt.Label();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -76,9 +77,13 @@ public class ProcessorOptionPanel extends java.awt.Panel {
         displayPanel.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(displayPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        add(label1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 	private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
 		try {
@@ -101,6 +106,7 @@ public class ProcessorOptionPanel extends java.awt.Panel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button addButton;
     private java.awt.Panel displayPanel;
+    private java.awt.Label label1;
     private java.awt.Panel northPanel;
     private java.awt.Choice processorOptionChoice;
     // End of variables declaration//GEN-END:variables
