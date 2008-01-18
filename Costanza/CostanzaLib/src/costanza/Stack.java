@@ -25,6 +25,7 @@ public class Stack {
     private float maxIntensityLimit;
     /**unique id for stack object*/
     private int id;
+    /**Unique static counter for Stack*/
     private static int numbOfInst = 0;
     
     /**Creates a new empty Stack with the specified width and height.
@@ -56,34 +57,14 @@ public class Stack {
     /**Constructs a Stack from an array of AWT Images.
      * 
      * @param images the array of images to create the stack from.
-	 * 
-	 * @todo Remove? This function must be obselete as I can spot at least two 
-	 * serious bugs in it. (sahlin)
      */
-    public Stack(java.awt.Image[] images) {
-	this.width = 0;
-	this.height = 0;
-	this.images = new Vector<Image>();
-	this.images.setSize(images.length);
+    public Stack(java.awt.Image[] images) throws Exception {
+        this();
 	for (int i = 0; i < images.length; ++i) {
-	    java.awt.Image image = images[i];
-	    this.images.add(new Image(image));
+            addImage(new Image(images[i]));
 	}
-	maxIntensityLimit = (float) 1.0;
-        id = numbOfInst++;
     }
 	
-	/** Constructs a Stack from an array of BufferedImage images.
-	 * 
-	 * @param images Array of buffered images to create the stack from.
-	 */
-	public Stack(java.awt.image.BufferedImage[] bufferedImages) throws Exception {
-		this();
-		for (int i = 0; i < bufferedImages.length; ++i) {
-			addImage(new Image(bufferedImages[i]));
-		}
-	}
-
     @Override
     public Object clone() {
 	//System.out.println("clone: images.size: " + images.size());
