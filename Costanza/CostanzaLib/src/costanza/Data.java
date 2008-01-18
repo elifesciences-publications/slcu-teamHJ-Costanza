@@ -12,9 +12,11 @@ import java.util.TreeMap;
  */
 public class Data {
 
-    /**Maps dataId to a Vector of Objects which represent data*/
+    /**Maps dataId to the stack Data*/
     private Map<DataId, Data_t> stackDataMap;
+    /**Maps dataId to the cell Data*/
     private Map<DataId, Collection<? extends CellData_t>> cellDataMap;
+    /**Maps cellId to the cell*/
     private Map<Integer, Cell> cells;
     /**Maps intensity tag to position in vector*/
     private Map<String, Integer> tag_map;
@@ -341,5 +343,24 @@ public class Data {
             throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
         }
         return pos;
+    }
+    
+    /**
+     * Renumbers cell ids to consecutive numbers
+     */
+    public void renumberCells() {
+
+        Set<Map.Entry<Integer, Cell>> entries = cells.entrySet();
+        Iterator<Map.Entry<Integer, Cell>> iter = entries.iterator();
+        Map<Integer, Cell> map = new TreeMap<Integer, Cell>();
+        Integer counter = 0;
+        while (iter.hasNext()) {
+            Map.Entry<Integer, Cell> ent = iter.next();
+            Cell c = ent.getValue();
+            c.seId(counter);
+            map.put( counter, c);
+            ++counter;
+        }
+        cells = map;
     }
 }

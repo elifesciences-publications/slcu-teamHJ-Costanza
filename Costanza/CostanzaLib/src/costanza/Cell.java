@@ -75,6 +75,14 @@ public class Cell implements Comparable<Cell>{
         cell_data.put(DataId.INTENSITIES, null);
     }
 
+    /* 
+     * *Sets internal id of the cell. Use with caution as cells are maped to ids in Data too.
+     * @param id
+     */
+    void seId( int id){
+        this.id = id; 
+    }
+    
     public int compareTo(Cell src) {
         return ((Integer)id).compareTo( src.id );
     }
