@@ -18,7 +18,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 	public static int REQUEST_BOA_COLORIZER = 1;
 	public static int REQUEST_BOA_INTENSITY_COLORIZER = 2;
-	public static int REQUEST_CELL_MARKER = 3;
+	public static int REQUEST_CELL_MARKER = 4;
 
 	void scaleDialogCancel(ScaleDialog dialog) {
 		status = PluginStatus.CANCEL_DIALOG;
@@ -152,7 +152,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		}
 	}
 
-	private void displayResult(String name, Job job, Case IJCase, Factory factory) throws Exception {
+	private void displayResult(String name, Job job, Case IJCase, Factory<Processor> factory) throws Exception {
 		Queue jobs = new Queue();
 		jobs.addJob(job);
 		Driver driver = new Driver(jobs, IJCase, factory);
