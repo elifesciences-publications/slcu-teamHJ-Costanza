@@ -42,8 +42,11 @@ public class MainFrame extends java.awt.Frame {
 		panel.add(ioOptionPanel, "IOOptionPanel");
 
 		preProcessorOptionPanel = new ProcessorOptionPanel(this);
+		
+		preProcessorOptionPanel.addProcessorOptionToMenu("Invert image", InvertOption.class);
 		preProcessorOptionPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
 		preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
+		preProcessorOptionPanel.addOptionPanel("Invert image");
 		preProcessorOptionPanel.addOptionPanel("Background extraction");
 		preProcessorOptionPanel.addOptionPanel("Smoothing");
 		panel.add(preProcessorOptionPanel, "PreProcessorOptionPanel");
@@ -77,9 +80,9 @@ public class MainFrame extends java.awt.Frame {
         startMenuItem = new java.awt.MenuItem();
         quitMenuItem = new java.awt.MenuItem();
         optionsMenu = new java.awt.Menu();
-        ioMenuItem = new java.awt.MenuItem();
         preProcessorMenuItem = new java.awt.MenuItem();
         postProcessorMenuItem = new java.awt.MenuItem();
+        ioMenuItem = new java.awt.MenuItem();
 
         setBackground(backgroundColor);
         setName("Costanza Plugin"); // NOI18N
@@ -118,14 +121,6 @@ public class MainFrame extends java.awt.Frame {
 
         optionsMenu.setLabel("Options");
 
-        ioMenuItem.setLabel("Input and output");
-        ioMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ioMenuItemActionPerformed(evt);
-            }
-        });
-        optionsMenu.add(ioMenuItem);
-
         preProcessorMenuItem.setLabel("Pre-processing");
         preProcessorMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -141,6 +136,14 @@ public class MainFrame extends java.awt.Frame {
             }
         });
         optionsMenu.add(postProcessorMenuItem);
+
+        ioMenuItem.setLabel("Output");
+        ioMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ioMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(ioMenuItem);
 
         menuBar.add(optionsMenu);
 
@@ -168,7 +171,6 @@ public class MainFrame extends java.awt.Frame {
 	private void startMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMenuItemActionPerformed
 		Queue jobs = new Queue();
 		try {
-			ioOptionPanel.addInverterJob(jobs);
 			preProcessorOptionPanel.addJobs(jobs);
 			Options gradientDescentOption = new Options();
 			gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
