@@ -26,7 +26,7 @@ public class BoaColorizerIntensity extends Processor {
             stack = (Stack) options.getOptionValue("OverrideStack");
 
         } else {
-            stack = c.getStack();
+            stack = c.getOriginalStack();
         }
         if (stack == null) {
             throw new Exception("No stack available");
