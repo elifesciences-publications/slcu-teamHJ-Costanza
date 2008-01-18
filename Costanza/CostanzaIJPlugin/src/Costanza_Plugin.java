@@ -7,6 +7,7 @@ import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
 import costanza.Job;
+import costanza.Options;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
@@ -16,7 +17,8 @@ import java.util.logging.Logger;
 public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 	public static int REQUEST_BOA_COLORIZER = 1;
-	public static int REQUEST_CELL_MARKER = 2;
+	public static int REQUEST_BOA_INTENSITY_COLORIZER = 2;
+	public static int REQUEST_CELL_MARKER = 3;
 
 	void scaleDialogCancel(ScaleDialog dialog) {
 		status = PluginStatus.CANCEL_DIALOG;
@@ -82,6 +84,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
 		factory.register("intensityfinder", costanza.IntensityFinder.class);
 		factory.register("boacolorize", costanza.BoaColorizer.class);
+		factory.register("boaintensitycolorize", costanza.BoaColorizerIntensity.class);
 		factory.register("cellmarker", costanza.CellCenterMarker.class);
 	}
 
@@ -137,6 +140,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	private void processResultRequests(Case IJCase, int request) throws Exception {
 		if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
 			Job job = new Job("boacolorize", null);
+			displayResult("Costanza - Basins of attractions (BOA)", job, IJCase, factory);
+		}
+		if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER) {
+			Job job = new Job("boaintensitycolorize", new Options());
 			displayResult("Costanza - Basins of attractions (BOA)", job, IJCase, factory);
 		}
 		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {

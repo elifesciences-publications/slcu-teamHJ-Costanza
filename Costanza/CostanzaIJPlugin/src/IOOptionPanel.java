@@ -13,6 +13,9 @@ public class IOOptionPanel extends java.awt.Panel {
 		if (boaColourizeCheckbox.getState() == true) {
 			request = request | Costanza_Plugin.REQUEST_BOA_COLORIZER;
 		}
+		if (boaIntensityColourizeCheckbox.getState() == true) {
+			request = request | Costanza_Plugin.REQUEST_BOA_INTENSITY_COLORIZER;
+		}
 		if (cellCenterMarkerOption.getState() == true) {
 			request = request | Costanza_Plugin.REQUEST_CELL_MARKER;
 		}
@@ -31,13 +34,14 @@ public class IOOptionPanel extends java.awt.Panel {
         boaColourizeCheckbox = new java.awt.Checkbox();
         outputOptionsLabel = new java.awt.Label();
         cellCenterMarkerOption = new java.awt.Checkbox();
+        boaIntensityColourizeCheckbox = new java.awt.Checkbox();
 
         setLayout(new java.awt.GridBagLayout());
 
         boaColourizeCheckbox.setLabel("Display basins of attractions (BOA).");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(boaColourizeCheckbox, gridBagConstraints);
 
@@ -45,19 +49,26 @@ public class IOOptionPanel extends java.awt.Panel {
         outputOptionsLabel.setText("Output options");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(outputOptionsLabel, gridBagConstraints);
 
         cellCenterMarkerOption.setLabel("Mark cell centers.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(cellCenterMarkerOption, gridBagConstraints);
+
+        boaIntensityColourizeCheckbox.setLabel("Display basins of attractions according to measured intensity.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        add(boaIntensityColourizeCheckbox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox boaColourizeCheckbox;
+    private java.awt.Checkbox boaIntensityColourizeCheckbox;
     private java.awt.Checkbox cellCenterMarkerOption;
     private java.awt.Label outputOptionsLabel;
     // End of variables declaration//GEN-END:variables
