@@ -157,8 +157,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		jobs.addJob(job);
 		Driver driver = new Driver(jobs, IJCase, factory);
 		driver.run();
-		Stack result = new Stack(IJCase.getResultImages());
-		ij.ImagePlus imagePlus = Utility.createImagePlusFromStack(result, name);
+		ij.ImagePlus imagePlus = Utility.createImagePlusFromResultStack(IJCase, name);
 		imagePlus.show();
 	}
 

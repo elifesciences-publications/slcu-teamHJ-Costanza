@@ -1,6 +1,8 @@
 
+import costanza.Case;
 import costanza.Image;
 import costanza.Stack;
+import java.awt.image.BufferedImage;
 
 /** Utility class for the Costanza Plugin. */
 public class Utility {
@@ -35,6 +37,35 @@ public class Utility {
 		for (int i = 0; i < stack.getDepth(); ++i) {
 			Image image = stack.getImage(i);
 			imageStack.addSlice("", getImageProcessorFromImage(image));
+		}
+
+		ij.ImagePlus imagePlus = new ij.ImagePlus(name, imageStack);
+		ij.measure.Calibration calibration = imagePlus.getCalibration();
+		calibration.pixelWidth = stack.getXScale();
+		calibration.pixelHeight = stack.getYScale();
+		calibration.pixelDepth = stack.getZScale();
+
+		return imagePlus;
+	}
+
+	/** Creates new ij.ImagePlus object from result stack. */
+	static public ij.ImagePlus createImagePlusFromResultStack(Case IJCase, String name) throws Exception {
+		Stack stack = IJCase.getStack();
+		int width = stack.getWidth();
+		int height = stack.getHeight();
+		int depth = stack.getDepth();
+
+		ij.ImageStack imageStack = new ij.ImageStack(width, height);
+
+		java.awt.image.BufferedImage[] resultImage = IJCase.getResultImages();
+
+		for (int i = 0; i < depth; ++i) {
+			ij.ImagePlus ipTmp = new ij.ImagePlus(name, resultImage[i]);
+			ij.ImageStack stackTmp = ipTmp.getImageStack();
+			if (stackTmp.getSize() != 1) {
+				throw new Exception("Unexpected error in getImagePlusFromResultStack()");
+			}
+			imageStack.addSlice("", stackTmp.getProcessor(1));
 		}
 
 		ij.ImagePlus imagePlus = new ij.ImagePlus(name, imageStack);
