@@ -32,11 +32,14 @@ public class BoaColorizerIntensity extends Processor {
             throw new Exception("No stack available");
         }
 
-        //System.out.println("Processing stack: " + stack.getId());
+        System.out.println("Processing stack: " + stack.getId());
+        System.out.println(c.getIntensityTagSet());
         
         int[] boaColors = genColors(c, boaCollection.size());
         BufferedImage[] images = getImagesFromStack(stack);
         Object[] boas = boaCollection.toArray();
+        System.out.println("BOA length: " + boas.length);
+        
         if (boaColors.length != boas.length) {
             throw new Exception("Lengths differ!");
         }

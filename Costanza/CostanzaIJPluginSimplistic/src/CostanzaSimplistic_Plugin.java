@@ -256,6 +256,10 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             }
             if (boaIntensityOutFlag) {
                 // Process for generating intensity colored boas
+                if(! IJCase.getIntensityTagMap().containsKey(IJCase.getOriginalStack().getId())){
+                    IntensityFinder intFinder = new IntensityFinder();
+                    intFinder.process(IJCase,null);
+                }
                 Options tmpOptions = new Options();
                 BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
                 try {
@@ -293,7 +297,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         IntensityFinder intFinder = new IntensityFinder();
                         intFinder.process(IJCase, op);
 
-                        System.out.println( IJCase.getIntensityTagSet() );
+                        //System.out.println( IJCase.getIntensityTagSet() );
                         //System.out.println(sz + ", " + imName);
 
                         // Process for generating intensity colored boas
@@ -305,7 +309,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                             error("Error in boaColorizerIntensity: " + ex.getMessage() + "\n");
                         }
                         // Plot boas
-                        ImagePlus ipTmp = createImagePlusFromStack( intensStack );
+                        ImagePlus ipTmp = createImagePlusFromResultStack(IJCase, "Intensity in BOAs");
                         ipTmp.show();
                     }
                     else{

@@ -90,6 +90,7 @@ public class IntensityFinder extends Processor {
             intens.addIntensity(meanTag, meanIntensity.get(i));
         }
         System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));
+        System.out.println(c.getIntensityTagSet());
 
         return c;
     }
