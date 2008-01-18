@@ -23,7 +23,7 @@ public class Stack {
     private float minIntensity;
     /** Stores the maximal allowed intensity, default is 1.0*/
     private float maxIntensityLimit;
-    /**unique id for stack object*/
+    /**Unique id for stack object*/
     private int id;
     /**Unique static counter for Stack*/
     private static int numbOfInst = 0;
