@@ -19,7 +19,6 @@ import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
 
 import costanza.CellIntensity;
-import costanza.MeanFilter2;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -152,7 +151,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             // MEAN FILTER
             if (smoothNum > 0) {
                 //MeanFilter meanFilter = new MeanFilter();
-                MeanFilter2 meanFilter = new MeanFilter2();
+                MeanFilter meanFilter = new MeanFilter();
                 for (int i = 0; i < smoothNum; ++i) {
                     try {
                         meanFilter.process(IJCase, meanFilterOptions);
