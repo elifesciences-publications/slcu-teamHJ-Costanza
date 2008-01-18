@@ -21,21 +21,20 @@ public class IntensityFinder extends Processor {
 //            throw new Exception("No original stack available in case");
 //        }
         Stack stack;
-        
-        if( options != null && options.hasOption("OverrideStack") ){
-            stack = (Stack)options.getOptionValue("OverrideStack");
-            //stackTag = (String)options.getOptionValue("StackTag");
-        }
-        else{
+
+        if (options != null && options.hasOption("OverrideStack")) {
+            stack = (Stack) options.getOptionValue("OverrideStack");
+        //stackTag = (String)options.getOptionValue("StackTag");
+        } else {
             stack = c.getOriginalStack();
         }
-        if(stack == null){
+        if (stack == null) {
             throw new Exception("No stack available");
         }
-        String stackTag = Integer.toString( stack.getId() );
-        
+        String stackTag = Integer.toString(stack.getId());
+
         //System.out.println("Processing stack: " + stack.getId());
-        
+
         // Get the basin of attractors from data in case
         Vector<BOA> boa = new Vector<BOA>();
         Collection boaCollection = c.getCellData(DataId.BOAS);
@@ -71,8 +70,8 @@ public class IntensityFinder extends Processor {
             }
         }
         for (int i = 0; i < numBoa; ++i) {
-					int numPixel = (boa.get(i)).size();
-					meanIntensity.set(i, intensity.get(i) / numPixel);
+            int numPixel = (boa.get(i)).size();
+            meanIntensity.set(i, intensity.get(i) / numPixel);
         }
         // Add the total and mean intensity
         //Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
@@ -80,15 +79,15 @@ public class IntensityFinder extends Processor {
         for (int i = 0; i < numBoa; ++i) {
             Cell cell = boa.get(i).getCell();
 
-            CellIntensity intens = (CellIntensity)cell.get(DataId.INTENSITIES);
-                    
-            if( intens == null ){
+            CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
+
+            if (intens == null) {
                 intens = new CellIntensity(c);
                 c.attachCellData(intens, cell);
             }
-            
+
             //intens.addIntensity(stackTag + "total", intensity.get(i));
-            intens.addIntensity(meanTag, meanIntensity.get(i));         
+            intens.addIntensity(meanTag, meanIntensity.get(i));
         }
         System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));
 
