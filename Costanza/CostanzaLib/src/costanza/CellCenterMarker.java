@@ -20,7 +20,7 @@ public class CellCenterMarker extends Processor {
 	if (cellCenters == null) {
 	    return c;
 	}
-	BufferedImage[] images = getImagesFromStack(c.getStack());
+	BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
 	Object[] ccs = cellCenters.toArray();
 	int color = genRedColor();
 	for (int i = 0; i < ccs.length; ++i) {
