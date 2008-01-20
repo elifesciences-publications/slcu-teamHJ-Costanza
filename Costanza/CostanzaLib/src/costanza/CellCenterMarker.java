@@ -2,10 +2,6 @@ package costanza;
 
 import java.awt.image.BufferedImage;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
-
-;
 
 /**Implementation of a Processor that colors each BOA with a unique color.
  * @author michael
