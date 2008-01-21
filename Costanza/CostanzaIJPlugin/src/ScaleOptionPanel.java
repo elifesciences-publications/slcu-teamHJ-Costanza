@@ -1,17 +1,16 @@
 
-import ij.measure.Calibration;
+public class ScaleOptionPanel extends java.awt.Panel {
 
-public class ScaleDialog extends java.awt.Dialog {
+	private MainFrame frame;
+	private ij.measure.Calibration calibration;
 
-	private Costanza_Plugin plugin;
-	private Calibration calibration;
-
-	public ScaleDialog(Costanza_Plugin plugin, boolean modal, ij.measure.Calibration calibration) {
-		super(plugin.getMainFrame(), "Costanza Plugin", modal);
-		this.plugin = plugin;
-		this.calibration = calibration;
-
+	public ScaleOptionPanel(MainFrame frame) {
 		initComponents();
+		this.frame = frame;
+	}
+
+	void setCalibration(ij.measure.Calibration calibration) {
+		this.calibration = calibration;
 		xScaleTextField.setText(Double.toString(calibration.pixelWidth));
 		yScaleTextField.setText(Double.toString(calibration.pixelHeight));
 		zScaleTextField.setText(Double.toString(calibration.pixelDepth));
@@ -26,7 +25,6 @@ public class ScaleDialog extends java.awt.Dialog {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        scaleLabel = new java.awt.Label();
         scalePanel = new java.awt.Panel();
         xScaleLabel = new java.awt.Label();
         xScaleTextField = new java.awt.TextField();
@@ -37,16 +35,9 @@ public class ScaleDialog extends java.awt.Dialog {
         buttonPanel = new java.awt.Panel();
         cancelButton = new java.awt.Button();
         continueButton = new java.awt.Button();
+        label = new java.awt.Label();
 
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                closeDialog(evt);
-            }
-        });
-        setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS));
-
-        scaleLabel.setText("Please enter scale of image.");
-        add(scaleLabel);
+        setLayout(new java.awt.GridBagLayout());
 
         scalePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -95,7 +86,10 @@ public class ScaleDialog extends java.awt.Dialog {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
         scalePanel.add(zScaleTextField, gridBagConstraints);
 
-        add(scalePanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        add(scalePanel, gridBagConstraints);
 
         cancelButton.setLabel("Cancel");
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -113,31 +107,34 @@ public class ScaleDialog extends java.awt.Dialog {
         });
         buttonPanel.add(continueButton);
 
-        add(buttonPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        add(buttonPanel, gridBagConstraints);
 
-        pack();
+        label.setText("Please enter scale of image:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(label, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-	/** Closes the dialog */
-	private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
-		setVisible(false);
-		dispose();
-	}//GEN-LAST:event_closeDialog
-
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		plugin.scaleDialogCancel(this);
+		calibration.pixelWidth = new Float(xScaleTextField.getText()).floatValue();
+		calibration.pixelHeight = new Float(yScaleTextField.getText()).floatValue();
+		calibration.pixelDepth = new Float(zScaleTextField.getText()).floatValue();
+		frame.scaleOptionPanelCancelButtonPressed();
 	}//GEN-LAST:event_cancelButtonActionPerformed
 
 	private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
 		calibration.pixelWidth = new Float(xScaleTextField.getText()).floatValue();
 		calibration.pixelHeight = new Float(yScaleTextField.getText()).floatValue();
 		calibration.pixelDepth = new Float(zScaleTextField.getText()).floatValue();
-		plugin.scaleDialogContinue(this);
+		frame.scaleOptionPanelContinueButtonPressed();
 	}//GEN-LAST:event_continueButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Panel buttonPanel;
     private java.awt.Button cancelButton;
     private java.awt.Button continueButton;
-    private java.awt.Label scaleLabel;
+    private java.awt.Label label;
     private java.awt.Panel scalePanel;
     private java.awt.Label xScaleLabel;
     private java.awt.TextField xScaleTextField;

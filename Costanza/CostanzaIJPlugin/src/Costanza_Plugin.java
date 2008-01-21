@@ -22,6 +22,65 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	public static int REQUEST_CELL_MARKER = 4;
 	public static int REQUEST_WORKING_STACK = 8;
 
+	private ij.ImagePlus imagePlus;
+	private Queue jobs;
+	private boolean secondaryStackOption;
+	
+	public void start(Queue jobs, boolean secondaryStackOption) {
+		this.jobs = jobs;
+		this.secondaryStackOption = secondaryStackOption;
+		try {
+			try {
+				imagePlus = ij.IJ.getImage();
+			} catch (Exception exception) {
+				// Do nothing as we assume ImageJ is displaying a message about this exception.
+				return;
+			}
+
+			frame.askForScale(imagePlus.getCalibration());
+		} catch (Exception exception) {
+			displayExceptionMessage(exception);
+			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
+			return;
+		}
+	}
+
+	void scaleOptionPanelContinueButtonPressed() {
+		try {
+			Stack stack = Utility.createStackFromImagePlus(imagePlus);
+			IJCase = new Case(stack);
+
+			Driver driver = new Driver(jobs, IJCase, factory);
+			driver.run();
+
+			if (secondaryStackOption == true) {
+				frame.askForSecondaryStack();
+			} else {
+				showFinalResults(frame, secondaryStackOption, stack.getId());
+			}
+		} catch (Exception exception) {
+			displayExceptionMessage(exception);
+			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
+			return;
+		}
+	}
+
+	void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
+		ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
+		secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus);
+
+		Options options = new Options();
+		options.addOption("OverrideStack", secondaryStack);
+		Job job = new Job("intensityfinder", options);
+		Queue secondaryStackJobs = new Queue();
+		secondaryStackJobs.addJob(job);
+
+		Driver driver = new Driver(secondaryStackJobs, IJCase, factory);
+		driver.run();
+
+		showFinalResults(frame, true, secondaryStack.getId());
+	}
+
 	private enum PluginStatus {
 
 		RUN_APPLICATION,
@@ -30,6 +89,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		CONTINUE_DIALOG,
 		WAITING_FOR_SECONDARY_STACK_CHOOSER
 	}
+	
 	private Case IJCase;
 	private Factory<Processor> factory;
 	private MainFrame frame;
@@ -43,27 +103,6 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 
 	MainFrame getMainFrame() {
 		return frame;
-	}
-
-	void scaleDialogContinue(ScaleDialog dialog) {
-		status = PluginStatus.CONTINUE_DIALOG;
-		dialog.setVisible(false);
-	}
-
-	void secondaryStackChooserButtonPressed() throws Exception {
-		ImagePlus imagePlus = ij.IJ.getImage();
-		secondaryStack = Utility.createStackFromImagePlus(imagePlus);
-		
-		Options options = new Options();
-		options.addOption("OverrideStack", secondaryStack);
-		Job job = new Job("intensityfinder", options);
-		Queue jobs = new Queue();
-		jobs.addJob(job);
-
-		Driver driver = new Driver(jobs, IJCase, factory);
-		driver.run();
-
-		showFinalResults(frame, true, secondaryStack.getId());
 	}
 
 	private void showFinalResults(MainFrame frame, boolean secondaryStackOption, int id) throws Exception {
@@ -110,47 +149,6 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("cellmarker", costanza.CellCenterMarker.class);
 	}
 
-	public void start(Queue jobs, boolean secondaryStackOption) {
-		try {
-			ij.ImagePlus imagePlus;
-			try {
-				imagePlus = ij.IJ.getImage();
-			} catch (Exception exception) {
-				// Do nothing as we assume ImageJ is displaying a message about this exception.
-				return;
-			}
-
-			ScaleDialog scaleDialog = new ScaleDialog(this, true, imagePlus.getCalibration());
-			scaleDialog.setVisible(true);
-
-			switch (status) {
-				case CANCEL_DIALOG:
-					return;
-				case CONTINUE_DIALOG:
-					status = PluginStatus.RUN_APPLICATION;
-					break;
-				default:
-					throw new Exception("Unexpected error in start()");
-			}
-
-			Stack stack = Utility.createStackFromImagePlus(imagePlus);
-			IJCase = new Case(stack);
-
-			Driver driver = new Driver(jobs, IJCase, factory);
-			driver.run();
-
-			if (secondaryStackOption == true) {
-				frame.askForSecondaryStack();
-			} else {
-				showFinalResults(frame, secondaryStackOption, stack.getId());
-			}
-		} catch (Exception exception) {
-			displayExceptionMessage(exception);
-			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
-			return;
-		}
-	}
-
 	static public void displayExceptionMessage(Exception exception) {
 		exception.printStackTrace();
 		ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
@@ -175,15 +173,15 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		}
 		if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
 			Stack stack = IJCase.getStack();
-			ImagePlus imagePlus = Utility.createImagePlusFromStack(stack, "Costanza - Working stack");
-			imagePlus.show();
+			ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(stack, "Costanza - Working stack");
+			workingStackImagePlus.show();
 		}
 	}
 
 	private void displayResult(String name, Job job, Case IJCase, Factory<Processor> factory) throws Exception {
-		Queue jobs = new Queue();
-		jobs.addJob(job);
-		Driver driver = new Driver(jobs, IJCase, factory);
+		Queue displayJobs = new Queue();
+		displayJobs.addJob(job);
+		Driver driver = new Driver(displayJobs, IJCase, factory);
 		driver.run();
 		ij.ImagePlus imagePlus = Utility.createImagePlusFromResultStack(IJCase, name);
 		imagePlus.show();

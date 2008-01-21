@@ -1,3 +1,7 @@
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class SecondaryStackOptionPanel extends java.awt.Panel {
 	MainFrame frame;
 	
@@ -16,33 +20,55 @@ public class SecondaryStackOptionPanel extends java.awt.Panel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         label = new java.awt.Label();
-        okButton = new java.awt.Button();
+        buttonPanel = new java.awt.Panel();
+        cancelButton = new java.awt.Button();
+        continueButton = new java.awt.Button();
 
         setLayout(new java.awt.GridBagLayout());
 
         label.setText("Make secondary stack active and press Ok to measure intensity levels.");
         add(label, new java.awt.GridBagConstraints());
 
-        okButton.setLabel("Ok");
-        okButton.addActionListener(new java.awt.event.ActionListener() {
+        cancelButton.setLabel("Cancel");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                okButtonActionPerformed(evt);
+                cancelButtonActionPerformed(evt);
             }
         });
+        buttonPanel.add(cancelButton);
+
+        continueButton.setLabel("Continue");
+        continueButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                continueButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(continueButton);
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        add(okButton, gridBagConstraints);
+        add(buttonPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-	private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-		frame.secondaryStackChooserButtonPressed();
-	}//GEN-LAST:event_okButtonActionPerformed
+	private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
+		try {
+			frame.secondaryStackOptionPanelContinueButtonPressed();//GEN-LAST:event_continueButtonActionPerformed
+		} catch (Exception ex) {
+			Logger.getLogger(SecondaryStackOptionPanel.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+		frame.secondaryStackOptionPanelCancelButtonPressed();
+	}//GEN-LAST:event_cancelButtonActionPerformed
 	
 	
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Panel buttonPanel;
+    private java.awt.Button cancelButton;
+    private java.awt.Button continueButton;
     private java.awt.Label label;
-    private java.awt.Button okButton;
     // End of variables declaration//GEN-END:variables
 	
 }

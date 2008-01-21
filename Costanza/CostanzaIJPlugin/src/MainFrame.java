@@ -8,15 +8,37 @@ import java.awt.Font;
 
 public class MainFrame extends java.awt.Frame {
 
+	void askForScale(ij.measure.Calibration calibration) {
+		scaleOptionPanel.setCalibration(calibration);
+		cardLayout.show(panel, "ScaleOptionPanel");
+		update();
+	}
+
 	void askForSecondaryStack() {
 		cardLayout.show(panel, "SecondaryStackOptionPanel");
 		update();
 	}
 
-	void secondaryStackChooserButtonPressed() throws Exception {
+	void scaleOptionPanelContinueButtonPressed() {
 		cardLayout.show(panel, "IOOptionPanel");
 		update();
-		plugin.secondaryStackChooserButtonPressed();
+		plugin.scaleOptionPanelContinueButtonPressed();
+	}
+
+	void scaleOptionPanelCancelButtonPressed() {
+		cardLayout.show(panel, "IOOptionPanel");
+		update();
+	}
+
+	void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
+		cardLayout.show(panel, "IOOptionPanel");
+		update();
+		plugin.secondaryStackOptionPanelContinueButtonPressed();
+	}
+
+	void secondaryStackOptionPanelCancelButtonPressed() {
+		cardLayout.show(panel, "IOOptionPanel");
+		update();
 	}
 
 	private enum PanelId {
@@ -30,6 +52,7 @@ public class MainFrame extends java.awt.Frame {
 	private ProcessorOptionPanel preProcessorOptionPanel;
 	private ProcessorOptionPanel postProcessorOptionPanel;
 	private SecondaryStackOptionPanel secondaryStackOptionPanel;
+	private ScaleOptionPanel scaleOptionPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.CardLayout cardLayout;
 	private Font menuFont;
@@ -79,6 +102,9 @@ public class MainFrame extends java.awt.Frame {
 		secondaryStackOptionPanel = new SecondaryStackOptionPanel(this);
 		panel.add(secondaryStackOptionPanel, "SecondaryStackOptionPanel");
 
+		scaleOptionPanel = new ScaleOptionPanel(this);
+		panel.add(scaleOptionPanel, "ScaleOptionPanel");
+		
 		cardLayout.show(panel, "IOOptionPanel");
 	}
 
