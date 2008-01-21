@@ -35,11 +35,11 @@ public class TextGUI {
 	final boolean gradientDescentFlag = true;
 	final boolean backgroundFinderIntensityFlag = true;
 	final boolean intensityFinderFlag = true;
-	final boolean peakRemoverFlag = false;
-	final boolean peakMergerFlag = false;
+	final boolean peakRemoverFlag = true;
+	final boolean peakMergerFlag = true;
 	final boolean boaColorizerFlag = false;
-	final boolean boaColorizerIntensityFlag = true;
-	final boolean cellCenterMarkerFlag = false;
+	final boolean boaColorizerIntensityFlag = false;
+	final boolean cellCenterMarkerFlag = true;
 	final boolean randomImages = (baseName.length() > 0) ? false : true;
 
 	System.out.println("Creating a Stack");
@@ -110,7 +110,7 @@ public class TextGUI {
 	System.out.println("FINAL RESULT\n\n");
 	System.out.println("Saving the images.");
 	writeImageStack(baseName, myCase.getStack());
-	writeImages("apa", myCase.getResultImages());
+	writeImages("result", myCase.getResultImages());
     }
 
     /** Read some images into a stack.
