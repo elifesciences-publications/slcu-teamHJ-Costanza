@@ -8,7 +8,7 @@ public class IOOptionPanel extends java.awt.Panel {
 		initComponents();
 	}
 
-	int getResultRequest() {
+	public int getResultRequest() {
 		int request = 0;
 		if (boaColourizeCheckbox.getState() == true) {
 			request = request | Costanza_Plugin.REQUEST_BOA_COLORIZER;
@@ -19,8 +19,16 @@ public class IOOptionPanel extends java.awt.Panel {
 		if (cellCenterMarkerOption.getState() == true) {
 			request = request | Costanza_Plugin.REQUEST_CELL_MARKER;
 		}
+		if (workingStackCheckbox.getState() == true) {
+			request = request | Costanza_Plugin.REQUEST_WORKING_STACK;
+		}
 		return request;
 	}
+	
+	public boolean	getSecondaryStackOption() {
+		return secondaryStackCheckbox.getState();
+	}
+	
 
 	/** This method is called from within the constructor to
 	 * initialize the form.
@@ -35,25 +43,29 @@ public class IOOptionPanel extends java.awt.Panel {
         outputOptionsLabel = new java.awt.Label();
         cellCenterMarkerOption = new java.awt.Checkbox();
         boaIntensityColourizeCheckbox = new java.awt.Checkbox();
+        inputOptionsLabel = new java.awt.Label();
+        secondaryStackCheckbox = new java.awt.Checkbox();
+        workingStackCheckbox = new java.awt.Checkbox();
 
         setLayout(new java.awt.GridBagLayout());
 
         boaColourizeCheckbox.setLabel("Display basins of attractions (BOA).");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(boaColourizeCheckbox, gridBagConstraints);
 
         outputOptionsLabel.setFont(new java.awt.Font("Dialog", 1, 12));
-        outputOptionsLabel.setText("Output options");
+        outputOptionsLabel.setText("Output options:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(outputOptionsLabel, gridBagConstraints);
 
         cellCenterMarkerOption.setLabel("Mark cell centers.");
+        cellCenterMarkerOption.setState(true);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -63,13 +75,36 @@ public class IOOptionPanel extends java.awt.Panel {
         boaIntensityColourizeCheckbox.setLabel("Display basins of attractions according to measured intensity.");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 5;
         add(boaIntensityColourizeCheckbox, gridBagConstraints);
+
+        inputOptionsLabel.setFont(new java.awt.Font("Dialog", 1, 12));
+        inputOptionsLabel.setText("Input options:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(inputOptionsLabel, gridBagConstraints);
+
+        secondaryStackCheckbox.setLabel("Use secondary stack to measure intensity levels.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(secondaryStackCheckbox, gridBagConstraints);
+
+        workingStackCheckbox.setLabel("Display internal working stack.");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(workingStackCheckbox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox boaColourizeCheckbox;
     private java.awt.Checkbox boaIntensityColourizeCheckbox;
     private java.awt.Checkbox cellCenterMarkerOption;
+    private java.awt.Label inputOptionsLabel;
     private java.awt.Label outputOptionsLabel;
+    private java.awt.Checkbox secondaryStackCheckbox;
+    private java.awt.Checkbox workingStackCheckbox;
     // End of variables declaration//GEN-END:variables
 }

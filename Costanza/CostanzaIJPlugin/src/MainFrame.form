@@ -37,6 +37,14 @@
             <Property name="label" type="java.lang.String" value="Options"/>
           </Properties>
           <SubComponents>
+            <MenuItem class="java.awt.MenuItem" name="ioMenuItem">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Input and output"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ioMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="java.awt.MenuItem" name="preProcessorMenuItem">
               <Properties>
                 <Property name="label" type="java.lang.String" value="Pre-processing"/>
@@ -51,14 +59,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="postProcessorMenuItemActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="java.awt.MenuItem" name="ioMenuItem">
-              <Properties>
-                <Property name="label" type="java.lang.String" value="Output"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ioMenuItemActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

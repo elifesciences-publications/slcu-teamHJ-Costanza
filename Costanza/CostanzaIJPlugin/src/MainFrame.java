@@ -7,15 +7,29 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class MainFrame extends java.awt.Frame {
+
+	void askForSecondaryStack() {
+		cardLayout.show(panel, "SecondaryStackOptionPanel");
+		update();
+	}
+
+	void secondaryStackChooserButtonPressed() throws Exception {
+		cardLayout.show(panel, "IOOptionPanel");
+		update();
+		plugin.secondaryStackChooserButtonPressed();
+	}
+
 	private enum PanelId {
 
 		IO,
 		PRE_PROCESSING,
-		POST_PROCESSING
+		POST_PROCESSING,
+		SECONDARY_STACK
 	}
 	private IOOptionPanel ioOptionPanel;
 	private ProcessorOptionPanel preProcessorOptionPanel;
 	private ProcessorOptionPanel postProcessorOptionPanel;
+	private SecondaryStackOptionPanel secondaryStackOptionPanel;
 	private Costanza_Plugin plugin;
 	private java.awt.CardLayout cardLayout;
 	private Font menuFont;
@@ -34,6 +48,10 @@ public class MainFrame extends java.awt.Frame {
 		pack();
 	}
 
+	public int getResultRequest() {
+		return ioOptionPanel.getResultRequest();
+	}
+
 	private void initOptionPanels() throws Exception {
 		cardLayout = new CardLayout();
 		panel.setLayout(cardLayout);
@@ -42,7 +60,7 @@ public class MainFrame extends java.awt.Frame {
 		panel.add(ioOptionPanel, "IOOptionPanel");
 
 		preProcessorOptionPanel = new ProcessorOptionPanel(this);
-		
+
 		preProcessorOptionPanel.addProcessorOptionToMenu("Invert image", InvertOption.class);
 		preProcessorOptionPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
 		preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
@@ -57,6 +75,9 @@ public class MainFrame extends java.awt.Frame {
 		postProcessorOptionPanel.addOptionPanel("Peak remover");
 		postProcessorOptionPanel.addOptionPanel("Peak merger");
 		panel.add(postProcessorOptionPanel, "PostProcessorOptionPanel");
+
+		secondaryStackOptionPanel = new SecondaryStackOptionPanel(this);
+		panel.add(secondaryStackOptionPanel, "SecondaryStackOptionPanel");
 
 		cardLayout.show(panel, "IOOptionPanel");
 	}
@@ -80,9 +101,9 @@ public class MainFrame extends java.awt.Frame {
         startMenuItem = new java.awt.MenuItem();
         quitMenuItem = new java.awt.MenuItem();
         optionsMenu = new java.awt.Menu();
+        ioMenuItem = new java.awt.MenuItem();
         preProcessorMenuItem = new java.awt.MenuItem();
         postProcessorMenuItem = new java.awt.MenuItem();
-        ioMenuItem = new java.awt.MenuItem();
 
         setBackground(backgroundColor);
         setName("Costanza Plugin"); // NOI18N
@@ -121,6 +142,14 @@ public class MainFrame extends java.awt.Frame {
 
         optionsMenu.setLabel("Options");
 
+        ioMenuItem.setLabel("Input and output");
+        ioMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ioMenuItemActionPerformed(evt);
+            }
+        });
+        optionsMenu.add(ioMenuItem);
+
         preProcessorMenuItem.setLabel("Pre-processing");
         preProcessorMenuItem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -136,14 +165,6 @@ public class MainFrame extends java.awt.Frame {
             }
         });
         optionsMenu.add(postProcessorMenuItem);
-
-        ioMenuItem.setLabel("Output");
-        ioMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ioMenuItemActionPerformed(evt);
-            }
-        });
-        optionsMenu.add(ioMenuItem);
 
         menuBar.add(optionsMenu);
 
@@ -181,7 +202,8 @@ public class MainFrame extends java.awt.Frame {
 		} catch (Exception exception) {
 			Costanza_Plugin.displayExceptionMessage(exception);
 		}
-		plugin.start(jobs, ioOptionPanel.getResultRequest());
+
+		plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
 	}//GEN-LAST:event_startMenuItemActionPerformed
 
 	private void quitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitMenuItemActionPerformed
