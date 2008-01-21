@@ -63,6 +63,29 @@
             </MenuItem>
           </SubComponents>
         </Menu>
+        <Menu class="java.awt.Menu" name="helpMenu">
+          <Properties>
+            <Property name="label" type="java.lang.String" value="Help"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="java.awt.MenuItem" name="websiteMenuItem">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Costanza&apos;s homepage"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="websiteMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="documentationMenuItem">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Online documentation"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="documentationMenuItemActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
       </SubComponents>
     </Menu>
   </NonVisualComponents>

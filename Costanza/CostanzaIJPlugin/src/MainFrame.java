@@ -5,6 +5,9 @@ import costanza.Queue;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainFrame extends java.awt.Frame {
 
@@ -129,6 +132,9 @@ public class MainFrame extends java.awt.Frame {
         ioMenuItem = new java.awt.MenuItem();
         preProcessorMenuItem = new java.awt.MenuItem();
         postProcessorMenuItem = new java.awt.MenuItem();
+        helpMenu = new java.awt.Menu();
+        websiteMenuItem = new java.awt.MenuItem();
+        documentationMenuItem = new java.awt.MenuItem();
 
         setBackground(backgroundColor);
         setName("Costanza Plugin"); // NOI18N
@@ -193,6 +199,26 @@ public class MainFrame extends java.awt.Frame {
 
         menuBar.add(optionsMenu);
 
+        helpMenu.setLabel("Help");
+
+        websiteMenuItem.setLabel("Costanza's homepage");
+        websiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                websiteMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(websiteMenuItem);
+
+        documentationMenuItem.setLabel("Online documentation");
+        documentationMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                documentationMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(documentationMenuItem);
+
+        menuBar.add(helpMenu);
+
         setMenuBar(menuBar);
 
         pack();
@@ -235,6 +261,22 @@ public class MainFrame extends java.awt.Frame {
 		plugin.stop();
 	}//GEN-LAST:event_quitMenuItemActionPerformed
 
+	private void websiteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteMenuItemActionPerformed
+		try {
+			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se");//GEN-LAST:event_websiteMenuItemActionPerformed
+		} catch (IOException ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+}
+
+	private void documentationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_documentationMenuItemActionPerformed
+		try {
+			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se");//GEN-LAST:event_documentationMenuItemActionPerformed
+		} catch (IOException ex) {
+			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
 	private void setActivePanel(PanelId id) {
 		switch (id) {
 			case IO:
@@ -262,6 +304,8 @@ public class MainFrame extends java.awt.Frame {
 		}
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.MenuItem documentationMenuItem;
+    private java.awt.Menu helpMenu;
     private java.awt.MenuItem ioMenuItem;
     private java.awt.Menu mainMenu;
     private java.awt.MenuBar menuBar;
@@ -271,5 +315,6 @@ public class MainFrame extends java.awt.Frame {
     private java.awt.MenuItem preProcessorMenuItem;
     private java.awt.MenuItem quitMenuItem;
     private java.awt.MenuItem startMenuItem;
+    private java.awt.MenuItem websiteMenuItem;
     // End of variables declaration//GEN-END:variables
 }
