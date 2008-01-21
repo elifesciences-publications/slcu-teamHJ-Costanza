@@ -27,6 +27,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		EXIT_APPLICATION
 	}
 	private Case IJCase;
+	private Stack stack;
 	private Factory<Processor> factory;
 	private MainFrame frame;
 	private PluginStatus status;
@@ -68,7 +69,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	 */
 	void scaleOptionPanelContinueButtonPressed() {
 		try {
-			Stack stack = Utility.createStackFromImagePlus(imagePlus);
+			stack = Utility.createStackFromImagePlus(imagePlus);
 			IJCase = new Case(stack);
 
 			Driver driver = new Driver(jobs, IJCase, factory);
@@ -240,8 +241,16 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		String newline = "\n";
 		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tBoa volume\tMean cell intensity");
 
+		int id;
+		if (secondaryStackOption == true) {
+			id = secondaryStack.getId();
+		} else {
+			id = stack.getId();
+		}
+
 		java.util.Set<Integer> cellIds = IJCase.getCellIds();
 		java.util.Iterator<Integer> iterator = cellIds.iterator();
+
 		while (iterator.hasNext()) {
 			Integer i = iterator.next();
 			String line = "";
@@ -249,18 +258,11 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
 			BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
 
-			Stack stack;
-			if (secondaryStackOption == true) {
-				stack = secondaryStack;
-			} else {
-				stack = IJCase.getStack();
-			}
-
 			float x = cellCenter.getX() * xScale;
 			float y = cellCenter.getY() * yScale;
 			float z = cellCenter.getZ() * zScale;
 			float volume = cellBoa.size() * volumeScale;
-			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(stack.getId() + "mean");
+			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(id + "mean");
 			ij.IJ.write(line);
 		}
 	}
