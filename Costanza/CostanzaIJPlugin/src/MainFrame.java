@@ -10,13 +10,11 @@ public class MainFrame extends java.awt.Frame {
 
 	void askForScale(ij.measure.Calibration calibration) {
 		scaleOptionPanel.setCalibration(calibration);
-		cardLayout.show(panel, "ScaleOptionPanel");
-		update();
+		setActivePanel(MainFrame.PanelId.SCALE);
 	}
 
 	void askForSecondaryStack() {
-		cardLayout.show(panel, "SecondaryStackOptionPanel");
-		update();
+		setActivePanel(MainFrame.PanelId.SECONDARY_STACK);
 	}
 
 	void scaleOptionPanelContinueButtonPressed() {
@@ -46,7 +44,8 @@ public class MainFrame extends java.awt.Frame {
 		IO,
 		PRE_PROCESSING,
 		POST_PROCESSING,
-		SECONDARY_STACK
+		SECONDARY_STACK,
+		SCALE
 	}
 	private IOOptionPanel ioOptionPanel;
 	private ProcessorOptionPanel preProcessorOptionPanel;
@@ -104,7 +103,7 @@ public class MainFrame extends java.awt.Frame {
 
 		scaleOptionPanel = new ScaleOptionPanel(this);
 		panel.add(scaleOptionPanel, "ScaleOptionPanel");
-		
+
 		cardLayout.show(panel, "IOOptionPanel");
 	}
 
@@ -226,7 +225,7 @@ public class MainFrame extends java.awt.Frame {
 			Options intensityFinderOption = new Options();
 			jobs.addJob(new Job("intensityfinder", intensityFinderOption));
 		} catch (Exception exception) {
-			Costanza_Plugin.displayExceptionMessage(exception);
+			Costanza_Plugin.printExceptionMessage(exception);
 		}
 
 		plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
@@ -248,6 +247,14 @@ public class MainFrame extends java.awt.Frame {
 				break;
 			case POST_PROCESSING:
 				cardLayout.show(panel, "PostProcessorOptionPanel");
+				update();
+				break;
+			case SECONDARY_STACK:
+				cardLayout.show(panel, "SecondaryStackOptionPanel");
+				update();
+				break;
+			case SCALE:
+				cardLayout.show(panel, "ScaleOptionPanel");
 				update();
 				break;
 			default:

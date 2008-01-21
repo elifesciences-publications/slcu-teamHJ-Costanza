@@ -11,7 +11,6 @@ import costanza.Options;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
-import ij.ImagePlus;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,10 +21,28 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	public static int REQUEST_CELL_MARKER = 4;
 	public static int REQUEST_WORKING_STACK = 8;
 
+	private enum PluginStatus {
+
+		RUN_APPLICATION,
+		EXIT_APPLICATION
+	}
+	private Case IJCase;
+	private Factory<Processor> factory;
+	private MainFrame frame;
+	private PluginStatus status;
+	private Stack secondaryStack;
 	private ij.ImagePlus imagePlus;
 	private Queue jobs;
 	private boolean secondaryStackOption;
-	
+
+	/**
+	 * This is the starting point of execution after the user starts the 
+	 * analyze.
+	 * 
+	 * @param jobs The queue of jobs to the processed. 
+	 * @param secondaryStackOption True if a second stack is being used for
+	 * intensity measurements.
+	 */
 	public void start(Queue jobs, boolean secondaryStackOption) {
 		this.jobs = jobs;
 		this.secondaryStackOption = secondaryStackOption;
@@ -36,15 +53,19 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 				// Do nothing as we assume ImageJ is displaying a message about this exception.
 				return;
 			}
-
 			frame.askForScale(imagePlus.getCalibration());
 		} catch (Exception exception) {
-			displayExceptionMessage(exception);
+			printExceptionMessage(exception);
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
 			return;
 		}
 	}
 
+	/**
+	 * This is the second point of execution. The used is asked to enter the
+	 * scale of the image and this function is called after the user presses 
+	 * Continue.
+	 */
 	void scaleOptionPanelContinueButtonPressed() {
 		try {
 			Stack stack = Utility.createStackFromImagePlus(imagePlus);
@@ -56,17 +77,22 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			if (secondaryStackOption == true) {
 				frame.askForSecondaryStack();
 			} else {
-				showFinalResults(frame, secondaryStackOption, stack.getId());
+				showFinalResults();
 			}
 		} catch (Exception exception) {
-			displayExceptionMessage(exception);
+			printExceptionMessage(exception);
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
 			return;
 		}
 	}
 
+	/** 
+	 * This is the option third point of execution. The user is being asked to
+	 * active a second stack and this function is called after the user presses
+	 * Continue.
+	 */
 	void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
-		ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
+		ij.ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
 		secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus);
 
 		Options options = new Options();
@@ -78,38 +104,32 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		Driver driver = new Driver(secondaryStackJobs, IJCase, factory);
 		driver.run();
 
-		showFinalResults(frame, true, secondaryStack.getId());
+		showFinalResults();
 	}
 
-	private enum PluginStatus {
-
-		RUN_APPLICATION,
-		EXIT_APPLICATION,
-		CANCEL_DIALOG,
-		CONTINUE_DIALOG,
-		WAITING_FOR_SECONDARY_STACK_CHOOSER
-	}
-	
-	private Case IJCase;
-	private Factory<Processor> factory;
-	private MainFrame frame;
-	private PluginStatus status;
-	private Stack secondaryStack;
-
-	void scaleDialogCancel(ScaleDialog dialog) {
-		status = PluginStatus.CANCEL_DIALOG;
-		dialog.setVisible(false);
+	/**
+	 * Stop the plugin.
+	 */
+	public void stop() {
+		frame.setVisible(false);
+		frame.dispose();
+		status = PluginStatus.EXIT_APPLICATION;
 	}
 
-	MainFrame getMainFrame() {
-		return frame;
+	/** 
+	 * Display final results.
+	 */
+	private void showFinalResults() throws Exception {
+		processResultRequests(frame.getResultRequest());
+		printData();
 	}
 
-	private void showFinalResults(MainFrame frame, boolean secondaryStackOption, int id) throws Exception {
-		processResultRequests(IJCase, secondaryStackOption, frame.getResultRequest());
-		displayData(IJCase, id);
-	}
-
+	/**
+	 * Starting point of plugin.
+	 * @param arg ???
+	 * @todo Find a meaning of arg.
+	 */
+	@Override
 	public void run(String arg) {
 		try {
 			initFactory();
@@ -128,12 +148,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		}
 	}
 
-	void stop() {
-		frame.setVisible(false);
-		frame.dispose();
-		status = PluginStatus.EXIT_APPLICATION;
-	}
-
+	/**
+	 * Initiate the factory.
+	 */
 	private void initFactory() {
 		factory = new Factory<Processor>();
 		factory.register("invert", costanza.Inverter.class);
@@ -149,15 +166,29 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("cellmarker", costanza.CellCenterMarker.class);
 	}
 
-	static public void displayExceptionMessage(Exception exception) {
+	/**
+	 * Use ImageJ's built in function to present an exception related error 
+	 * message.
+	 * 
+	 * @param exception Exception just caught by the application.
+	 * 
+	 * @todo Change showMessage to a better error message function?
+	 */
+	static public void printExceptionMessage(Exception exception) {
 		exception.printStackTrace();
 		ij.IJ.showMessage("Costanza Plugin", "Caught exception: " + exception.getMessage());
 	}
 
-	private void processResultRequests(Case IJCase, boolean secondaryStackOption, int request) throws Exception {
+	/**
+	 * Display results according to the user's request.
+	 * 
+	 * @param request Request from the user.
+	 * @throws java.lang.Exception
+	 */
+	private void processResultRequests(int request) throws Exception {
 		if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
 			Job job = new Job("boacolorize", null);
-			displayResult("Costanza - Basins of attractions (BOA)", job, IJCase, factory);
+			displayResult("Costanza - Basins of attractions (BOA)", job);
 		}
 		if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER) {
 			Options options = new Options();
@@ -165,29 +196,41 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 				options.addOption("OverrideStack", secondaryStack);
 			}
 			Job job = new Job("boaintensitycolorize", options);
-			displayResult("Costanza - Basins of attractions (BOA)", job, IJCase, factory);
+			displayResult("Costanza - Basins of attractions (BOA)", job);
 		}
 		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
 			Job job = new Job("cellmarker", null);
-			displayResult("Costanza - Cell centers", job, IJCase, factory);
+			displayResult("Costanza - Cell centers", job);
 		}
 		if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
 			Stack stack = IJCase.getStack();
-			ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(stack, "Costanza - Working stack");
+			ij.ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(stack, "Costanza - Working stack");
 			workingStackImagePlus.show();
 		}
 	}
 
-	private void displayResult(String name, Job job, Case IJCase, Factory<Processor> factory) throws Exception {
+	/**
+	 * Display a result.
+	 * 
+	 * @param name Name of result.
+	 * @param job Job to be used to retrieve result.
+	 * @throws java.lang.Exception
+	 */
+	private void displayResult(String name, Job job) throws Exception {
 		Queue displayJobs = new Queue();
 		displayJobs.addJob(job);
 		Driver driver = new Driver(displayJobs, IJCase, factory);
 		driver.run();
-		ij.ImagePlus imagePlus = Utility.createImagePlusFromResultStack(IJCase, name);
-		imagePlus.show();
+		ij.ImagePlus displayImagePlus = Utility.createImagePlusFromResultStack(IJCase, name);
+		displayImagePlus.show();
 	}
 
-	private void displayData(Case IJCase, int id) throws Exception {
+	/**
+	 * Print data from the case.
+	 * 
+	 * @throws java.lang.Exception
+	 */
+	private void printData() throws Exception {
 		float xScale = IJCase.getStack().getXScale();
 		float yScale = IJCase.getStack().getYScale();
 		float zScale = IJCase.getStack().getZScale();
@@ -196,7 +239,6 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		String tab = "\t";
 		String newline = "\n";
 		ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tBoa volume\tMean cell intensity");
-
 
 		java.util.Set<Integer> cellIds = IJCase.getCellIds();
 		java.util.Iterator<Integer> iterator = cellIds.iterator();
@@ -207,11 +249,18 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
 			BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
 
+			Stack stack;
+			if (secondaryStackOption == true) {
+				stack = secondaryStack;
+			} else {
+				stack = IJCase.getStack();
+			}
+
 			float x = cellCenter.getX() * xScale;
 			float y = cellCenter.getY() * yScale;
 			float z = cellCenter.getZ() * zScale;
 			float volume = cellBoa.size() * volumeScale;
-			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(id + "mean");
+			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(stack.getId() + "mean");
 			ij.IJ.write(line);
 		}
 	}
