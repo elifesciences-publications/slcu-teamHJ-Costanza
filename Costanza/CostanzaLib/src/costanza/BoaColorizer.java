@@ -11,73 +11,106 @@ import java.util.Vector;
  */
 public class BoaColorizer extends Processor {
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
+    /**This colors the BOA using a random color. 
+     * The coloring is done on the original Stack and not the working Stack. 
+     * @param c the Case to process.
+     * @param options not used in this process.
+     * @returns the processed Case.
+     */
     public Case process(Case c, Options options) throws Exception {
-        // Get the basin of attractors from data in case
-        Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
-        if (boaCollection == null) {
-            return c;
-        }
-        int[] boaColors = genColors(boaCollection.size());
-        BufferedImage[] images = getImagesFromStack(c.getStack());
-        Object[] boas = boaCollection.toArray();
-        if (boaColors.length != boas.length) {
-            throw new Exception("Lengths differ!");
-        }
-        for (int i = 0; i < boas.length; ++i) {
-            colorizeBoa((BOA)boas[i], images, boaColors[i]);
-        }
-        c.setResultImages(images);
+	// Get the basin of attractors from data in case
+	Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
+	if (boaCollection == null) {
+	    return c;
+	}
+	int[] boaColors = genColors(boaCollection.size());
+	BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
+	Object[] boas = boaCollection.toArray();
+	if (boaColors.length != boas.length) {
+	    throw new Exception("Lengths differ!");
+	}
+	for (int i = 0; i < boas.length; ++i) {
+	    colorizeBoa((BOA) boas[i], images, boaColors[i]);
+	}
+	c.setResultImages(images);
 
-        System.out.println("Number of collected BOAs: " + boaCollection.size());
-        return c;
+	System.out.println("Number of collected BOAs: " + boaCollection.size());
+	return c;
     }
 
+    /**Color the BOA in the specified BufferedImages with the specified color.
+     * 
+     * @param boa the BOA to color.
+     * @param images the images the BOA may reside in.
+     * @param boaColor the color to use for the BOA.
+     */
     private void colorizeBoa(BOA boa, BufferedImage[] images, int boaColor) {
-        for (int j = 0; j < boa.size(); j++) {
-            Pixel p = boa.get(j);
-            BufferedImage bufferedImage = images[p.getZ()];
-            int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
-            int newColor = boaColor;
-            if (isGrayScale(prevColor) == false) {
+	for (int j = 0; j < boa.size(); j++) {
+	    Pixel p = boa.get(j);
+	    BufferedImage bufferedImage = images[p.getZ()];
+	    int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
+	    int newColor = boaColor;
+	    if (isGrayScale(prevColor) == false) {
 		System.out.println("Combining colors from BOA!");
-                newColor = combine(prevColor, boaColor);
-            }
-            bufferedImage.setRGB(p.getX(), p.getY(), newColor);
-        }
+		newColor = combine(prevColor, boaColor);
+	    }
+	    bufferedImage.setRGB(p.getX(), p.getY(), newColor);
+	}
 
     }
 
+    /**Combine to colors into one.
+     * The colors are encoded as a 4 byte ARGB with alpha set to max.
+     * @param color1 the first color to use for the combination.
+     * @param color2 the second color to use for the combination.
+     * @return the two colors combined as one.
+     */
     private int combine(int color1, int color2) {
-        int red = (((color1 >> 16) & 0xff) + ((color2 >> 16) & 0xff)) / 2;
-        int green = (((color1 >> 8) & 0xff) + ((color2 >> 8) & 0xff)) / 2;
-        int blue = (((color1) & 0xff) + ((color2) & 0xff)) / 2;
-        return (255 << 24) | (red << 16) | (green << 8) | blue;
+	int red = (((color1 >> 16) & 0xff) + ((color2 >> 16) & 0xff)) / 2;
+	int green = (((color1 >> 8) & 0xff) + ((color2 >> 8) & 0xff)) / 2;
+	int blue = (((color1) & 0xff) + ((color2) & 0xff)) / 2;
+	return (255 << 24) | (red << 16) | (green << 8) | blue;
     }
 
+    /**Generate a specified number of random colors.
+     * The colors are encoded as a 4 byte ARGB with alpha set to max.
+     * @param size the number of colors to generate.
+     * @return an array of the generated colors.
+     */
     private int[] genColors(int size) {
-        int[] colors = new int[size];
-        for (int i = 0; i < colors.length; ++i) {
-            int red = (int) (Math.random() * 255);
-            int green = (int) (Math.random() * 255);
-            int blue = (int) (Math.random() * 255);
-            colors[i] = (255 << 24) | (red << 16) | (green << 8) | blue;
-        }
-        return colors;
+	int[] colors = new int[size];
+	for (int i = 0; i < colors.length; ++i) {
+	    int red = (int) (Math.random() * 255);
+	    int green = (int) (Math.random() * 255);
+	    int blue = (int) (Math.random() * 255);
+	    colors[i] = (255 << 24) | (red << 16) | (green << 8) | blue;
+	}
+	return colors;
     }
 
+    /**Convert the Stack to an array of BufferedImage that we can manipulate.
+     * @param stack the Stack to extract the images from.
+     * @return an array of BufferedImage representing the Images in our Stack.
+     */
     private BufferedImage[] getImagesFromStack(Stack stack) {
-        BufferedImage[] images = new BufferedImage[stack.getDepth()];
-        for (int i = 0; i < images.length; i++) {
-            images[i] = stack.getImage(i).getImage();
-        }
-        return images;
+	BufferedImage[] images = new BufferedImage[stack.getDepth()];
+	for (int i = 0; i < images.length; i++) {
+	    images[i] = stack.getImage(i).getImage();
+	}
+	return images;
     }
 
+    /**Finds out if a color is gray scale or not.
+     * The color should be encoded as a 4 byte ARGB.
+     * @param rgb the color to check.
+     * @return true if the color is gray scale and false otherwise.
+     */
     private boolean isGrayScale(int rgb) {
-        int red = (rgb >> 16) & 0xff;
-        int green = (rgb >> 8) & 0xff;
-        int blue = rgb & 0xff;
-        return red == green && red == blue;
+	int red = (rgb >> 16) & 0xff;
+	int green = (rgb >> 8) & 0xff;
+	int blue = rgb & 0xff;
+	return red == green && red == blue;
     }
 }
