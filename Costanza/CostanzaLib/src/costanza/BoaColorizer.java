@@ -11,14 +11,15 @@ import java.util.Vector;
  */
 public class BoaColorizer extends Processor {
 
-    @Override
-    @SuppressWarnings("unchecked")
     /**This colors the BOA using a random color. 
      * The coloring is done on the original Stack and not the working Stack. 
      * @param c the Case to process.
-     * @param options not used in this process.
-     * @returns the processed Case.
+     * @param options not used in this Processor.
+     * @return the processed Case.
+     * @throws java.lang.Exception
      */
+    @Override
+    @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
 	Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);

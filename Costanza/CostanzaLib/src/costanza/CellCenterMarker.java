@@ -9,7 +9,14 @@ import java.util.Collection;
  */
 public class CellCenterMarker extends Processor {
 
-    @Override @SuppressWarnings("unchecked")
+    /**This colors the CellCenter using a red color. 
+     * @param c the Case to process.
+     * @param options not used in this Processor.
+     * @return the processed Case.
+     * @throws java.lang.Exception
+     */
+    @Override
+    @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
 	Collection<CellCenter> cellCenters = (Collection<CellCenter>) c.getCellData(DataId.CENTERS);
@@ -30,35 +37,22 @@ public class CellCenterMarker extends Processor {
 	return c;
     }
 
-    private int combine(int color1, int color2) {
-	int red = (((color1 >> 16) & 0xff) + ((color2 >> 16) & 0xff)) / 2;
-	int green = (((color1 >> 8) & 0xff) + ((color2 >> 8) & 0xff)) / 2;
-	int blue = (((color1) & 0xff) + ((color2) & 0xff)) / 2;
-	return (255 << 24) | (red << 16) | (green << 8) | blue;
-    }
-
+    /**Generate a red color encoded in a 4 byte int as ARGB with alpha set to max.
+     * @return the red color encoded in a 4 byte int as ARGB with alpha set to max.
+     */
     private int genRedColor() {
-	int color = 0;
-	int red = 255;
-	int green = 0;
-	int blue = 0;
-	//color = (255 & 0xff << 24) | (red & 0xff << 16) | (green << 8) | blue;
-	color = 0xffff0000;
-	return color;
+	return 0xffff0000;
     }
 
+    /**Convert the Stack to an array of BufferedImage that we can manipulate.
+     * @param stack the Stack to extract the images from.
+     * @return an array of BufferedImage representing the Images in our Stack.
+     */
     private BufferedImage[] getImagesFromStack(Stack stack) {
 	BufferedImage[] images = new BufferedImage[stack.getDepth()];
 	for (int i = 0; i < images.length; i++) {
 	    images[i] = stack.getImage(i).getImage();
 	}
 	return images;
-    }
-
-    private boolean isGrayScale(int rgb) {
-	int red = (rgb >> 16) & 0xff;
-	int green = (rgb >> 8) & 0xff;
-	int blue = rgb & 0xff;
-	return red == green && red == blue;
     }
 }
