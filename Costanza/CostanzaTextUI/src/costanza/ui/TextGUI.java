@@ -49,58 +49,58 @@ public class TextGUI {
 	Queue queue = new Queue();
 
 	if (invertFlag) {
-	    System.out.println("### Applying Invert ###");
+	    System.out.println("### Adding Invert ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("invert", options));
 	}
 	if (backgroundFinderIntensityFlag) {
-	    System.out.println("### Applying BackGroundFinderIntesity ###");
+	    System.out.println("### Adding BackGroundFinderIntesity ###");
 	    Options options = new Options();
 	    options.addOption("threshold", new Float(0.1));
 	    queue.addJob(new Job("backgroundextractor", options));
 	}
 	if (meanFilterFlag) {
-	    System.out.println("### Applying MeanFilter ###");
+	    System.out.println("### Adding MeanFilter ###");
 	    Options options = new Options();
 	    options.addOption("radius", new Float(2));
 	    queue.addJob(new Job("meanfilter", options));
 	}
 	if (gradientDescentFlag) {
-	    System.out.println("### Applying GradientDescent ###");
+	    System.out.println("### Adding GradientDescent ###");
 	    Options options = new Options();
 	    options.addOption("extendedNeighborhood", new Integer(0));
 	    queue.addJob(new Job("gradientdescent", options));
 	}
 	if (intensityFinderFlag) {
-	    System.out.println("### Applying IntensityFinder ###");
+	    System.out.println("### Adding IntensityFinder ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("intensityfinder", options));
 	}
 	if (peakRemoverFlag) {
-	    System.out.println("### Applying PeakRemover ###");
+	    System.out.println("### Adding PeakRemover ###");
 	    Options options = new Options();
 	    options.addOption("sizeThreshold", new Float(10));
 	    options.addOption("intensityThreshold", new Float(0.1));
 	    queue.addJob(new Job("peakremover", options));
 	}
 	if (peakMergerFlag) {
-	    System.out.println("### Applying PeakMerger ###");
+	    System.out.println("### Adding PeakMerger ###");
 	    Options options = new Options();
 	    options.addOption("radius", new Float(1));
 	    queue.addJob(new Job("peakmerger", options));
 	}
 	if (boaColorizerFlag) {
-	    System.out.println("### Applying BoaColorizer ###");
+	    System.out.println("### Adding BoaColorizer ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("boacolorize", options));
 	}
 	if (boaColorizerIntensityFlag) {
-	    System.out.println("### Applying BoaColorizerIntensity ###");
+	    System.out.println("### Adding BoaColorizerIntensity ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("boacolorizeintensity", options));
 	}
 	if (cellCenterMarkerFlag) {
-	    System.out.println("### Applying CellCenterMarker ###");
+	    System.out.println("### Adding CellCenterMarker ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("cellcentermarker", options));
 	}
