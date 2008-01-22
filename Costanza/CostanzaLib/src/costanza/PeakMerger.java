@@ -1,37 +1,19 @@
-/*
- * PeakMerger.java
- *
- * Created on December 1, 2007, 12:49 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
 package costanza;
-
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
 
 /**
  * PeakMerger merges peaks if they are closer than some threshold.
- *
  * @author pontus
+ * @see Processor
  */
 public class PeakMerger extends Processor {
 
-    private int bigInt = 100000;
-
-    /** Creates a new instance of PeakMerger */
-    public PeakMerger() {
-    }
-
-    /**
-     * Implements the PeakMerger algorithm.
-     * @param c a Case 
-	 * @param o an Option
+    /**Implements the PeakMerger algorithm.
+     * @param c the Case to work on. 
+     * @param o the Option object to use.
      * @return a modified Case object
      * @see Processor
      */
+    @Override
     public Case process(Case c, Options o) throws Exception {
 	float R = ((Float) o.getOptionValue("radius")).floatValue();
 	float[] scale = c.getStack().getScale();
@@ -44,14 +26,14 @@ public class PeakMerger extends Processor {
 		boolean merged =
 			testForMerging(o1, o2, scale, R, c);
 		if (merged) {
-		    i=0;
+		    i = 0;
 		    obj = c.getCellData(DataId.CENTERS).toArray();
 		    numObj = obj.length;
 		    break;
 		}
 	    }
 	}
-        
+
 //        int size1 = c.sizeOfCells();
 //        Set<Integer> keys = c.getCellIds();
 //        int size2 = keys.size();
@@ -84,15 +66,24 @@ public class PeakMerger extends Processor {
 
     }
 
+    /**Test if two CellCenter objects should be merged.
+     * @param o1 the first CellCenter.
+     * @param o2 the second CellCenter.
+     * @param scale the scale to use in each dimension.
+     * @param R the cut off distance to use.
+     * @param manip the Case to do the merging in.
+     * @return true if the merging should be done, false otherwise.
+     * @throws java.lang.Exception
+     */
     private boolean testForMerging(Object o1, Object o2, float[] scale,
-	    float R, Case manip) throws Exception{
+	    float R, Case manip) throws Exception {
 	boolean merged = false;
 	if (!o1.toString().equals(o2.toString())) {
 	    CellCenter cc1 = (CellCenter) o1;
 	    CellCenter cc2 = (CellCenter) o2;
 	    if (getDistance(cc1, cc2, scale) < R) {
 		//System.out.println("merge " + cc1.getId() + " " + cc2.getId());
-		manip.mergeAllData( cc1.getCell(), cc2.getCell() );
+		manip.mergeAllData(cc1.getCell(), cc2.getCell());
 		//System.out.println("Done");
 		merged = true;
 	    }
@@ -100,11 +91,12 @@ public class PeakMerger extends Processor {
 	return merged;
     }
 
-    /**
-     * Calculates the distance between two CellCenters taking the
-     * scale int account.
-     * @param two CellCenter and a float []
-     * @return the distance between the CellCenters
+    /**Calculates the distance between two CellCenters taking the
+     * scale into account.
+     * @param cc1 the first CellCenter.
+     * @param cc2 the second CellCenter.
+     * @param scale the scale to use for the different dimensions.
+     * @return the distance between the two CellCenters.
      */
     private float getDistance(CellCenter cc1, CellCenter cc2, float[] scale) {
 	float x1 = cc1.getX();
