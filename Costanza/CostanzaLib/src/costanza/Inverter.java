@@ -1,13 +1,19 @@
 package costanza;
 
-/**
- * Invert a stack by setting all intensity values to
- * stack.maxIntensityLimit()-stack.Intensity(xI,yI,zI).
- *
- * @see         Processor
+/**Invert a stack by setting all intensity values to the value you get 
+ * by subtracting the current intensity from the the maximum intensity limit.
+ * @see Processor
  */
 public class Inverter extends Processor {
     
+    /**Inverts the Stack in the Case given.
+     * No Options are used in this Processor. You may safely set it to null.
+     * @param c the Case holding the Stack to invert.
+     * @param options not used here.
+     * @return the processed Case containing the inverted Stack.
+     * @throws java.lang.Exception
+     */
+    @Override
     public Case process(Case c, Options options) throws Exception {
         Stack stack = c.getStack();
         if(stack == null){
