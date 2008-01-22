@@ -3,13 +3,13 @@ package costanza;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 
-/**Implementation of a Processor that colors each BOA with a unique color.
+/**Implementation of a Processor that marks each CellCenter with red redColor.
  * @author michael
  * @see Processor
  */
 public class CellCenterMarker extends Processor {
 
-    /**This colors the CellCenter using a red color. 
+    /**This colors the CellCenter using a red redColor. 
      * @param c the Case to process.
      * @param options not used in this Processor.
      * @return the processed Case.
@@ -25,23 +25,33 @@ public class CellCenterMarker extends Processor {
 	}
 	BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
 	Object[] ccs = cellCenters.toArray();
-	int color = genRedColor();
+	int redColor = 0xffff0000;
 	for (int i = 0; i < ccs.length; ++i) {
 	    CellCenter cc = (CellCenter) ccs[i];
 	    BufferedImage bufferedImage = images[cc.getZ()];
-	    bufferedImage.setRGB(cc.getX(), cc.getY(), color);
+	    //Color the center and the neighbouring pixels red.
+
+	    if (cc.getX() - 1 > 0 &&
+		    cc.getX() + 1 < bufferedImage.getWidth() &&
+		    cc.getY() - 1 > 0 &&
+		    cc.getY() + 1 < bufferedImage.getHeight()) {
+		bufferedImage.setRGB(cc.getX() - 1, cc.getY() - 1, redColor);
+		bufferedImage.setRGB(cc.getX(), cc.getY() - 1, redColor);
+		bufferedImage.setRGB(cc.getX() + 1, cc.getY() - 1, redColor);
+		bufferedImage.setRGB(cc.getX() - 1, cc.getY(), redColor);
+		bufferedImage.setRGB(cc.getX(), cc.getY(), redColor);
+		bufferedImage.setRGB(cc.getX() + 1, cc.getY(), redColor);
+		bufferedImage.setRGB(cc.getX() - 1, cc.getY() + 1, redColor);
+		bufferedImage.setRGB(cc.getX(), cc.getY() + 1, redColor);
+		bufferedImage.setRGB(cc.getX() + 1, cc.getY() + 1, redColor);
+	    } else {
+		bufferedImage.setRGB(cc.getX(), cc.getY(), redColor);
+	    }
 	}
 	c.setResultImages(images);
 
 	System.out.println("Number of collected Cell Centers: " + cellCenters.size());
 	return c;
-    }
-
-    /**Generate a red color encoded in a 4 byte int as ARGB with alpha set to max.
-     * @return the red color encoded in a 4 byte int as ARGB with alpha set to max.
-     */
-    private int genRedColor() {
-	return 0xffff0000;
     }
 
     /**Convert the Stack to an array of BufferedImage that we can manipulate.
