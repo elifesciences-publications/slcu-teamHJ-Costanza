@@ -53,8 +53,7 @@ public class BoaColorizerIntensity extends Processor {
     }
 
     private void colorizeBoa(BOA boa, BufferedImage[] images, int boaColor) {
-        for (int j = 0; j < boa.size(); j++) {
-            Pixel p = boa.get(j);
+        for (Pixel p : boa) {
             BufferedImage bufferedImage = images[p.getZ()];
             bufferedImage.setRGB(p.getX(), p.getY(), boaColor);
         }

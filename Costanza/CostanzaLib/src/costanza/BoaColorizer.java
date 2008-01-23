@@ -26,12 +26,15 @@ public class BoaColorizer extends Processor {
 	if (boaCollection == null) {
 	    return c;
 	}
+        //System.out.println("Starting BoaColorizer");
 	int[] boaColors = genColors(boaCollection.size());
+        //System.out.println("Colors generated");
 	BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
 	Object[] boas = boaCollection.toArray();
 	if (boaColors.length != boas.length) {
 	    throw new Exception("Lengths differ!");
 	}
+        //System.out.println("Colorizing Boas");
 	for (int i = 0; i < boas.length; ++i) {
 	    colorizeBoa((BOA) boas[i], images, boaColors[i]);
 	}
@@ -48,8 +51,8 @@ public class BoaColorizer extends Processor {
      * @param boaColor the color to use for the BOA.
      */
     private void colorizeBoa(BOA boa, BufferedImage[] images, int boaColor) {
-	for (int j = 0; j < boa.size(); j++) {
-	    Pixel p = boa.get(j);
+        
+	for (Pixel p: boa){
 	    BufferedImage bufferedImage = images[p.getZ()];
 	    int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
 	    int newColor = boaColor;

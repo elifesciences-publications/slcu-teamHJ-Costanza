@@ -13,6 +13,7 @@ import costanza.Pixel;
 import costanza.CellCenter;
 import costanza.DataId;
 import costanza.BOA;
+import costanza.BOASmoother;
 import costanza.StackBackground;
 import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
@@ -57,7 +58,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             GenericDialog gd = new GenericDialog("Parameter settings");
 
             gd.addMessage("Background extraction:");
-            gd.addCheckbox("Apply background extractor", false);
+            gd.addCheckbox("Apply background extractor", true);
             gd.addNumericField("Background intensity threshold:", 0.1, 1);
             gd.addCheckbox("Show background stack", false);
 
@@ -71,19 +72,22 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             gd.addCheckbox("Show gradient descent boas", false);
 
             gd.addMessage("Postprocessing:");
-            gd.addCheckbox("Apply remover:", false);
-            gd.addNumericField("Minimal peak intensity:", 0, 1);
-            gd.addNumericField("Minimal boa size:", 0, 1);
-            gd.addCheckbox("Apply merger:", false);
-            gd.addNumericField("Merging radius:", 0, 1);
+            gd.addCheckbox("Apply remover:", true);
+            gd.addNumericField("Minimal peak intensity:", 0.1, 1);
+            gd.addNumericField("Minimal boa size:", 10, 1);
+            gd.addCheckbox("Apply merger:", true);
+            gd.addNumericField("Merging radius:", 5, 1);
+            gd.addCheckbox("Apply BOA smoothing:", false);
+            gd.addNumericField("Upper neighbor limit(out of 26):", 13, 1);
+            gd.addNumericField("Lower neighbor limit(out of 26):", 7, 1);
 
             gd.addMessage("Output:");
             gd.addCheckbox("Show cell center stack:", true);
             gd.addCheckbox("Show random boa stack:", false);
-            gd.addCheckbox("Show intensity boa stack:", false);
+            gd.addCheckbox("Show intensity boa stack:", true);
 
             gd.addMessage("Processing options:");
-            gd.addCheckbox("Load additional intensity data:", true);
+            gd.addCheckbox("Load additional intensity data:", false);
 
             gd.showDialog();
 
@@ -109,6 +113,9 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             float minSize = (float) gd.getNextNumber();
             boolean mergerFlag = (boolean) gd.getNextBoolean();
             float mergerR = (float) gd.getNextNumber();
+            boolean boaSmootherFlag = (boolean) gd.getNextBoolean();
+            int upperNeighLimit = (int) gd.getNextNumber();
+            int lowerNeighLimit = (int) gd.getNextNumber();
             //output
             boolean ccOutFlag = (boolean) gd.getNextBoolean();
             boolean boaOutFlag = (boolean) gd.getNextBoolean();
@@ -132,7 +139,10 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             peakRemoverOptions.addOption("sizeThreshold", new Float(minSize));
             Options peakMergerOptions = new Options();
             peakMergerOptions.addOption("radius", new Float(mergerR));
-
+            Options boaSmootherOptions = new Options();
+            boaSmootherOptions.addOption("upperNeighborLimit", (Integer) upperNeighLimit);
+            boaSmootherOptions.addOption("lowerNeighborLimit", (Integer) lowerNeighLimit);
+            
             // BACKGROUND EXTRACTION
             if (bgFlag) {
                 BackgroundFinderIntensity backgroundFinder = new BackgroundFinderIntensity();
@@ -240,6 +250,17 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 ImagePlus ipTmp = createImagePlusFromResultStack(IJCase, "Cell centers");
                 ipTmp.show();
             }
+            if (boaSmootherFlag) {
+              
+                BOASmoother bs = new BOASmoother(); 
+                System.out.println("Starting BOASmoother");
+                try {
+                    bs.process(IJCase, boaSmootherOptions);
+                } catch (Exception ex) {
+                    error("Error in BOASmoother: " + ex.getMessage() + "\n");
+                }
+                System.out.println("BOASmoother finished");
+            }
             if (boaOutFlag) {
                 // Process for generating random colored boas
                 Options tmpOptions = new Options();
@@ -283,7 +304,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         ij.IJ.run("Image Sequence...");
                         ImagePlus imp = ij.IJ.getImage();
                         int sz = imp.getImageStackSize();
-                        String imName = imp.getTitle();
+                        //String imName = imp.getTitle();
 
                         Stack intensStack = createStackFromImagePlus(imp);
 
@@ -300,7 +321,6 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         //System.out.println(sz + ", " + imName);
 
                         // Process for generating intensity colored boas
-                        
                         BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
                         try {
                             boaColorizer.process(IJCase, op);

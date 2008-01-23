@@ -70,6 +70,7 @@ public class PeakMerger extends Processor {
             }
 	}
 
+        c.renumberCells();
 	return c;
 
     }

@@ -80,6 +80,7 @@ public class PeakRemover extends Processor {
 //
 //            System.out.print(cell.getCellId() + ": " + dat + "\n");
 //        }
+        c.renumberCells();
 	return c;
     }
 }
