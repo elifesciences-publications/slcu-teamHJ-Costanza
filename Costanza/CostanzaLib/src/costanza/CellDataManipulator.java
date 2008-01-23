@@ -7,7 +7,6 @@ import java.io.StreamTokenizer;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.Vector;
 
 /** Class holds methods for manipulating cell data*/
 public class CellDataManipulator extends Data {
@@ -149,15 +148,12 @@ public class CellDataManipulator extends Data {
         Set<DataId> ids = getDataKeys( DataGroup.CELL );
 	Iterator iter = ids.iterator();
         
-        int c1id = c1.getCellId();
-        int c2id = c2.getCellId();
-        
-        Vector<Integer> cfinal = new Vector<Integer>();
 	while (iter.hasNext()) {
 	    DataId id = (DataId) iter.next();
-            cfinal.add(merge(id, c1, c2));
+            merge(id, c1, c2);
 	}
         //System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
+        removeCell(c2);
     }
     
     /**Merges all data for given cells. Final data are put in the first cell. 
@@ -207,7 +203,8 @@ public class CellDataManipulator extends Data {
 		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
 		    return -1;
 		}
-
+                
+                //for below reason intensities must be merged before boas
 		BOA b1 = (BOA)c1.get(DataId.BOAS), b2 = (BOA)c2.get(DataId.BOAS);
                 if (b1 == null || b2 == null) {
 		    throw new Exception("There is no BOA associated with this Intensity");
@@ -234,7 +231,7 @@ public class CellDataManipulator extends Data {
 		break;
 	    }
 	}
-        removeCell(c2);
+        removeCellData( id, c2);
         return c1.getCellId();
     }
 

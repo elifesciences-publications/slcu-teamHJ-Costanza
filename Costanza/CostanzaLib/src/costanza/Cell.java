@@ -38,6 +38,14 @@ public class Cell implements Comparable<Cell>{
         return cell_data.get( id );
     }
     
+    /**Checks if cell contains data of given type
+     * @param id of data type
+     * @return true if cell containd data of given type
+     */
+    public boolean hasData(DataId id){
+        return cell_data.get( id ) != null;
+    }
+    
     /**Retrives all the data contained in the cell,
      * @return Collection of cell data. Collection may contain nulls if some of data types are not used in the cell.
      */

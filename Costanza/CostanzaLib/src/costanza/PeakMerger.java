@@ -15,76 +15,74 @@ public class PeakMerger extends Processor {
      */
     @Override
     public Case process(Case c, Options o) throws Exception {
-	float R = ((Float) o.getOptionValue("radius")).floatValue();
-	float[] scale = c.getStack().getScale();
-	Object obj[] = c.getCellData(DataId.CENTERS).toArray();
-	int numObj = obj.length;
-	int i = 0;
-	for (; i < numObj; ++i) {
-	    Object o1 = obj[i];
-	    for (Object o2 : c.getCellData(DataId.CENTERS).toArray()) {
-		boolean merged =
-			testForMerging(o1, o2, scale, R, c);
-		if (merged) {
-		    i = 0;
-		    obj = c.getCellData(DataId.CENTERS).toArray();
-		    numObj = obj.length;
-		    break;
-		}
+
+	float R2 = ((Float) o.getOptionValue("radius")).floatValue();
+        R2 *= R2;
+        
+	float[] scale2 = c.getStack().getScale();
+        for( int i  = 0; i < scale2.length; ++i ){
+            scale2[i] *= scale2[i]; 
+        }
+        
+	CellCenter cent[] = new CellCenter[c.sizeOfData(DataId.CENTERS)];
+        c.getCellData(DataId.CENTERS, cent);
+	int numCent = cent.length;
+        
+        //status of the center -1 -processable, i merged to i, -2 - unmergable
+        int stat[] = new int[numCent];
+        for( int i  = 0; i < stat.length; ++i ){
+            stat[i] = -1; 
+        }
+        
+
+	for (int i = 0; i < numCent; ++i) {
+	    
+            //get cell to process
+            int ind1 = i;
+            if(stat[i] >= 0){
+                ind1  = stat[i];
+            }
+            else if( stat[i] == -2 ){
+                continue;
+            }
+            CellCenter c1 = cent[ind1];
+            
+            //marker for unmergable;
+            boolean merged = false;
+            
+	    for (int j = i+1; j < numCent; ++j) {
+                
+                int ind2 = j;
+                if(stat[j] >= 0){
+                    ind2  = stat[j];
+                }
+                else if( stat[j] == -2 ){
+                    continue;
+                }
+                CellCenter c2 = cent[ind2];
+                
+		merged = merged || testForMerging(c1, c2, scale2, R2, c);
 	    }
+            
+            if(!merged){
+                stat[i] = -2;
+                stat[ind1] = -2;
+            }
 	}
 
-//        int size1 = c.sizeOfCells();
-//        Set<Integer> keys = c.getCellIds();
-//        int size2 = keys.size();
-//        System.out.println("Peak merger sizes :  " + size1 + "; " + size2 );
-//        System.out.println("Peak merger set :  " + keys );
-//        Iterator<Integer> iter = keys.iterator();
-//        while(iter.hasNext()){
-//            Cell cell = c.getCell(iter.next());
-//            Vector<Object> dat = new Vector<Object>();
-//            if(cell.get(DataId.CENTERS) != null )
-//                dat.add("cent");
-//            else
-//                dat.add(null);
-//            if(cell.get(DataId.BOAS) != null )
-//                dat.add("boa ");
-//            else
-//                dat.add(null);
-//            if(cell.get(DataId.INTENSITIES) != null )
-//                dat.add("inte");
-//            else
-//                dat.add(null);
-//            if(cell.get(DataId.NEIGHBORS) != null )
-//                dat.add("neig");
-//            else
-//                dat.add(null);
-//
-//            System.out.print( cell.getCellId() + ": " + dat + "\n");
-//        }
 	return c;
 
     }
 
-    /**Test if two CellCenter objects should be merged.
-     * @param o1 the first CellCenter.
-     * @param o2 the second CellCenter.
-     * @param scale the scale to use in each dimension.
-     * @param R the cut off distance to use.
-     * @param manip the Case to do the merging in.
-     * @return true if the merging should be done, false otherwise.
-     * @throws java.lang.Exception
-     */
-    private boolean testForMerging(Object o1, Object o2, float[] scale,
-	    float R, Case manip) throws Exception {
+    private boolean testForMerging(CellCenter c1, CellCenter c2, float[] scale2,
+	    float R2, Case manip) throws Exception{
+
 	boolean merged = false;
-	if (!o1.toString().equals(o2.toString())) {
-	    CellCenter cc1 = (CellCenter) o1;
-	    CellCenter cc2 = (CellCenter) o2;
-	    if (getDistance(cc1, cc2, scale) < R) {
+	if (! (c1==c2) ) {
+	    if (getSqrDistance(c1, c2, scale2) < R2) {
 		//System.out.println("merge " + cc1.getId() + " " + cc2.getId());
-		manip.mergeAllData(cc1.getCell(), cc2.getCell());
-		//System.out.println("Done");
+		manip.mergeAllData( c1.getCell(), c2.getCell() );
+
 		merged = true;
 	    }
 	}
@@ -98,7 +96,7 @@ public class PeakMerger extends Processor {
      * @param scale the scale to use for the different dimensions.
      * @return the distance between the two CellCenters.
      */
-    private float getDistance(CellCenter cc1, CellCenter cc2, float[] scale) {
+    private float getSqrDistance(CellCenter cc1, CellCenter cc2, float[] scale2) {
 	float x1 = cc1.getX();
 	float y1 = cc1.getY();
 	float z1 = cc1.getZ();
@@ -107,9 +105,9 @@ public class PeakMerger extends Processor {
 	float z2 = cc2.getZ();
 	//System.out.println("center 1:" + cc1.getId() + " " + x1 + " " + y1 + " " + z1);
 	//System.out.println("center 2:" + cc2.getId() + " " + x2 + " " + y2 + " " + z2);
-	return (float) Math.sqrt(
-		(x1 - x2) * (x1 - x2) * scale[0] * scale[0] +
-		(y1 - y2) * (y1 - y2) * scale[1] * scale[1] +
-		(z1 - z2) * (z1 - z2) * scale[2] * scale[2]);
+	return (float)(
+		(x1 - x2) * (x1 - x2) * scale2[0] +
+		(y1 - y2) * (y1 - y2) * scale2[1] +
+		(z1 - z2) * (z1 - z2) * scale2[2]);
     }
 }

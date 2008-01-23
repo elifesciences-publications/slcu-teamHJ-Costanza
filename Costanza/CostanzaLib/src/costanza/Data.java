@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**Data is a container for different types of data used by Processor.
  */
@@ -14,8 +15,6 @@ public class Data {
 
     /**Maps dataId to the stack Data*/
     private Map<DataId, Data_t> stackDataMap;
-    /**Maps dataId to the cell Data*/
-    private Map<DataId, Collection<? extends CellData_t>> cellDataMap;
     /**Maps cellId to the cell*/
     private Map<Integer, Cell> cells;
     /**Maps intensity tag to position in vector*/
@@ -27,11 +26,6 @@ public class Data {
         cells = new TreeMap<Integer, Cell>();
         stackDataMap = new EnumMap<DataId, Data_t>(DataId.class);
         stackDataMap.put(DataId.BACKGROUND, null);
-        cellDataMap = new EnumMap<DataId, Collection<? extends CellData_t>>(DataId.class);
-        cellDataMap.put(DataId.CENTERS, new Vector<CellCenter>());
-        cellDataMap.put(DataId.BOAS, new Vector<BOA>());
-        cellDataMap.put(DataId.NEIGHBORS, new Vector<CellNeighbors>());
-        cellDataMap.put(DataId.INTENSITIES, new Vector<CellIntensity>());
     }
     
     /**
@@ -62,31 +56,37 @@ public class Data {
      * Gets Set of keys of available data types for given DataGroup
      * @param dg DataGroup
      * @return Set<DataId>
-     * @throws java.lang.Exception
      */
-    public Set<DataId> getDataKeys(DataGroup dg) throws Exception {
-        switch (dg) {
-            case CELL:
-                return cellDataMap.keySet();
-            case STACK:
-                return stackDataMap.keySet();
-            default:
-                throw new Exception("Unsupported DataGroup.");
+    public Set<DataId> getDataKeys(DataGroup dg){
+        DataId id[] = DataId.values();
+        Set<DataId> set = new TreeSet<DataId>();
+        for (int i = 0; i < id.length; ++i) {
+            if( id[i].getGroup() == dg )
+                set.add(id[i]);
         }
+        return set;
     }
 
-    /**Deprecated method. Avoid using it. It might be not supported in the next version.
+    /**Deprecated method. Avoid using it. It might be not supported in the next version and it is slow.
      * Gives the size of the data of given type
      * @param id DataId
      * @return int
      */
     public int sizeOfData(DataId id) {
-        if (cellDataMap.containsKey(id)) {
-            return getCellData(id).size();
-        } else if (stackDataMap.containsKey(id)) {
-            return 1;
+        int size = 0;
+        if (id.getGroup() == DataGroup.CELL) {
+            Collection<Cell> cls = cells.values();
+            Iterator<Cell> it = cls.iterator();
+
+            while (it.hasNext()) {
+                if (it.next().hasData(id)) {
+                    ++size;
+                }
+            }
+        } else if (id.getGroup() == DataGroup.STACK) {
+            size = 1;
         }
-        return 0;
+        return size;
     }
 
     /**Deprecated method. Avoid using it. It might be not supported in the next version.
@@ -95,7 +95,19 @@ public class Data {
      * @return Collection<? extends CellData_t >, null if no data of given type found
      */
     public Collection<? extends CellData_t > getCellData(DataId id) {
-        return cellDataMap.get(id);
+        int size = cells.size();
+        Vector<CellData_t> v  = new Vector<CellData_t>(size);
+
+        Collection<Cell> cls = cells.values();
+        Iterator<Cell> it = cls.iterator();
+        
+        while(it.hasNext()){
+            CellData_t d = it.next().get(id);
+            if( d != null ){
+                v.add( d );
+            } 
+        }
+        return v;
     }
 
     /**Deprecated method. Avoid using it. It might be not supported in the next version.
@@ -106,13 +118,24 @@ public class Data {
      */
     @SuppressWarnings("unchecked")
     public <T extends CellData_t> T[] getCellData(DataId id, T[] arr) {
-        int size = cellDataMap.get(id).size();
-        if(arr.length >= size )
-            return cellDataMap.get(id).toArray(arr);
-        else{
+        int size = cells.size();
+        if(arr.length < size ){
             arr = (T[])java.lang.reflect.Array.newInstance(arr.getClass().getComponentType(), size);
-            return cellDataMap.get(id).toArray(arr);
         }
+        //System.out.println("vector size = " + v.size() + "; cells size = " + cells.size());
+        Collection<Cell> cls = cells.values();
+        Iterator<Cell> it = cls.iterator();
+        
+        int counter = 0;
+        while(it.hasNext()){
+            CellData_t d = it.next().get(id);
+            if( d != null ){
+                arr[counter] = (T)d;
+                ++counter;
+            } 
+            
+        }
+        return arr;
     }
     
     /**Retrives cell data of given Cell associated with given dataId
@@ -195,11 +218,7 @@ public class Data {
         cell.add( data );
         data.setCell( cell );
         
-        Collection<T> dColl = (Collection<T>) cellDataMap.get(data.getDataId());
-        dColl.add( data );
-        
         cells.put(cell.getCellId(), cell);
-
     }
     
     /**Removes data from data set
@@ -209,9 +228,6 @@ public class Data {
         DataId id = d.getDataId();
         
         if (id.getGroup() == DataGroup.CELL) {
-            Collection<? extends Data_t> dColl = cellDataMap.get(id);
-            if(dColl != null)
-                dColl.remove(d);
             
             Cell cell = ((CellData_t)d).getCell();
             if(cell != null)
@@ -229,8 +245,6 @@ public class Data {
     public void removeCellData(DataId dId, Cell c) {
         if(c == null)
             return;
-        Data_t d = c.get(dId);
-        cellDataMap.get(dId).remove(d);
 	c.remove(dId);
     }
     
@@ -249,13 +263,6 @@ public class Data {
     public void removeAllCellData(Cell c){
         if(c == null)
             return;
-        Iterator< Map.Entry<DataId, CellData_t> > iter = c.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<DataId, CellData_t> pairs = (Map.Entry<DataId, CellData_t>) iter.next();
-            CellData_t data = pairs.getValue();
-            if( data != null )
-                cellDataMap.get(pairs.getKey()).remove(data);
-        }
         
         c.clear();
     }
@@ -275,13 +282,6 @@ public class Data {
 
         if(c == null)
             return;
-        Iterator< Map.Entry<DataId, CellData_t> > iter = c.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry<DataId, CellData_t> pairs = (Map.Entry<DataId, CellData_t>) iter.next();
-            CellData_t data = pairs.getValue();
-            if( data != null )
-                cellDataMap.get(pairs.getKey()).remove(data);
-        }
         
         cells.remove(c.getCellId());
     }
@@ -300,12 +300,9 @@ public class Data {
     public void clearData(DataId id) {
 
         if (id.getGroup() == DataGroup.CELL) {
-            Collection<? extends Data_t> dColl = cellDataMap.get(id);
-            dColl.clear();
-            Iterator<Map.Entry<Integer, Cell>> iter = cells.entrySet().iterator();
+            Iterator<Cell> iter = cells.values().iterator();
             while (iter.hasNext()) {
-                Map.Entry<Integer, Cell> pairs = (Map.Entry<Integer, Cell>) iter.next();
-                pairs.getValue().remove(id);
+                iter.next().remove(id);
             }
         } else if (id.getGroup() == DataGroup.STACK) {
             stackDataMap.put(id, null);
@@ -318,7 +315,6 @@ public class Data {
     /**Gets the set of used intensity tags
      * @return Set<String> intensity tags
      */
-    //public Set<String> getTagSet() {
     public Set<String> getIntensityTagSet() {
         return tag_map.keySet();
     }

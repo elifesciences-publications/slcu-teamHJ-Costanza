@@ -3,9 +3,9 @@ package costanza;
 public enum DataId {
 
     CENTERS(DataGroup.CELL),
+    INTENSITIES(DataGroup.CELL),
     BOAS(DataGroup.CELL),
     NEIGHBORS(DataGroup.CELL),
-    INTENSITIES(DataGroup.CELL),
     BACKGROUND(DataGroup.STACK);
     private final DataGroup group;
 
