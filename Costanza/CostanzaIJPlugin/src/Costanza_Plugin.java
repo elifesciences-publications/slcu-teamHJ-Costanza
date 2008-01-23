@@ -130,7 +130,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	 * @param arg ???
 	 * @todo Find a meaning of arg.
 	 */
-	@Override
+	//@Override
 	public void run(String arg) {
 		try {
 			initFactory();
