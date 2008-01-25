@@ -21,7 +21,11 @@ public class MeanFilter extends Processor {
     @Override
     public Case process(Case c, Options options) throws Exception {
 
-	Stack stack = c.getStack();
+        Stack stack = c.getStack();
+        if (stack == null) {
+	    throw new Exception("No working stack initialised in case");
+	}
+      
 	//System.out.println("Mean: Original Stack: " + c.getStack().getDepth());
 	float radius = ((Float) options.getOptionValue("radius")).floatValue();
 	float radius2 = radius * radius;
@@ -29,10 +33,7 @@ public class MeanFilter extends Processor {
 	int ySize = stack.getHeight();
 	int xSize = stack.getWidth();
 
-	// Introduce a local clone
-	if (c.getStack() == null) {
-	    throw new Exception("No working stack initialised in case");
-	}
+	// Introduce a local clone	
 	float[][][] localStack = new float[xSize][ySize][zSize];
 	int[][][] bgFlag = new int[xSize][ySize][zSize];
 	for (int zI = 0; zI < zSize; ++zI) {
@@ -47,7 +48,8 @@ public class MeanFilter extends Processor {
 	if (sb != null) {
 	    int bgSize = sb.size();
 	    for (int i = 0; i < bgSize; ++i) {
-		bgFlag[sb.elementAt(i).getX()][sb.elementAt(i).getY()][sb.elementAt(i).getZ()] = -1;
+                Pixel p = sb.elementAt(i);
+		bgFlag[p.getX()][p.getY()][p.getZ()] = -1;
 	    }
 	}
 

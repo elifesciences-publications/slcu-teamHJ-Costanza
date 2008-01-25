@@ -10,16 +10,17 @@ import costanza.IntensityFinder;
 import costanza.Options;
 import costanza.Stack;
 import costanza.Pixel;
-import costanza.CellCenter;
 import costanza.DataId;
 import costanza.BOA;
 import costanza.BOASmoother;
+import costanza.BackgroundFilter;
+import costanza.BackgroundMedianFilter;
 import costanza.StackBackground;
 import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
 
-import costanza.CellIntensity;
+import costanza.MedianFilter;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -34,12 +35,7 @@ import java.util.Iterator;
 
 import ij.*;
 import ij.gui.*;
-import ij.io.ImportDialog;
-import ij.io.OpenDialog;
-import ij.io.Opener;
 import ij.process.*;
-import java.util.Hashtable;
-import java.util.Set;
 
 public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
@@ -58,9 +54,18 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             GenericDialog gd = new GenericDialog("Parameter settings");
 
             gd.addMessage("Background extraction:");
+
+            gd.addCheckbox("Apply median filter", false);
+            gd.addNumericField("Number of medianFilter runs:", 1, 0);
+            gd.addNumericField("MedianFilter radius:", 1, 1);
+            gd.addCheckbox("Show filtered stack", false);
+
             gd.addCheckbox("Apply background extractor", true);
             gd.addNumericField("Background intensity threshold:", 0.1, 1);
-            gd.addCheckbox("Show background stack", false);
+            gd.addCheckbox("Show background stack", true);
+
+            gd.addCheckbox("Filter background", true);
+            gd.addCheckbox("Run filter in 2D", true);
 
             gd.addMessage("\nPreprocessing:");
             gd.addNumericField("Number of meanFilter runs:", 2, 0);
@@ -87,7 +92,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             gd.addCheckbox("Show intensity boa stack:", true);
 
             gd.addMessage("Processing options:");
-            gd.addCheckbox("Load additional intensity data:", false);
+            gd.addCheckbox("Prompt for additional intensity data:", false);
 
             gd.showDialog();
 
@@ -97,9 +102,17 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             }
             // Extract user provided values
             //bg
+            boolean medianFlag = (boolean) gd.getNextBoolean();
+            int medianNum = (int) gd.getNextNumber();
+            float medianRadius = (float) gd.getNextNumber();
+            boolean medianOutput = (boolean) gd.getNextBoolean();
+
             boolean bgFlag = (boolean) gd.getNextBoolean();
             float bgThreshold = (float) gd.getNextNumber();
             boolean bgOutput = (boolean) gd.getNextBoolean();
+
+            boolean bgFilterFlag = (boolean) gd.getNextBoolean();
+            boolean dim2DFlag = (boolean) gd.getNextBoolean();
             //preproc
             int smoothNum = (int) gd.getNextNumber();
             float smoothR = (float) gd.getNextNumber();
@@ -129,6 +142,8 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             IJ.showMessage("Costanza", "Stack initialization finished!");
 
             // Set the options
+            Options medianOptions = new Options();
+            medianOptions.addOption("medianFilterRadius", new Float(medianRadius));
             Options backgroundOptions = new Options();
             backgroundOptions.addOption("threshold", new Float(bgThreshold));
             Options meanFilterOptions = new Options();
@@ -142,20 +157,50 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             Options boaSmootherOptions = new Options();
             boaSmootherOptions.addOption("upperNeighborLimit", (Integer) upperNeighLimit);
             boaSmootherOptions.addOption("lowerNeighborLimit", (Integer) lowerNeighLimit);
-            
+
             // BACKGROUND EXTRACTION
             if (bgFlag) {
+                if (medianFlag) {
+                    MedianFilter medianFilter = new MedianFilter();
+                    try {
+                        medianFilter.process(IJCase, medianOptions);
+                    } catch (Exception ex) {
+                        error("Error in median filter: " + ex.getMessage() + "\n");
+                    }
+                    if (bgOutput) {
+                        ImagePlus tmp = createImagePlusFromStack(IJCase.getStack());
+                        tmp.show();
+                    }
+                }
+                Collection<Pixel> bgCollection;
                 BackgroundFinderIntensity backgroundFinder = new BackgroundFinderIntensity();
                 try {
                     backgroundFinder.process(IJCase, backgroundOptions);
                 } catch (Exception ex) {
                     error("Error in backgroundfinder: " + ex.getMessage() + "\n");
                 }
-                Collection<Pixel> bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
-                IJ.showMessage("Costanza", "Backgroundfinder with intensity threshold " + bgThreshold + " found " + bgCollection.size() + " bg pixels.");
+                bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
                 if (bgOutput) {
-                    showBackground(IJCase.getOriginalStack(), bgCollection, "Background");
+                    showBackground(IJCase.getOriginalStack(), bgCollection, " Original Background");
                 }
+                if (bgFilterFlag) {
+                    BackgroundFilter bmf = new BackgroundFilter();
+                    try {
+                        if (dim2DFlag) {
+                            backgroundOptions.addOption("2D", true);
+                        }
+                        bmf.process(IJCase, backgroundOptions);
+                        bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
+                        IJ.showMessage("Costanza", "Backgroundfinder with intensity threshold " + bgThreshold + " found " + bgCollection.size() + " bg pixels.");
+                        if (bgOutput) {
+                            showBackground(IJCase.getOriginalStack(), bgCollection, "Background");
+                        }
+                    } catch (Exception ex) {
+                        error("Error in backgroundMedianFilter: " + ex.getMessage() + "\n");
+                    }
+                }
+
+                IJCase.setStack(IJCase.getOriginalStack());
             }
 
             // MEAN FILTER
@@ -251,8 +296,8 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 ipTmp.show();
             }
             if (boaSmootherFlag) {
-              
-                BOASmoother bs = new BOASmoother(); 
+
+                BOASmoother bs = new BOASmoother();
                 System.out.println("Starting BOASmoother");
                 try {
                     bs.process(IJCase, boaSmootherOptions);
@@ -276,9 +321,9 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             }
             if (boaIntensityOutFlag) {
                 // Process for generating intensity colored boas
-                if(! IJCase.getIntensityTagMap().containsKey(IJCase.getOriginalStack().getId())){
+                if (!IJCase.getIntensityTagMap().containsKey(IJCase.getOriginalStack().getId())) {
                     IntensityFinder intFinder = new IntensityFinder();
-                    intFinder.process(IJCase,null);
+                    intFinder.process(IJCase, null);
                 }
                 Options tmpOptions = new Options();
                 BoaColorizerIntensity boaColorizer = new BoaColorizerIntensity();
@@ -300,7 +345,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                     ngd.addMessage("Read new intensity data?");
                     ngd.showDialog();
                     if (ngd.wasOKed()) {
-                        
+
                         ij.IJ.run("Image Sequence...");
                         ImagePlus imp = ij.IJ.getImage();
                         int sz = imp.getImageStackSize();
@@ -330,8 +375,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                         // Plot boas
                         ImagePlus ipTmp = createImagePlusFromResultStack(IJCase, "Intensity in BOAs");
                         ipTmp.show();
-                    }
-                    else{
+                    } else {
                         cont = false;
                     }
                 }
