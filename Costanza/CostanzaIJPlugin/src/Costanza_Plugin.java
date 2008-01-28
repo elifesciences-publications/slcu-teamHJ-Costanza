@@ -204,8 +204,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			displayResult("Costanza - Cell centers", job);
 		}
 		if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
-			Stack stack = IJCase.getStack();
-			ij.ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(stack, "Costanza - Working stack");
+			Stack workingStack = IJCase.getStack();
+			ij.ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(workingStack, "Costanza - Working stack");
 			workingStackImagePlus.show();
 		}
 	}
@@ -262,7 +262,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			float y = cellCenter.getY() * yScale;
 			float z = cellCenter.getZ() * zScale;
 			float volume = cellBoa.size() * volumeScale;
-			line += i + tab + x + tab + y + tab + z + tab + volume + tab + cellIntensity.getIntensity(id + "mean");
+			float intensity = cellIntensity.getIntensity(id + "mean") * 255.0f;
+			line += i + tab + x + tab + y + tab + z + tab + volume + tab + intensity;
 			ij.IJ.write(line);
 		}
 	}
