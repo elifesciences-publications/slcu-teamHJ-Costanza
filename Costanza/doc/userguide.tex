@@ -1,6 +1,6 @@
 \documentclass[a4paper,12pt]{article}
 
-\usepackage{graphics}
+\usepackage{graphicx}
 \usepackage{ucs}
 \usepackage[utf8x]{inputenc}
 \PrerenderUnicode{åäöÅÄÖ}
@@ -93,17 +93,94 @@ parameters given to the different algorithms used. Here we provide
 some examples of applications where also the parameter values used are
 presented to guide users into setting reasonable parameter values.
 
-\subsection{Low resolution plant SAM nuclei data in 3D}
+\subsection{SAM nuclei data in 3D}
 
-\subsection{High resolution plant SAM nuclei data in 3D}
+This data set represents nuclei marked cells in the Arabidopsis shoot apical
+meristem. The data set consists of a stack with 20 images, but here the result
+will be displayed in 2D images for an easier check on performance. The
+segmentation is run using two different resolutions, and the result is shown
+in Fig.~\ref{fig:43zoom}.
 
-\subsection{High resolution plant SAM membrane data in 2D}
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.25\columnwidth]{figures/43smallzoomCenters.eps}
+\hspace{0.20\columnwidth}
+\includegraphics[width=0.5\columnwidth]{figures/43zoomCenters.eps}
+\caption{Result shown for images of nuclei data. Original images can be found
+	at http://www.thep.lu.se/...}
+\label{fig:43zoom}
+\end{center}
+\end{figure}
+%
+Parameters used for these two runs are given in Table~\ref{tab:43zoom}, and
+represents reasonable values also for 3D stacks.
 
-\subsection{High resolution mouse XXX nuclei data in 3D}
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|l|cc|}
+			\hline
+			Parameter & Small & Large\\
+			\hline
+			Bg threshold & 10 & 10\\
+			MeanFilter R & 1.0 & 2.5\\
+			MeanFilter num & 2 & 2\\
+			Remove Int Th. & 10 & 10\\
+			Remove Size Th. & 5 & 10\\
+			Merger R & 3 & 6\\
+			xy-scale & 1 & 1\\
+			z-scale & 1 & 2\\
+			\hline
+		\end{tabular}
+		\caption{Nuclei extraction in 2D and 3D.}
+		\label{tab:43zoom}
+	\end{center}
+\end{table}
 
-\subsection{Low resolution \textit{E coli} cell data in 2D}
+\subsection{SAM membrane data in 2D}
 
-\subsection{High resolution plant root membrane data in 2D}
+This data set represents membrane marked cells in the Arabidopsis shoot apical
+meristem. The data set consists of single images. The segmentation is run
+using two different resolutions, and the result is shown in
+Fig.~\ref{fig:membrane}.
+
+\begin{figure}[h!]
+\begin{center}
+%\includegraphics[width=0.25\columnwidth]{figures/wus.eps}
+\includegraphics[width=0.25\columnwidth]{figures/wusCenters.eps}
+\includegraphics[width=0.25\columnwidth]{figures/wusBOAs.eps}
+\includegraphics[width=0.25\columnwidth]{figures/wusBOAsIntensity.eps}
+
+\includegraphics[width=0.33\columnwidth]{figures/pin1BOAs.eps}
+\includegraphics[width=0.33\columnwidth]{figures/pin1BOAsIntensity.eps}
+
+\caption{Result shown for images of membrane data. Original images can be
+	found at http://www.thep.lu.se/...}
+\label{fig:membrane}
+\end{center}
+\end{figure}
+%
+Parameters used for these two segmentations are given in Table~\ref{tab:membrane}.
+
+\begin{table}
+	\begin{center}
+		\begin{tabular}{|l|cc|}
+			\hline
+			Parameter & WUS & PIN1\\
+			\hline
+			Bg threshold & 1 & 1\\
+			MeanFilter R & 5.0 & 10.0\\
+			MeanFilter num & 2 & 2\\
+			Remove Int Th. & 10 & 10\\
+			Remove Size Th. & 10 & 10\\
+			Merger R & 5 & 10\\
+			xy-scale & 1 & 1\\
+			z-scale & - & -\\
+			\hline
+		\end{tabular}
+		\caption{Cell extraction in 2D membrane data.}
+		\label{tab:membrane}
+	\end{center}
+\end{table}
 
 \bibliographystyle{abbrv}
 \bibliography{references}
