@@ -43,6 +43,23 @@ segmenter algorithm, preprocessing, and postprocessing.
 
 \subsection{Steepest gradient descent for segmentation}
 
+This is the main algorithm for Costanza. It starts at each voxel in the stacks
+and tries to find local intensity maxima by ``walking'' uphill in intensity
+among its neighbors. All paths leading to the same maxima are saved to the
+basin of attractor of this maxima, and represents a compartment. If a neighbor
+has an intensity value higher then the current voxel, a step is performed to
+the neighbor with highest
+
+\begin{equation}
+\frac{\Delta I}{\Delta \mathbf{x}} =
+\frac{I_{neigh}-I_{current}}{\mathbf{x}_{neigh}-\mathbf{x}_{current}}
+\end{equation}
+
+where $\mathbf{x}_{current}(\mathbf{x}_{current})$ is the current (neighbor)
+position, and $I$ are the respective intensities.
+
+The neighborhood is defined by the closest voxels, i.e
+$(x\pm1,y,z)$, $(x,y\pm1,z)$, and $(x,y,z\pm1)$.
 
 
 \subsection{Preprocessing}
@@ -80,11 +97,113 @@ of times to run the filtering.
 
 \subsection{Postprocessing}
 
+After gradient descent is applied for segmentation, two post-processing steps
+are available.
+
 \subsubsection{Peak removal}
+
+Since the gradient descent algorithm is insensitive to absolute intensity
+values, it may happen that it finds compartments in the noisy
+background. There is a post-processor for removing these false positives by
+using thresholds in minimal size and minimal intensity for the extracted
+compartments. The user should provide a minimal size $S_{min}$ given in volume
+units, and minimal intensity $I_{min}$.
 
 \subsubsection{Peak merging}
 
+Bright objects with dark regions within them might be interpreted as several
+compartments by the gradient descent algorithm. The user has the possibility
+to merge such compartments, by setting a minimal distance
+$R_{min}$. Compartments with centers at a distance below $R_{min}$ will be
+merged into a single compartment. This algorithm is run recursively.
+
+
 \section{User interface}
+
+\subsection{Main}
+
+The main menu is used for running the Costanza application by chosing ``Start
+analyze''. The current active stack and selected processors and parameter
+values will be used. The main menu also includes a ``close'' function that
+will exit the Costanza plugin.
+
+\subsection{Options}
+
+Options are used to set all features of Costanza. Three different views can be
+selected (Fig.~\ref{fig:gui}). 
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=0.5\columnwidth]{figures/GUI_input_output.eps}\\
+\includegraphics[width=0.5\columnwidth]{figures/GUI_pre.eps}\\
+\includegraphics[width=0.5\columnwidth]{figures/GUI_post.eps}
+\caption{Graphical user interface for Costanza.}
+\label{fig:gui}
+\end{center}
+\end{figure}
+%
+
+\subsubsection{Input-Output}
+
+This view allows for selecting input and output options. As input the active
+stack is automatically chosen for segmentation. If an additional stack is to
+be used for measuring intensities, the box ``use secondary stack...'' have to
+be checked.
+
+As default, the segmentation result is provided in a table displayed by
+ImageJ. Additionally other types of output can be selected:
+
+\begin{itemize}
+%
+\item Cell centers can be marked with red dots.
+%
+\item Basin of Attractions (BOAs), leading to the different cell centers can be
+	displayed with random colors.
+%
+\item BOAs can be displayed with colors from measured intensities can be
+	displayed. The color schema is from blue via green yellow to red.
+%
+\item The working stack can be displayed. This can be useful to see how the
+	preprocessing has changed the original stack.
+%
+\end{itemize}
+
+\subsubsection{Pre-processing}
+
+Here different pre-processing step can be chosen, added and removed by the
+user. The alternatives at the moment are:
+
+\begin{itemize}
+%
+\item Invert, inverts the pixels in the stack. This is needed if the objects
+	are dark in a brighter background, e.g. if bright membranes are marking
+	cells.
+%
+\item Background threshold, this will set all pixels below a threshold
+	intensity to belong to the background, and hence will not be available in
+	the segmentation.
+%
+\item Mean Filter, this will reduce noise in the images by applying a mean
+	filter with provided radius. As it is often useful to apply this more than
+	once, this option is also provided by the user.
+%
+\end{itemize}
+
+\subsubsection{Post-processing}
+
+After the gradient descent algorithm is applied for segmentation, it might be
+useful to do some post-processing. The available algorithms that can be
+chosen, added and removed are:
+
+\begin{itemize} 
+%
+\item Removal, where found compartments can be removed due to being too small
+	or having too low intensity.
+%
+\item Merger, where compartments with centers too close to each other can be
+	merged into a single compartment.
+%
+\end{itemize}
 
 \section{Examples}
 
