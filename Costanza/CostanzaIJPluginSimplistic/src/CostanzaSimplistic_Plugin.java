@@ -14,13 +14,12 @@ import costanza.DataId;
 import costanza.BOA;
 import costanza.BOASmoother;
 import costanza.BackgroundFilter;
-import costanza.BackgroundMedianFilter;
 import costanza.StackBackground;
 import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
-
 import costanza.MedianFilter;
+
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -28,14 +27,15 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.FloatProcessor;
 import ij.process.ImageProcessor;
 import ij.process.ImageConverter;
+import ij.*;
+import ij.gui.*;
+import ij.process.*;
+
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 import java.util.Collection;
 import java.util.Iterator;
 
-import ij.*;
-import ij.gui.*;
-import ij.process.*;
 
 public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
