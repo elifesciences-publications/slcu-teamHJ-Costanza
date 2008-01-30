@@ -263,19 +263,19 @@ public class MainFrame extends java.awt.Frame {
 
 	private void websiteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteMenuItemActionPerformed
 		try {
-			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se");//GEN-LAST:event_websiteMenuItemActionPerformed
+			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se/~henrik/Costanza/");
 		} catch (IOException ex) {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
-}
+}//GEN-LAST:event_websiteMenuItemActionPerformed
 
 	private void documentationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_documentationMenuItemActionPerformed
 		try {
-			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se");//GEN-LAST:event_documentationMenuItemActionPerformed
+			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se/~henrik/Costanza/doc/userguide.pdf");
 		} catch (IOException ex) {
 			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	}
+	}//GEN-LAST:event_documentationMenuItemActionPerformed
 
 	private void setActivePanel(PanelId id) {
 		switch (id) {
