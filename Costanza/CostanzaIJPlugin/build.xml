@@ -1,6 +1,6 @@
 <project name="Costanza" default="compile" basedir=".">
     <description>
-        This builds the Costanza TextGUI.
+        This builds the Costanza ImageJ plugin.
     </description>
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
