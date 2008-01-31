@@ -114,6 +114,10 @@ public class Image {
         return newImage;
     }
 
+    float[] getPixels(){
+        return pixels;
+    }
+    
     /** Returns the width of the image.
      * @return the width of the image.
      */

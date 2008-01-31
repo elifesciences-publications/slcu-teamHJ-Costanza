@@ -28,11 +28,12 @@ public class BackgroundFinderIntensity extends Processor {
 
 	// Create vector with pixels that stores the background
 	StackBackground bgPixel = new StackBackground();
-
+        
 	int width = c.getStack().getWidth();
 	int height = c.getStack().getHeight();
 	int depth = c.getStack().getDepth();
-
+        bgPixel.ensureCapacity(width*height*depth);
+        
 	// Extract pixels with intensity lower than threshold into background
 	for (int x = 0; x < width; ++x) {
 	    for (int y = 0; y < height; ++y) {
@@ -43,10 +44,9 @@ public class BackgroundFinderIntensity extends Processor {
 		}
 	    }
 	}
+        
+        bgPixel.trimToSize();
 
-	// Create background BOA and add it to data structure
-	//BOA bgBoa = new BOA(-1,bgPixel);
-	//c.getData().attachData(DataId.BACKGROUND,bgBoa);
 	c.attachStackData(bgPixel);
 
 	return c;

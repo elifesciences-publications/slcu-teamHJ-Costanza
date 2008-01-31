@@ -1,4 +1,3 @@
-
 import costanza.Case;
 import costanza.Image;
 import costanza.BackgroundFinderIntensity;
@@ -12,14 +11,11 @@ import costanza.Stack;
 import costanza.Pixel;
 import costanza.DataId;
 import costanza.BOA;
-import costanza.BOASmoother;
-import costanza.BackgroundFilter;
 import costanza.StackBackground;
 import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
 import costanza.MedianFilter;
-
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -57,15 +53,12 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
             gd.addCheckbox("Apply median filter", false);
             gd.addNumericField("Number of medianFilter runs:", 1, 0);
-            gd.addNumericField("MedianFilter radius:", 1, 1);
+            gd.addNumericField("MedianFilter radius:", 2, 1);
             gd.addCheckbox("Show filtered stack", false);
 
             gd.addCheckbox("Apply background extractor", true);
             gd.addNumericField("Background intensity threshold:", 0.1, 1);
             gd.addCheckbox("Show background stack", true);
-
-            gd.addCheckbox("Filter background", true);
-            gd.addCheckbox("Run filter in 2D", true);
 
             gd.addMessage("\nPreprocessing:");
             gd.addNumericField("Number of meanFilter runs:", 2, 0);
@@ -82,9 +75,9 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             gd.addNumericField("Minimal boa size:", 10, 1);
             gd.addCheckbox("Apply merger:", true);
             gd.addNumericField("Merging radius:", 5, 1);
-            gd.addCheckbox("Apply BOA smoothing:", false);
-            gd.addNumericField("Upper neighbor limit(out of 26):", 13, 1);
-            gd.addNumericField("Lower neighbor limit(out of 26):", 7, 1);
+//            gd.addCheckbox("Apply BOA smoothing:", false);
+//            gd.addNumericField("Upper neighbor limit(out of 26):", 13, 1);
+//            gd.addNumericField("Lower neighbor limit(out of 26):", 7, 1);
 
             gd.addMessage("Output:");
             gd.addCheckbox("Show cell center stack:", true);
@@ -111,8 +104,8 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             float bgThreshold = (float) gd.getNextNumber();
             boolean bgOutput = (boolean) gd.getNextBoolean();
 
-            boolean bgFilterFlag = (boolean) gd.getNextBoolean();
-            boolean dim2DFlag = (boolean) gd.getNextBoolean();
+//            boolean bgFilterFlag = (boolean) gd.getNextBoolean();
+//            boolean dim2DFlag = (boolean) gd.getNextBoolean();
             //preproc
             int smoothNum = (int) gd.getNextNumber();
             float smoothR = (float) gd.getNextNumber();
@@ -126,9 +119,9 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             float minSize = (float) gd.getNextNumber();
             boolean mergerFlag = (boolean) gd.getNextBoolean();
             float mergerR = (float) gd.getNextNumber();
-            boolean boaSmootherFlag = (boolean) gd.getNextBoolean();
-            int upperNeighLimit = (int) gd.getNextNumber();
-            int lowerNeighLimit = (int) gd.getNextNumber();
+//            boolean boaSmootherFlag = (boolean) gd.getNextBoolean();
+//            int upperNeighLimit = (int) gd.getNextNumber();
+//            int lowerNeighLimit = (int) gd.getNextNumber();
             //output
             boolean ccOutFlag = (boolean) gd.getNextBoolean();
             boolean boaOutFlag = (boolean) gd.getNextBoolean();
@@ -154,26 +147,30 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
             peakRemoverOptions.addOption("sizeThreshold", new Float(minSize));
             Options peakMergerOptions = new Options();
             peakMergerOptions.addOption("radius", new Float(mergerR));
-            Options boaSmootherOptions = new Options();
-            boaSmootherOptions.addOption("upperNeighborLimit", (Integer) upperNeighLimit);
-            boaSmootherOptions.addOption("lowerNeighborLimit", (Integer) lowerNeighLimit);
+//            Options boaSmootherOptions = new Options();
+//            boaSmootherOptions.addOption("upperNeighborLimit", (Integer) upperNeighLimit);
+//            boaSmootherOptions.addOption("lowerNeighborLimit", (Integer) lowerNeighLimit);
 
             // BACKGROUND EXTRACTION
             if (bgFlag) {
                 if (medianFlag) {
                     MedianFilter medianFilter = new MedianFilter();
-                    try {
-                        medianFilter.process(IJCase, medianOptions);
-                    } catch (Exception ex) {
-                        error("Error in median filter: " + ex.getMessage() + "\n");
+                    System.out.println("Appling median filter.");
+                    for (int i = 0; i < medianNum; ++i) {
+                        try {
+                            medianFilter.process(IJCase, medianOptions);
+                        } catch (Exception ex) {
+                            error("Error in median filter: " + ex.getMessage() + "\n");
+                        }
                     }
-                    if (bgOutput) {
+                    if (medianOutput) {
                         ImagePlus tmp = createImagePlusFromStack(IJCase.getStack());
                         tmp.show();
                     }
                 }
                 Collection<Pixel> bgCollection;
                 BackgroundFinderIntensity backgroundFinder = new BackgroundFinderIntensity();
+                System.out.println("Extracting background.");
                 try {
                     backgroundFinder.process(IJCase, backgroundOptions);
                 } catch (Exception ex) {
@@ -183,30 +180,30 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 if (bgOutput) {
                     showBackground(IJCase.getOriginalStack(), bgCollection, " Original Background");
                 }
-                if (bgFilterFlag) {
-                    BackgroundFilter bmf = new BackgroundFilter();
-                    try {
-                        if (dim2DFlag) {
-                            backgroundOptions.addOption("2D", true);
-                        }
-                        bmf.process(IJCase, backgroundOptions);
-                        bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
-                        IJ.showMessage("Costanza", "Backgroundfinder with intensity threshold " + bgThreshold + " found " + bgCollection.size() + " bg pixels.");
-                        if (bgOutput) {
-                            showBackground(IJCase.getOriginalStack(), bgCollection, "Background");
-                        }
-                    } catch (Exception ex) {
-                        error("Error in backgroundMedianFilter: " + ex.getMessage() + "\n");
-                    }
-                }
-
-                IJCase.setStack(IJCase.getOriginalStack());
+//                if (bgFilterFlag) {
+//                    BackgroundFilter bmf = new BackgroundFilter();
+//                    try {
+//                        if (dim2DFlag) {
+//                            backgroundOptions.addOption("2D", true);
+//                        }
+//                        bmf.process(IJCase, backgroundOptions);
+//                        bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
+//                        IJ.showMessage("Costanza", "Backgroundfinder with intensity threshold " + bgThreshold + " found " + bgCollection.size() + " bg pixels.");
+//                        if (bgOutput) {
+//                            showBackground(IJCase.getOriginalStack(), bgCollection, "Background");
+//                        }
+//                    } catch (Exception ex) {
+//                        error("Error in backgroundMedianFilter: " + ex.getMessage() + "\n");
+//                    }
+//                }
+//
+//                IJCase.setStack(IJCase.getOriginalStack());
             }
 
             // MEAN FILTER
             if (smoothNum > 0) {
-                //MeanFilter meanFilter = new MeanFilter();
                 MeanFilter meanFilter = new MeanFilter();
+                System.out.println("Appling mean filter.");
                 for (int i = 0; i < smoothNum; ++i) {
                     try {
                         meanFilter.process(IJCase, meanFilterOptions);
@@ -223,6 +220,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
 
             // GRADIENT DESCENT
             GradientDescent gradientDescent = new GradientDescent();
+            System.out.println("Appling gradient descent.");
             try {
                 gradientDescent.process(IJCase, gradientDescentOptions);
             } catch (Exception ex) {
@@ -295,17 +293,17 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 ImagePlus ipTmp = createImagePlusFromResultStack(IJCase, "Cell centers");
                 ipTmp.show();
             }
-            if (boaSmootherFlag) {
-
-                BOASmoother bs = new BOASmoother();
-                System.out.println("Starting BOASmoother");
-                try {
-                    bs.process(IJCase, boaSmootherOptions);
-                } catch (Exception ex) {
-                    error("Error in BOASmoother: " + ex.getMessage() + "\n");
-                }
-                System.out.println("BOASmoother finished");
-            }
+//            if (boaSmootherFlag) {
+//
+//                BOASmoother bs = new BOASmoother();
+//                System.out.println("Starting BOASmoother");
+//                try {
+//                    bs.process(IJCase, boaSmootherOptions);
+//                } catch (Exception ex) {
+//                    error("Error in BOASmoother: " + ex.getMessage() + "\n");
+//                }
+//                System.out.println("BOASmoother finished");
+//            }
             if (boaOutFlag) {
                 // Process for generating random colored boas
                 Options tmpOptions = new Options();

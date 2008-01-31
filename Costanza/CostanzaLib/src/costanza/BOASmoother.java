@@ -5,11 +5,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-/** It is experimental code.
+/**This is experimental code.
  * This proceessor is supposed to give BOAs more cell like shape. It removes and 
  * adds pixels to boa based on number of nearest neighbors of given pixel belonging 
  * to BOA. If this number is below lowerLimit pixel is removed. If it is above upper 
- * limit pixel is added. Doent check if added pixels belong to other BOA.  
+ * limit pixel is added. Doesn't check if added pixels belong to other BOA.  
  * @author pawel
  */
 public class BOASmoother extends Processor {

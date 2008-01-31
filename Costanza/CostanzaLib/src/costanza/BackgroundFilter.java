@@ -1,7 +1,7 @@
 package costanza;
 
 /**
- *
+ * Experimental code
  * @author pawel
  */
 public class BackgroundFilter extends Processor {
@@ -21,7 +21,7 @@ public class BackgroundFilter extends Processor {
             dim2D = ((Boolean)options.getOptionValue("2D")).booleanValue();
         }
         if(dim2D){
-            lowLimit = 4;
+            lowLimit = 3;
             hiLimit = 5;
         }
         int zSize = stack.getDepth();
