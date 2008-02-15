@@ -51,7 +51,7 @@ public class GradientDescent extends Processor {
 
 	Vector<Pixel> max = new Vector<Pixel>();//Potential cell centers
 	// Marker for which pixels that have been visited
-	int[][][] flag = new int[width][height][depth];
+	short[][][] flag = new short[width][height][depth];
 	for (int x = 0; x < width; ++x) {
 	    for (int y = 0; y < height; ++y) {
 		for (int z = 0; z < depth; ++z) {
@@ -192,13 +192,13 @@ public class GradientDescent extends Processor {
 			int n = max.size();//count++?
 			int numWalk = walkTmp.size();
 			for (int a = 0; a < numWalk; ++a) {
-			    flag[walkTmp.elementAt(a).getX()][walkTmp.elementAt(a).getY()][walkTmp.elementAt(a).getZ()] = n;
+			    flag[walkTmp.elementAt(a).getX()][walkTmp.elementAt(a).getY()][walkTmp.elementAt(a).getZ()] = (short) n;
 			}
 		    } else { //old maximum or background
 			int n = flag[x][y][z];
 			int numWalk = walkTmp.size();
 			for (int a = 0; a < numWalk; ++a) {
-			    flag[walkTmp.elementAt(a).getX()][walkTmp.elementAt(a).getY()][walkTmp.elementAt(a).getZ()] = n;
+			    flag[walkTmp.elementAt(a).getX()][walkTmp.elementAt(a).getY()][walkTmp.elementAt(a).getZ()] = (short) n;
 			}
 		    }
 		}

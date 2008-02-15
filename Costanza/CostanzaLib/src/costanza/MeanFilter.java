@@ -14,7 +14,7 @@ package costanza;
 
 public class MeanFilter extends Processor {
 
-    private int lineRadius[];
+    private short lineRadius[];
     private int kXRadius;
     private int kYRadius;
     private int kZRadius;
@@ -54,7 +54,7 @@ public class MeanFilter extends Processor {
         int xmax = xSize + kXRadius;
         int cacheWidth = xmax - xmin;
 
-        int[] newLineRadius0 = new int[kZSize];
+        short[] newLineRadius0 = new short[kZSize];
 
         float cache[] = new float[kZSize * kYSize * cacheWidth]; // 3D image stripe
 
@@ -140,7 +140,7 @@ public class MeanFilter extends Processor {
      * @param kZSize kernel size in z direction
      * @return sum
      */
-    private float getAreaSums(float[] cache, int cacheWidth, int xCache0, int[] lineRadius, int kYSize, int kZSize) {
+    private float getAreaSums(float[] cache, int cacheWidth, int xCache0, short[] lineRadius, int kYSize, int kZSize) {
         float sum = 0;
         int yIncr = cacheWidth * kZSize;
         for (int y = 0; y < kYSize; y++) {
@@ -168,7 +168,7 @@ public class MeanFilter extends Processor {
      * @param sum previous value
      * @return new sum
      */
-    private float addSideSums(float[] cache, int cacheWidth, int xCache0, int[] lineRadius, int kYSize, int kZSize, float sum) {
+    private float addSideSums(float[] cache, int cacheWidth, int xCache0, short[] lineRadius, int kYSize, int kZSize, float sum) {
         int yIncr = cacheWidth * kZSize;
         for (int y = 0; y < kYSize; y++) {
             int yInd = y * yIncr;
@@ -214,8 +214,8 @@ public class MeanFilter extends Processor {
         
         //fill in values for y=0, z=0 
         int yIncr = kYRadius* kZSize;
-        lineRadius = new int[kZSize * kYSize];
-        lineRadius[ yIncr + kZRadius] = kXRadius;
+        lineRadius = new short[kZSize * kYSize];
+        lineRadius[ yIncr + kZRadius] = (short) kXRadius;
         kNPoints = (2 * kXRadius + 1);
 
         for (int y = 1; y <= kYRadius; ++y) {
@@ -227,8 +227,8 @@ public class MeanFilter extends Processor {
             double radf = (radius2 - y2 * yScale2) / xScale + 1e-10;
             int rad = radf < 0.0 ? -1 : (int) Math.sqrt(radf);
 
-            lineRadius[yInd1 + kZRadius] = rad;
-            lineRadius[yInd2 + kZRadius] = rad;
+            lineRadius[yInd1 + kZRadius] = (short) rad;
+            lineRadius[yInd2 + kZRadius] = (short) rad;
 
             kNPoints += rad < 0 ? 0 : 4 * rad + 2;
 
@@ -240,10 +240,10 @@ public class MeanFilter extends Processor {
                 radf = (radius2 - z2 * zScale2 - y2 * yScale2) / xScale + 1e-10;
                 rad = radf < 0.0 ? -1 : (int) Math.sqrt(radf);
 
-                lineRadius[yInd1 + zInd1] = rad;
-                lineRadius[yInd2 + zInd1] = rad;
-                lineRadius[yInd1 + zInd2] = rad;
-                lineRadius[yInd2 + zInd2] = rad;
+                lineRadius[yInd1 + zInd1] = (short) rad;
+                lineRadius[yInd2 + zInd1] = (short) rad;
+                lineRadius[yInd1 + zInd2] = (short) rad;
+                lineRadius[yInd2 + zInd2] = (short) rad;
 
                 kNPoints += rad < 0 ? 0 : 8 * rad + 4;
             }
@@ -254,8 +254,8 @@ public class MeanFilter extends Processor {
             double radf = (radius2 - z * z * zScale2) / xScale + 1e-10;
             int rad = radf < 0.0 ? -1 : (int) Math.sqrt(radf);
 
-            lineRadius[yIncr + kZRadius - z] = rad;
-            lineRadius[yIncr + kZRadius + z] = rad;
+            lineRadius[yIncr + kZRadius - z] = (short) rad;
+            lineRadius[yIncr + kZRadius + z] = (short) rad;
 
             kNPoints += rad < 0 ? 0 : 4 * rad + 2;
         }

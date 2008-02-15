@@ -5,7 +5,7 @@ package costanza;
 public class Pixel implements Comparable<Pixel> {
 
     /** Pixel indices in x, y, z directions*/
-    private int x,  y,  z;
+    private short x,  y,  z;
 
     /**Create uninitialized Pixel*/
     public Pixel() {
@@ -17,9 +17,9 @@ public class Pixel implements Comparable<Pixel> {
      *@param z int
      */
     public Pixel(int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = (short) x;
+        this.y = (short) y;
+        this.z = (short) z;
     }
 
     /**Copy constructor 
@@ -55,21 +55,21 @@ public class Pixel implements Comparable<Pixel> {
      *@param x int
      **/
     public void setX(int x) {
-        this.x = x;
+        this.x = (short) x;
     }
 
     /**Sets Pixel index in y direction.
      *@param y int
      **/
     public void setY(int y) {
-        this.y = y;
+        this.y = (short) y;
     }
 
     /**Sets Pixel index in z direction.
      *@param z int
      **/
     public void setZ(int z) {
-        this.z = z;
+        this.z = (short) z;
     }
 
     /**Sets Pixel indices.
@@ -78,11 +78,12 @@ public class Pixel implements Comparable<Pixel> {
      *@param z int
      **/
     public void setXYZ(int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.x = (short) x;
+        this.y = (short) y;
+        this.z = (short) z;
     }
 
+    @Override
     public int compareTo(Pixel p) {
         if (x < p.x) {
             return -1;
