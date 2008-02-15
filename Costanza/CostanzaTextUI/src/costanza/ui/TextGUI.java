@@ -62,7 +62,8 @@ public class TextGUI {
 	if (meanFilterFlag) {
 	    System.out.println("### Adding MeanFilter ###");
 	    Options options = new Options();
-	    options.addOption("radius", new Float(2));
+	    options.addOption("radius", new Float(5));
+	    queue.addJob(new Job("meanfilter", options));
 	    queue.addJob(new Job("meanfilter", options));
 	}
 	if (gradientDescentFlag) {
@@ -125,8 +126,8 @@ public class TextGUI {
 	Stack stack = new Stack();
 	if (randomImages) {
 	    for (int i = 0; i < numImages; ++i) {
-				stack.addImage(createRandomImage(100, 100));
-				//stack.addImage(createSinglePixelImage(100, 100));
+		stack.addImage(createRandomImage(100, 100));
+	    //stack.addImage(createSinglePixelImage(100, 100));
 	    }
 	} else {
 	    String fname = "";
@@ -294,7 +295,9 @@ public class TextGUI {
 
     public static void main(String[] argv) {
 	try {
-	    new costanza.ui.TextGUI(argv.length > 0 ? argv[0] : "");
+	    //new costanza.ui.TextGUI(argv.length > 0 ? argv[0] : "");
+	    //new costanza.ui.TextGUI("/home/whitman/michael/projects/imageProcessing/data/nucleiLarge/jpg/nuclei0");
+	    new costanza.ui.TextGUI("/home/whitman/michael/projects/imageProcessing/data/13hrs/jpg/113h0");
 	//tryConversion();
 	//tryRedPixels();
 	} catch (Exception e) {
