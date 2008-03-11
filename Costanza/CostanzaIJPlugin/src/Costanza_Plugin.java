@@ -45,6 +45,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	 * intensity measurements.
 	 */
 	public void start(Queue jobs, boolean secondaryStackOption) {
+		frame.setMenuAndButtonsEnabled(false);
 		this.jobs = jobs;
 		this.secondaryStackOption = secondaryStackOption;
 		try {
@@ -79,6 +80,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 				frame.askForSecondaryStack();
 			} else {
 				showFinalResults();
+				frame.setMenuAndButtonsEnabled(true);
 			}
 		} catch (Exception exception) {
 			printExceptionMessage(exception);
@@ -106,8 +108,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		driver.run();
 
 		showFinalResults();
+		frame.setMenuAndButtonsEnabled(true);
 	}
-
+	
 	/**
 	 * Stop the plugin.
 	 */
