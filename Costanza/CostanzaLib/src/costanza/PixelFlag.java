@@ -24,7 +24,7 @@ public class PixelFlag implements Data_t {
     private int x_increm;
     /**definition of value for background*/
     public static final short BACKGROUND_FLAG = -1;
-    
+    public static final short UNMARKED_FLAG = -2;
     /**
      * Construct PixelFlag of given dimensions
      * @param x_dim
@@ -38,7 +38,7 @@ public class PixelFlag implements Data_t {
         x_increm = m_y_dim*m_z_dim;
         m_flags = new short[ m_x_dim * m_y_dim * m_z_dim ];
         for(int i = 0; i < m_flags.length; ++i)
-            m_flags[i] = 0;
+            m_flags[i] = UNMARKED_FLAG;
     }
     /**
      * set flag at given position to the val
@@ -79,7 +79,28 @@ public class PixelFlag implements Data_t {
     public boolean is_background( int x, int y, int z ){
          return m_flags[x*x_increm + y*m_z_dim + z] == BACKGROUND_FLAG;
     }
-
+    /**
+     * check if flag at given position is set to unmarked
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public boolean is_unmarked( int x, int y, int z ){
+         return m_flags[x*x_increm + y*m_z_dim + z] == UNMARKED_FLAG;
+    }
+    
+    /**
+     * check if flag at given position don't define a boa 
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+    public boolean is_not_boa( int x, int y, int z ){
+         return m_flags[x*x_increm + y*m_z_dim + z] < 0;
+    }
+    
     public DataId getDataId() {
         return DataId.PIXEL_FLAG;
     }

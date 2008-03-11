@@ -14,15 +14,16 @@ import java.util.logging.Logger;
  */
 public class BoaColorizerIntensity extends Processor {
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
+    @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
         // Get the basin of attractors from data in case
-        Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
-        if (boaCollection == null) {
-            return c;
-        }
+//        Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
+//        if (boaCollection == null) {
+//            return c;
+//        }
 
-        if ( options != null && options.hasOption("OverrideStack")) {
+        if (options != null && options.hasOption("OverrideStack")) {
             stack = (Stack) options.getOptionValue("OverrideStack");
 
         } else {
@@ -34,21 +35,54 @@ public class BoaColorizerIntensity extends Processor {
 
 //        System.out.println("Processing stack: " + stack.getId());
 //        System.out.println(c.getIntensityTagSet());
-        
-        int[] boaColors = genColors(c, boaCollection.size());
-        BufferedImage[] images = getImagesFromStack(stack);
-        Object[] boas = boaCollection.toArray();
-//        System.out.println("BOA length: " + boas.length);
-        
-        if (boaColors.length != boas.length) {
+        int[] boaColors = genColors(c, c.sizeOfCells());
+        //System.out.println("Colors generated");
+        BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
+        Object[] cells = c.getCells().toArray();
+        if (boaColors.length != cells.length) {
             throw new Exception("Lengths differ!");
         }
-        for (int i = 0; i < boas.length; ++i) {
-            colorizeBoa((BOA) boas[i], images, boaColors[i]);
-        }
-        c.setResultImages(images);
 
-        System.out.println("Number of collected BOAs: " + boaCollection.size());
+        int xDim = images[0].getWidth();
+        int yDim = images[0].getHeight();
+        int zDim = images.length;
+        int curSize = boaColors.length;
+        PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
+
+        for (int iz = 0; iz < zDim; ++iz) {
+            BufferedImage bufferedImage = images[iz];
+            for (int iy = 0; iy < yDim; ++iy) {
+                for (int ix = 0; ix < xDim; ++ix) {
+                    short flag = pf.get_flag(ix, iy, iz);
+                    if (flag != PixelFlag.BACKGROUND_FLAG) {
+                        int color;
+                        if (flag >= curSize) {
+                            color = randomColor();
+                        } else {
+                            color = boaColors[flag];
+                        }
+
+                        bufferedImage.setRGB(ix, iy, color);
+
+                    }
+                }
+            }
+        }
+
+//        int[] boaColors = genColors(c, boaCollection.size());
+//        BufferedImage[] images = getImagesFromStack(stack);
+//        Object[] boas = boaCollection.toArray();
+////        System.out.println("BOA length: " + boas.length);
+//        
+//        if (boaColors.length != boas.length) {
+//            throw new Exception("Lengths differ!");
+//        }
+//        for (int i = 0; i < boas.length; ++i) {
+//            colorizeBoa((BOA) boas[i], images, boaColors[i]);
+//        }
+//        c.setResultImages(images);
+//
+//        System.out.println("Number of collected BOAs: " + boaCollection.size());
         return c;
     }
 
@@ -97,6 +131,13 @@ public class BoaColorizerIntensity extends Processor {
             colors[i] = getColor(value[i]);
         }
         return colors;
+    }
+
+    private int randomColor() {
+        int red = (int) (Math.random() * 255);
+        int green = (int) (Math.random() * 255);
+        int blue = (int) (Math.random() * 255);
+        return (255 << 24) | (red << 16) | (green << 8) | blue;
     }
 
     private int getColor(float value) {
