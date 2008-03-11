@@ -15,13 +15,13 @@ import java.util.List;
 public class PixelFlag implements Data_t {
 
     /**array of flags for each stack pixel*/
-    private short m_flags[];
+    private short flags[];
     /**dimensions of the stack*/
-    private int m_x_dim;
-    private int m_y_dim;
-    private int m_z_dim;
+    private int xDim;
+    private int yDim;
+    private int zDim;
     /**increment of array index for x stored for efficiency*/ 
-    private int x_increm;
+    private int xIncrem;
     /**definition of value for background*/
     public static final short BACKGROUND_FLAG = -1;
     public static final short UNMARKED_FLAG = -2;
@@ -32,13 +32,13 @@ public class PixelFlag implements Data_t {
      * @param z_dim
      */
     public PixelFlag( int x_dim, int y_dim, int z_dim){
-        m_x_dim = x_dim;
-        m_y_dim = y_dim;
-        m_z_dim = z_dim;
-        x_increm = m_y_dim*m_z_dim;
-        m_flags = new short[ m_x_dim * m_y_dim * m_z_dim ];
-        for(int i = 0; i < m_flags.length; ++i)
-            m_flags[i] = UNMARKED_FLAG;
+        xDim = x_dim;
+        yDim = y_dim;
+        zDim = z_dim;
+        xIncrem = yDim*zDim;
+        flags = new short[ xDim * yDim * zDim ];
+        for(int i = 0; i < flags.length; ++i)
+            flags[i] = UNMARKED_FLAG;
     }
     /**
      * set flag at given position to the val
@@ -47,8 +47,8 @@ public class PixelFlag implements Data_t {
      * @param z
      * @param val
      */
-    public void set_flag( int x, int y, int z, short val ){
-        m_flags[x*m_y_dim*m_z_dim + y*m_z_dim + z] = val;
+    public void setFlag( int x, int y, int z, short val ){
+        flags[x*yDim*zDim + y*zDim + z] = val;
     }
     /**
      * get flag at given position
@@ -57,8 +57,8 @@ public class PixelFlag implements Data_t {
      * @param z
      * @return
      */
-    public short get_flag( int x, int y, int z ){
-         return m_flags[x*x_increm + y*m_z_dim + z];
+    public short getFlag( int x, int y, int z ){
+         return flags[x*xIncrem + y*zDim + z];
     }
     /**
      * set flag at given position to the background value
@@ -66,8 +66,8 @@ public class PixelFlag implements Data_t {
      * @param y
      * @param z
      */
-    public void set_background( int x, int y, int z ){
-        m_flags[x*m_y_dim*m_z_dim + y*m_z_dim + z] = BACKGROUND_FLAG;
+    public void setBackground( int x, int y, int z ){
+        flags[x*yDim*zDim + y*zDim + z] = BACKGROUND_FLAG;
     }
     /**
      * check if flag at given position is set to background
@@ -76,8 +76,8 @@ public class PixelFlag implements Data_t {
      * @param z
      * @return
      */
-    public boolean is_background( int x, int y, int z ){
-         return m_flags[x*x_increm + y*m_z_dim + z] == BACKGROUND_FLAG;
+    public boolean isBackground( int x, int y, int z ){
+         return flags[x*xIncrem + y*zDim + z] == BACKGROUND_FLAG;
     }
     /**
      * check if flag at given position is set to unmarked
@@ -86,20 +86,20 @@ public class PixelFlag implements Data_t {
      * @param z
      * @return
      */
-    public boolean is_unmarked( int x, int y, int z ){
-         return m_flags[x*x_increm + y*m_z_dim + z] == UNMARKED_FLAG;
+    public boolean isUnmarked( int x, int y, int z ){
+         return flags[x*xIncrem + y*zDim + z] == UNMARKED_FLAG;
     }
     
-    /**
-     * check if flag at given position don't define a boa 
-     * @param x
-     * @param y
-     * @param z
-     * @return
-     */
-    public boolean is_not_boa( int x, int y, int z ){
-         return m_flags[x*x_increm + y*m_z_dim + z] < 0;
-    }
+//    /**
+//     * check if flag at given position don't define a boa 
+//     * @param x
+//     * @param y
+//     * @param z
+//     * @return
+//     */
+//    public boolean is_not_boa( int x, int y, int z ){
+//         return flags[x*xIncrem + y*zDim + z] < 0;
+//    }
     
     public DataId getDataId() {
         return DataId.PIXEL_FLAG;
@@ -111,10 +111,10 @@ public class PixelFlag implements Data_t {
      */
     public Collection<Pixel> findPixels( short id ){
         List<Pixel> pixels = new LinkedList<Pixel>();
-        for( int ix = 0; ix < m_x_dim; ++ix ){
-            for( int iy = 0; iy < m_y_dim; ++iy ){
-                for( int iz = 0; iz < m_z_dim; ++iz ){
-                    if( get_flag(ix,iy,iz) == id )
+        for( int ix = 0; ix < xDim; ++ix ){
+            for( int iy = 0; iy < yDim; ++iy ){
+                for( int iz = 0; iz < zDim; ++iz ){
+                    if( getFlag(ix,iy,iz) == id )
                         pixels.add( new Pixel(ix,iy,iz) );
                 }
             }
@@ -129,10 +129,10 @@ public class PixelFlag implements Data_t {
      */
     public int count(short id) {
         int counter = 0;
-        for (int ix = 0; ix < m_x_dim; ++ix) {
-            for (int iy = 0; iy < m_y_dim; ++iy) {
-                for (int iz = 0; iz < m_z_dim; ++iz) {
-                    if (get_flag(ix, iy, iz) == id) {
+        for (int ix = 0; ix < xDim; ++ix) {
+            for (int iy = 0; iy < yDim; ++iy) {
+                for (int iz = 0; iz < zDim; ++iz) {
+                    if (getFlag(ix, iy, iz) == id) {
                         ++counter;
                     }
                 }
@@ -147,11 +147,11 @@ public class PixelFlag implements Data_t {
      * @param dest new value
      */
     public void changeAll( short source, short dest ){
-        for( int ix = 0; ix < m_x_dim; ++ix ){
-            for( int iy = 0; iy < m_y_dim; ++iy ){
-                for( int iz = 0; iz < m_z_dim; ++iz ){
-                    if( get_flag(ix,iy,iz) == source )
-                        set_flag(ix,iy,iz, dest);
+        for( int ix = 0; ix < xDim; ++ix ){
+            for( int iy = 0; iy < yDim; ++iy ){
+                for( int iz = 0; iz < zDim; ++iz ){
+                    if( getFlag(ix,iy,iz) == source )
+                        setFlag(ix,iy,iz, dest);
                 }
             }
         }

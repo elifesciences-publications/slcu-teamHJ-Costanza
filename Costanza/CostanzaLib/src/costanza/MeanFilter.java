@@ -51,7 +51,7 @@ public class MeanFilter extends Processor {
             for (int ix = 0; ix < xSize; ++ix) {
                 for(int iy = 0; iy < ySize; ++iy){
                     for(int iz = 0; iz < zSize; ++iz){
-                        if( pf.is_background(ix, iy, iz) )
+                        if( pf.isBackground(ix, iy, iz) )
                             bgFlag[ix + xSize*iy + zIncr*iz] = -1;
                     }
                 }

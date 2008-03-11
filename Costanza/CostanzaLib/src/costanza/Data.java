@@ -209,6 +209,21 @@ public class Data {
         attachCellData( data, cell );
     }
 
+    /**Attaches cell data to cell with given id
+     * @param data
+     * @param cellId Integer
+     * @param size of the new cell
+     */
+    public <T extends CellData_t> void attachCellData(T data, Integer cellId, short size) {
+
+        Cell cell = cells.get(cellId);
+        if (cell == null) {
+            cell = new Cell(cellId, size);
+        }
+        
+        attachCellData( data, cell );
+    }
+    
     /**Attaches data to given cell
      * @param data
      * @param cell Cell

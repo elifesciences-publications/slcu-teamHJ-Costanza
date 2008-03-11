@@ -41,10 +41,10 @@ public class BackgroundFinderIntensity extends Processor {
 		for (int z = 0; z < depth; ++z) {
 		    if (c.getStack().getIntensity(x, y, z) < threshold) {
 			//bgPixel.add(new Pixel(x, y, z));
-                        pf.set_background(x, y, z);
+                        pf.setBackground(x, y, z);
 		    }
                     else
-                        pf.set_flag(x, y, z, (short)0);
+                        pf.setFlag(x, y, z, (short)0);
                         
 		}
 	    }
