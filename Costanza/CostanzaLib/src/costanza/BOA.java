@@ -62,7 +62,8 @@ public class BOA extends HashSet<Pixel> implements CellData_t{
      *@return DataId
      */
     public DataId getDataId() {
-        return DataId.BOAS;
+        //return DataId.BOAS;
+        return null;
     }
     
     /**Sets the cell which owns the data.

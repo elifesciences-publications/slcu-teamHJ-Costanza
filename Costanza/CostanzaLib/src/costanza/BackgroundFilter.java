@@ -8,6 +8,7 @@ public class BackgroundFilter extends Processor {
 
     @Override
     public Case process(Case c, Options options) throws Exception {  
+        /*
         int lowLimit = 6;
         int hiLimit = 16;
         
@@ -128,7 +129,7 @@ public class BackgroundFilter extends Processor {
             }
         }
         sb.trimToSize();
-        
+       // */
         return c;
     }
     }

@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.Vector;
 
 public class StackBackground extends Vector<Pixel> implements Data_t{
-    
+
     /** Creates a new instance of StackBackground */
     public StackBackground(){}
     
-    /**Constructs BOA including Pixels in Collection c with id.
+    /**Constructs Background including Pixels in Collection c with id.
      *@param c Collection<Pixel> 
      */
     public StackBackground( Collection<Pixel> c ) {
@@ -29,8 +29,8 @@ public class StackBackground extends Vector<Pixel> implements Data_t{
         addAll(c);
     }
     
-    /**checks if the Pixel p is in the BOA.
-     *@return boolean true for pixel being in the BOA
+    /**checks if the Pixel p is in the Background.
+     *@return boolean true for pixel being in the Background
      */
     public boolean hasPixel( Pixel p ){
         return contains( p );
@@ -40,7 +40,9 @@ public class StackBackground extends Vector<Pixel> implements Data_t{
      *@return DataId
      */
     public DataId getDataId() {
-        return DataId.BACKGROUND;
+        //return DataId.BACKGROUND;
+        return null;
     }
+
 }
 

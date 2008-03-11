@@ -2,6 +2,7 @@ package costanza;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ public class Cell implements Comparable<Cell>{
     private int id;
     /**Map of data types to the data objects */
     private Map<DataId, CellData_t> cell_data;
+    /**number of pixels in the cell*/
+    private short cellSize;
     
     /**Constructs the cell of given id
      * @param i id of the new cell
@@ -19,8 +22,20 @@ public class Cell implements Comparable<Cell>{
     public Cell(int i) {
         this.id = i;
         cell_data = new EnumMap<DataId, CellData_t>(DataId.class);
-        cell_data.remove(DataId.BACKGROUND);
+        
+        Iterator<DataId> it = cell_data.keySet().iterator();
+        while (it.hasNext()) {
+            DataId d_id = it.next();
+            if(d_id.getGroup() != DataGroup.CELL)
+                it.remove();
+        }
+        //cell_data.remove(DataId.BACKGROUND);
         clear();
+    }
+    
+    public Cell(int i, short size) {
+        this(i);
+        cellSize = size;
     }
 
     /**Adds/replaces data in the cell
@@ -30,12 +45,19 @@ public class Cell implements Comparable<Cell>{
         cell_data.put( data.getDataId(), data );
     }
     
+    public void setSize( short size){
+        cellSize = size;
+    }
     /**Retrives data of given type from the cell
      * @param id of data type
      * @return cell data, null if no data present
      */
     public CellData_t get(DataId id){
         return cell_data.get( id );
+    }
+    
+    public short size(){
+        return cellSize;
     }
     
     /**Checks if cell contains data of given type
@@ -73,15 +95,22 @@ public class Cell implements Comparable<Cell>{
     public void remove(DataId id) {
         cell_data.put( id, null );
     }
-    
+
     /**Clears all the data in the cell
      */
-    public void clear(){
-        cell_data.put(DataId.CENTERS, null);
-        cell_data.put(DataId.BOAS, null);
-        cell_data.put(DataId.NEIGHBORS, null);
-        cell_data.put(DataId.INTENSITIES, null);
+    public void clear() {
+        Iterator<CellData_t> it = cell_data.values().iterator();
+        while (it.hasNext()) {
+            CellData_t cd = it.next();
+            cd = null;
+        }
     }
+        
+//        cell_data.put(DataId.CENTERS, null);
+//        cell_data.put(DataId.BOAS, null);
+//        cell_data.put(DataId.NEIGHBORS, null);
+//        cell_data.put(DataId.INTENSITIES, null);
+//
 
     /* 
      * *Sets internal id of the cell. Use with caution as cells are maped to ids in Data too.

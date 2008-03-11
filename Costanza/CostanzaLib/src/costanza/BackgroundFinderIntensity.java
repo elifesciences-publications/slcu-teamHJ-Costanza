@@ -25,29 +25,34 @@ public class BackgroundFinderIntensity extends Processor {
 	if (c.getStack() == null) {
 	    throw new Exception("No working stack available in case.");
 	}
-
-	// Create vector with pixels that stores the background
-	StackBackground bgPixel = new StackBackground();
-        
+      
 	int width = c.getStack().getWidth();
 	int height = c.getStack().getHeight();
 	int depth = c.getStack().getDepth();
-        bgPixel.ensureCapacity(width*height*depth);
+       // Create vector with pixels that stores the background
+	//StackBackground bgPixel = new StackBackground();
+        
+        PixelFlag pf = new PixelFlag(width, height, depth);
+        //bgPixel.ensureCapacity(width*height*depth);
         
 	// Extract pixels with intensity lower than threshold into background
 	for (int x = 0; x < width; ++x) {
 	    for (int y = 0; y < height; ++y) {
 		for (int z = 0; z < depth; ++z) {
 		    if (c.getStack().getIntensity(x, y, z) < threshold) {
-			bgPixel.add(new Pixel(x, y, z));
+			//bgPixel.add(new Pixel(x, y, z));
+                        pf.set_background(x, y, z);
 		    }
+                    else
+                        pf.set_flag(x, y, z, (short)0);
+                        
 		}
 	    }
 	}
         
-        bgPixel.trimToSize();
-
-	c.attachStackData(bgPixel);
+        //bgPixel.trimToSize();
+	//c.attachStackData(bgPixel);
+        c.attachStackData(pf);
 
 	return c;
     }

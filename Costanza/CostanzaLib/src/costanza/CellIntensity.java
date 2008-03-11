@@ -5,7 +5,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
-/**CellIntensity is a Vector of lfoar intensity values, implements CellData_t*/
+/**CellIntensity is a Vector of float intensity values, implements CellData_t*/
 public class CellIntensity extends Vector<Float> implements CellData_t {
 
     /**Cell which owns data*/
@@ -16,6 +16,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     /**Constructs uninitialized CellIntensity*/
     public CellIntensity( Data d) {
         tag_map = d.getIntensityTagMap();
+        cell = null;
     }
 
     /**Constructs CellIntensity which holds specified intensity.

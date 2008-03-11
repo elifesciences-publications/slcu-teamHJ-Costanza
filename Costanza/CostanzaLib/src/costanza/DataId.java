@@ -4,9 +4,10 @@ public enum DataId {
 
     CENTERS(DataGroup.CELL),
     INTENSITIES(DataGroup.CELL),
-    BOAS(DataGroup.CELL),
+//    BOAS(DataGroup.CELL),
     NEIGHBORS(DataGroup.CELL),
-    BACKGROUND(DataGroup.STACK);
+//    BACKGROUND(DataGroup.STACK),
+    PIXEL_FLAG(DataGroup.STACK);
     private final DataGroup group;
 
     DataId(DataGroup g) {

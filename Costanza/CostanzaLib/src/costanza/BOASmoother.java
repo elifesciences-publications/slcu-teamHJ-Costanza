@@ -17,7 +17,7 @@ public class BOASmoother extends Processor {
     @Override
     public Case process(Case c, Options options) throws Exception {
 
-
+/*
         final int upperLimit = ((Integer) options.getOptionValue("upperNeighborLimit")).intValue();
         final int lowerLimit = ((Integer) options.getOptionValue("lowerNeighborLimit")).intValue();
        
@@ -74,6 +74,7 @@ public class BOASmoother extends Processor {
             }
             //System.out.println("BOA " + boa.hashCode() + " removed: " + remCount + " added: " + addCount);
         }
+         */
         return c;
     }
 }

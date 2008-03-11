@@ -121,19 +121,19 @@ public class CellDataManipulator extends Data {
 		}
 		break;
 	    }
-	    case BOAS: {
-		writer.write(coll.size() + sp + dim + "\n");
-		while (iter.hasNext()) {
-		    BOA elem = (BOA) iter.next();
-		    writer.write(elem.getCellId() + "\n");
-		    Iterator<Pixel> pixIter = elem.iterator();
-		    while (pixIter.hasNext()) {
-			Pixel pix = pixIter.next();
-			writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n");
-		    }
-		}
-		break;
-	    }
+//	    case BOAS: {
+//		writer.write(coll.size() + sp + dim + "\n");
+//		while (iter.hasNext()) {
+//		    BOA elem = (BOA) iter.next();
+//		    writer.write(elem.getCellId() + "\n");
+//		    Iterator<Pixel> pixIter = elem.iterator();
+//		    while (pixIter.hasNext()) {
+//			Pixel pix = pixIter.next();
+//			writer.write(pix.getX() + sp + pix.getY() + pix + pix.getZ() + "\n");
+//		    }
+//		}
+//		break;
+//	    }
 	}
 
     }
@@ -153,6 +153,10 @@ public class CellDataManipulator extends Data {
             merge(id, c1, c2);
 	}
         //System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
+        //now merge boas in PixelFlag
+        PixelFlag pf = (PixelFlag) getStackData(DataId.PIXEL_FLAG);
+        if(pf != null)
+            pf.changeAll((short)c2.getCellId(), (short)c1.getCellId());
         removeCell(c2);
     }
     
@@ -205,31 +209,32 @@ public class CellDataManipulator extends Data {
 		}
                 
                 //for below reason intensities must be merged before boas
-		BOA b1 = (BOA)c1.get(DataId.BOAS), b2 = (BOA)c2.get(DataId.BOAS);
-                if (b1 == null || b2 == null) {
-		    throw new Exception("There is no BOA associated with this Intensity");
-		}
+//		BOA b1 = (BOA)c1.get(DataId.BOAS), b2 = (BOA)c2.get(DataId.BOAS);
+//                if (b1 == null || b2 == null) {
+//		    throw new Exception("There is no BOA associated with this Intensity");
+//		}
 
-		int mergedSize = b1.size() + b2.size();
+		int mergedSize = c1.size() + c2.size();
 		for (int i=0; i < e1.size(); ++i) {
-		    float I = e1.getIntensity(i)*b1.size() + e2.getIntensity(i)*b2.size();
+		    float I = e1.getIntensity(i)*c1.size() + e2.getIntensity(i)*c2.size();
                     e1.setIntensity(i, I/mergedSize);
 		}
+                c1.setSize((short)mergedSize);
 		break;
 	    }
-	    case BOAS: {
-
-                BOA e1 = (BOA)c1.get(id), e2 = (BOA)c2.get(id);
-
-		if (e1 == null || e2 == null) {
-		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
-		    return -1;
-		}
-
-		e1.addPixels(e2);
-
-		break;
-	    }
+//	    case BOAS: {
+//
+//                BOA e1 = (BOA)c1.get(id), e2 = (BOA)c2.get(id);
+//
+//		if (e1 == null || e2 == null) {
+//		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
+//		    return -1;
+//		}
+//
+//		e1.addPixels(e2);
+//
+//		break;
+//	    }
 	}
         removeCellData( id, c2);
         return c1.getCellId();

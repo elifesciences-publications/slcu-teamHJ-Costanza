@@ -37,12 +37,26 @@ public class MeanFilter extends Processor {
         int zIncr = ySize * xSize;
         int[] bgFlag = new int[xSize * ySize * zSize];
 
-        StackBackground sb = (StackBackground) c.getStackData(DataId.BACKGROUND);
-        if (sb != null) {
-            int bgSize = sb.size();
-            for (int i = 0; i < bgSize; ++i) {
-                Pixel p = sb.elementAt(i);
-                bgFlag[p.getX() + xSize * p.getY() + zIncr * p.getZ()] = -1;
+//        StackBackground sb = (StackBackground) c.getStackData(DataId.BACKGROUND);
+//        if (sb != null) {
+//            int bgSize = sb.size();
+//            for (int i = 0; i < bgSize; ++i) {
+//                Pixel p = sb.elementAt(i);
+//                bgFlag[p.getX() + xSize * p.getY() + zIncr * p.getZ()] = -1;
+//            }
+//        }
+        //StackBackground sb = (StackBackground) c.getStackData(DataId.BACKGROUND);
+        PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
+        if (pf != null) {
+            for (int ix = 0; ix < xSize; ++ix) {
+                for(int iy = 0; iy < ySize; ++iy){
+                    for(int iz = 0; iz < zSize; ++iz){
+                        if( pf.is_background(ix, iy, iz) )
+                            bgFlag[ix + xSize*iy + zIncr*iz] = -1;
+                    }
+                }
+//                Pixel p = sb.elementAt(i);
+//                bgFlag[p.getX() + xSize * p.getY() + zIncr * p.getZ()] = -1;
             }
         }
         //prepare spherical kernel

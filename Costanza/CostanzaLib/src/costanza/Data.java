@@ -25,7 +25,8 @@ public class Data {
         tag_map = new TreeMap<String, Integer>();
         cells = new TreeMap<Integer, Cell>();
         stackDataMap = new EnumMap<DataId, Data_t>(DataId.class);
-        stackDataMap.put(DataId.BACKGROUND, null);
+        //stackDataMap.put(DataId.BACKGROUND, null);
+        stackDataMap.put(DataId.PIXEL_FLAG, null);
     }
     
     /**

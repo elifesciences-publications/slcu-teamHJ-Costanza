@@ -1,5 +1,8 @@
 package costanza;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 /**
  * PeakRemover removes a peak if its smaller than some threshold size,
  * or if has an intensity lower than some threshold.
@@ -18,6 +21,7 @@ public class PeakRemover extends Processor {
      */
     @Override
     public Case process(Case c, Options o) throws Exception {
+        Stack stack = c.getStack();
 	float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
 	float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
 
@@ -33,21 +37,33 @@ public class PeakRemover extends Processor {
 		c.removeCell(cc.getCell());
 	    }
 	}
-	BOA[] boas =  new BOA[c.sizeOfData(DataId.BOAS)];
-        c.getCellData(DataId.BOAS, boas);
-        
-	for (int i = 0; i < boas.length; ++i) {
-	    BOA boa = boas[i];//it.next();
-	    float size =
-		    boa.size() *
-		    (c.getStack().getXScale()) *
-		    (c.getStack().getYScale()) *
-		    (c.getStack().getZScale());
-	    if (size < sizeThreshold) {
-		c.removeCell(boa.getCell());
-	    //c.removeAllCellData(boa.getCell());
-	    }
-	}
+        Iterator<Cell> it = c.getCells().iterator();
+        while(it.hasNext())
+        {
+            Cell cell = it.next();
+            float size = cell.size() *
+		    (stack.getXScale()) *
+		    (stack.getYScale()) *
+		    (stack.getZScale());
+            if (size < sizeThreshold) {
+		c.removeCell(cell);
+            }
+        }
+//	BOA[] boas =  new BOA[c.sizeOfData(DataId.BOAS)];
+//        c.getCellData(DataId.BOAS, boas);
+//        
+//	for (int i = 0; i < boas.length; ++i) {
+//	    BOA boa = boas[i];//it.next();
+//	    float size =
+//		    boa.size() *
+//		    (c.getStack().getXScale()) *
+//		    (c.getStack().getYScale()) *
+//		    (c.getStack().getZScale());
+//	    if (size < sizeThreshold) {
+//		c.removeCell(boa.getCell());
+//	    //c.removeAllCellData(boa.getCell());
+//	    }
+//	}
 //        int size1 = c.sizeOfCells();
 //        Set<Integer> keys = c.getCellIds();
 //        int size2 = keys.size();
