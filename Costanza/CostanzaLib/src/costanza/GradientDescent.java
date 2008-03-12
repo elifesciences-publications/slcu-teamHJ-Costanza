@@ -63,7 +63,7 @@ public class GradientDescent extends Processor {
 						zFac *= zFac;
 				}
 				//Get the PixelFlag from the case (where the boas will be stored)
-				Pixelflag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
+				PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
 				//int count = 1;
 				//Find the maxima from each pixel
 				for (int zStart = 0; zStart < depth; ++zStart) {
@@ -79,7 +79,7 @@ public class GradientDescent extends Processor {
 										//System.out.println("Stack: " + z);
 										//}
 										//find the max by walking uphill (greedy)
-										double value, newValue;
+										float value, newValue;
 										if (pf.isUnmarked(x,y,z)) {
 												do {
 														newValue = value = c.getStack().getIntensity(x, y, z);
