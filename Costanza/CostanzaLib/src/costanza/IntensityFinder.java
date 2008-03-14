@@ -115,18 +115,21 @@ public class IntensityFinder extends Processor {
             float intVal = intensities.get(i);
             if (intVal > 0.0) {
                 Cell cell = c.getCell(i);
-                int cellSize = cell.size();
-                if(cellSize == 0)
-                    throw new Exception("Cell of size 0 pixels detected.");
-                CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
+                if(cell != null)
+                {
+                    int cellSize = cell.size();
+                    if(cellSize == 0)
+                        throw new Exception("Cell of size 0 pixels detected.");
+                    CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
 
-                if (intens == null) {
-                    intens = new CellIntensity(c);
-                    c.attachCellData(intens, cell);
+                    if (intens == null) {
+                        intens = new CellIntensity(c);
+                        c.attachCellData(intens, cell);
+                    }
+
+                    //intens.addIntensity(stackTag + "total", intensity.get(i));
+                    intens.addIntensity(meanTag, intVal/cellSize);
                 }
-
-                //intens.addIntensity(stackTag + "total", intensity.get(i));
-                intens.addIntensity(meanTag, intVal/cellSize);
             }
         }
         System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));

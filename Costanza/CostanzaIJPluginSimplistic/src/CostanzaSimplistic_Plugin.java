@@ -16,6 +16,7 @@ import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
 import costanza.MedianFilter;
+import costanza.PixelFlag;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -176,9 +177,9 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
                 } catch (Exception ex) {
                     error("Error in backgroundfinder: " + ex.getMessage() + "\n");
                 }
-                bgCollection = (StackBackground) IJCase.getStackData(DataId.BACKGROUND);
+                PixelFlag pf = (PixelFlag)IJCase.getStackData(DataId.PIXEL_FLAG);
                 if (bgOutput) {
-                    showBackground(IJCase.getOriginalStack(), bgCollection, " Original Background");
+                    showBackground(IJCase.getOriginalStack(), pf, " Original Background");
                 }
 //                if (bgFilterFlag) {
 //                    BackgroundFilter bmf = new BackgroundFilter();
@@ -536,7 +537,7 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
         ip.show();
     }
 
-    private void showBackground(Stack stack, Collection<Pixel> pixels, String name) throws Exception {
+    private void showBackground(Stack stack, PixelFlag pf, String name) throws Exception {
         int width = stack.getWidth();
         int height = stack.getHeight();
         int depth = stack.getDepth();
@@ -545,13 +546,16 @@ public class CostanzaSimplistic_Plugin implements PlugInFilter {
         ImageProcessor imag_proc = imag.getProcessor();
         //ImageStack imag_stack = imag.getStack();
 
-        Iterator<Pixel> iter = pixels.iterator();
-        while (iter.hasNext()) {
-            Pixel p = iter.next();
-            imag.setSlice(p.getZ() + 1);
-            imag_proc.putPixel(p.getX(), p.getY(), 0);
+        for (int ix = 0; ix < width; ++ix) {
+            for (int iy = 0; iy < height; ++iy) {
+                for (int iz = 0; iz < depth; ++iz) {
+                    if(pf.isBackground(ix, iy, iz)){
+                        imag.setSlice(iz + 1);
+                        imag_proc.putPixel(ix, iy, 0);
+                    }
+                }
+            }
         }
-
         //IJ.showMessage("Costanza", "Showing background.");
         imag.show();
     }

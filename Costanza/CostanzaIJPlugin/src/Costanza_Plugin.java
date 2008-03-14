@@ -3,6 +3,7 @@ import costanza.Case;
 import costanza.CellCenter;
 import costanza.CellIntensity;
 import costanza.BOA;
+import costanza.Cell;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
@@ -259,12 +260,13 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			String line = "";
 			CellCenter cellCenter = (CellCenter) IJCase.getCellData(DataId.CENTERS, i);
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
-			BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
+			//BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
+                        int cellSize = IJCase.getCell(i).size();
 
 			float x = cellCenter.getX() * xScale;
 			float y = cellCenter.getY() * yScale;
 			float z = cellCenter.getZ() * zScale;
-			float volume = cellBoa.size() * volumeScale;
+			float volume = cellSize * volumeScale;
 			float intensity = cellIntensity.getIntensity(id + "mean") * 255.0f;
 			line += i + tab + x + tab + y + tab + z + tab + volume + tab + intensity;
 			ij.IJ.write(line);
