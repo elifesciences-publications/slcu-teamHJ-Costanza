@@ -23,96 +23,96 @@ import javax.imageio.ImageIO;
  * @author michael
  */
 public class TextGUI {
+	
+	/** Creates a new instance of TextGUI.
+	 * 
+	 * @param baseName the name to use as base for loading and saving images.
+	 * @throws java.lang.Exception
+	 */
+	public TextGUI(String baseName) throws Exception {
+		final boolean invertFlag = false;
+		final boolean meanFilterFlag = true;
+		final boolean gradientDescentFlag = true;
+		final boolean backgroundFinderIntensityFlag = true;
+		final boolean intensityFinderFlag = true;
+		final boolean peakRemoverFlag = true;
+		final boolean peakMergerFlag = true;
+		final boolean boaColorizerFlag = false;
+		final boolean boaColorizerIntensityFlag = false;
+		final boolean cellCenterMarkerFlag = true;
+		final boolean randomImages = (baseName.length() > 0) ? false : true;
 
-    /** Creates a new instance of TextGUI.
-     * 
-     * @param baseName the name to use as base for loading and saving images.
-     * @throws java.lang.Exception
-     */
-    public TextGUI(String baseName) throws Exception {
-	final boolean invertFlag = false;
-	final boolean meanFilterFlag = true;
-	final boolean gradientDescentFlag = true;
-	final boolean backgroundFinderIntensityFlag = true;
-	final boolean intensityFinderFlag = true;
-	final boolean peakRemoverFlag = true;
-	final boolean peakMergerFlag = true;
-	final boolean boaColorizerFlag = false;
-	final boolean boaColorizerIntensityFlag = false;
-	final boolean cellCenterMarkerFlag = true;
-	final boolean randomImages = (baseName.length() > 0) ? false : true;
-
-	System.out.println("Creating a Stack");
-	Stack stack = readImageStack(baseName, 20, randomImages);
-	Case myCase = new Case(stack);
-	Factory<Processor> factory = initFactory();
-	Queue queue = new Queue();
-
-	if (invertFlag) {
+		System.out.println("Creating a Stack");
+		Stack stack = readImageStack(baseName, 20, randomImages);
+		Case myCase = new Case(stack);
+		Factory<Processor> factory = initFactory();
+		Queue queue = new Queue();
+		
+		if (invertFlag) {
 	    System.out.println("### Adding Invert ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("invert", options));
-	}
-	if (backgroundFinderIntensityFlag) {
+		}
+		if (backgroundFinderIntensityFlag) {
 	    System.out.println("### Adding BackGroundFinderIntesity ###");
 	    Options options = new Options();
 	    options.addOption("threshold", new Float(0.1));
 	    queue.addJob(new Job("backgroundextractor", options));
-	}
-	if (meanFilterFlag) {
+		}
+		if (meanFilterFlag) {
 	    System.out.println("### Adding MeanFilter ###");
 	    Options options = new Options();
 	    options.addOption("radius", new Float(5));
 	    queue.addJob(new Job("meanfilter", options));
 	    queue.addJob(new Job("meanfilter", options));
-	}
-	if (gradientDescentFlag) {
+		}
+		if (gradientDescentFlag) {
 	    System.out.println("### Adding GradientDescent ###");
 	    Options options = new Options();
 	    options.addOption("extendedNeighborhood", new Integer(0));
 	    queue.addJob(new Job("gradientdescent", options));
-	}
-	if (intensityFinderFlag) {
+		}
+		if (intensityFinderFlag) {
 	    System.out.println("### Adding IntensityFinder ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("intensityfinder", options));
-	}
-	if (peakRemoverFlag) {
+		}
+		if (peakRemoverFlag) {
 	    System.out.println("### Adding PeakRemover ###");
 	    Options options = new Options();
 	    options.addOption("sizeThreshold", new Float(10));
 	    options.addOption("intensityThreshold", new Float(0.1));
 	    queue.addJob(new Job("peakremover", options));
-	}
-	if (peakMergerFlag) {
+		}
+		if (peakMergerFlag) {
 	    System.out.println("### Adding PeakMerger ###");
 	    Options options = new Options();
 	    options.addOption("radius", new Float(1));
 	    queue.addJob(new Job("peakmerger", options));
-	}
-	if (boaColorizerFlag) {
+		}
+		if (boaColorizerFlag) {
 	    System.out.println("### Adding BoaColorizer ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("boacolorize", options));
-	}
-	if (boaColorizerIntensityFlag) {
+		}
+		if (boaColorizerIntensityFlag) {
 	    System.out.println("### Adding BoaColorizerIntensity ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("boacolorizeintensity", options));
-	}
-	if (cellCenterMarkerFlag) {
+		}
+		if (cellCenterMarkerFlag) {
 	    System.out.println("### Adding CellCenterMarker ###");
 	    Options options = new Options();
 	    queue.addJob(new Job("cellcentermarker", options));
+		}
+		
+		Driver driver = new Driver(queue, myCase, factory);
+		driver.run();
+		System.out.println("FINAL RESULT\n\n");
+		System.out.println("Saving the images.");
+		writeImageStack(baseName, myCase.getStack());
+		writeImages("result", myCase.getResultImages());
 	}
-
-	Driver driver = new Driver(queue, myCase, factory);
-	driver.run();
-	System.out.println("FINAL RESULT\n\n");
-	System.out.println("Saving the images.");
-	writeImageStack(baseName, myCase.getStack());
-	writeImages("result", myCase.getResultImages());
-    }
 
     /** Read some images into a stack.
      * 
@@ -293,46 +293,46 @@ public class TextGUI {
 	boolean write = ImageIO.write(bi, "jpg", new File("apa.jpg"));
     }
 
-    public static void main(String[] argv) {
-	try {
-	    //new costanza.ui.TextGUI(argv.length > 0 ? argv[0] : "");
+	public static void main(String[] argv) {
+		try {
+	    new costanza.ui.TextGUI(argv.length > 0 ? argv[0] : "");
 	    //new costanza.ui.TextGUI("/home/whitman/michael/projects/imageProcessing/data/nucleiLarge/jpg/nuclei0");
-	    new costanza.ui.TextGUI("/home/whitman/michael/projects/imageProcessing/data/13hrs/jpg/113h0");
-	//tryConversion();
-	//tryRedPixels();
-	} catch (Exception e) {
+	    //new costanza.ui.TextGUI("/home/whitman/michael/projects/imageProcessing/data/13hrs/jpg/113h0");
+			//tryConversion();
+			//tryRedPixels();
+		} catch (Exception e) {
 	    System.err.println("Error: " + e.getMessage());
 	    e.printStackTrace();
+		}
 	}
-    }
+	
+	private Factory<Processor> initFactory() {
+		Factory<Processor> factory = new Factory<Processor>();
+		factory.register("invert", costanza.Inverter.class);
+		factory.register("meanfilter", costanza.MeanFilter.class);
+		factory.register("null", costanza.NullProcessor.class);
+		factory.register("gradientdescent", costanza.GradientDescent.class);
+		factory.register("peakremover", costanza.PeakRemover.class);
+		factory.register("peakmerger", costanza.PeakMerger.class);
+		factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
+		factory.register("intensityfinder", costanza.IntensityFinder.class);
+		factory.register("boacolorize", costanza.BoaColorizer.class);
+		factory.register("boacolorizeintensity", costanza.BoaColorizerIntensity.class);
+		factory.register("cellcentermarker", costanza.CellCenterMarker.class);
+		return factory;
+	}
 
-    private Factory<Processor> initFactory() {
-	Factory<Processor> factory = new Factory<Processor>();
-	factory.register("invert", costanza.Inverter.class);
-	factory.register("meanfilter", costanza.MeanFilter.class);
-	factory.register("null", costanza.NullProcessor.class);
-	factory.register("gradientdescent", costanza.GradientDescent.class);
-	factory.register("peakremover", costanza.PeakRemover.class);
-	factory.register("peakmerger", costanza.PeakMerger.class);
-	factory.register("backgroundextractor", costanza.BackgroundFinderIntensity.class);
-	factory.register("intensityfinder", costanza.IntensityFinder.class);
-	factory.register("boacolorize", costanza.BoaColorizer.class);
-	factory.register("boacolorizeintensity", costanza.BoaColorizerIntensity.class);
-	factory.register("cellcentermarker", costanza.CellCenterMarker.class);
-	return factory;
-    }
-
-    private void writeImages(String baseName, BufferedImage[] resultImages) throws IOException {
-	for (int i = 0; i < resultImages.length; i++) {
+	private void writeImages(String baseName, BufferedImage[] resultImages) throws IOException {
+		for (int i = 0; i < resultImages.length; i++) {
 	    BufferedImage bufferedImage = resultImages[i];
 	    String fname = "";
 	    if (i < 10) {
-		fname = baseName + "0" + i + ".png";
+				fname = baseName + "0" + i + ".png";
 	    } else {
-		fname = baseName + i + ".png";
+				fname = baseName + i + ".png";
 	    }
 	    boolean write = ImageIO.write(bufferedImage, "png", new File(fname));
 	    System.out.println("Writing image " + fname + ": " + write);
+		}
 	}
-    }
 }

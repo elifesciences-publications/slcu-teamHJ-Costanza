@@ -67,6 +67,15 @@ public class GradientDescent extends Processor {
 				//int count = 1;
 				//Find the maxima from each pixel
 				for (int zStart = 0; zStart < depth; ++zStart) {
+					for (int yStart = 0; yStart < height; ++yStart) {
+						for (int xStart = 0; xStart < width; ++xStart) {
+							if (pf.isBackground(xStart,yStart,zStart)==false) {
+								pf.setFlag(xStart,yStart,zStart,(short)-2);
+							}
+						}
+					}
+				}
+				for (int zStart = 0; zStart < depth; ++zStart) {
 						for (int yStart = 0; yStart < height; ++yStart) {
 								for (int xStart = 0; xStart < width; ++xStart) {
 										int x = xStart;
@@ -80,6 +89,7 @@ public class GradientDescent extends Processor {
 										//}
 										//find the max by walking uphill (greedy)
 										float value, newValue;
+										//System.out.println(x+" "+y+" "+z+"  getFlag="+pf.getFlag(x,y,z)+" isUnmarked="+pf.isUnmarked(x,y,z));
 										if (pf.isUnmarked(x,y,z)) {
 												do {
 														newValue = value = c.getStack().getIntensity(x, y, z);
@@ -182,6 +192,7 @@ public class GradientDescent extends Processor {
 						}
 				}
 				int numCell = max.size();
+				System.out.println("Gradient descent found "+numCell+" cells.");
 				// Attach the cell positions to the data in the case
 				for (int i = 0; i < numCell; ++i) {
 						//System.out.println(i + ":  " + max.get(i));

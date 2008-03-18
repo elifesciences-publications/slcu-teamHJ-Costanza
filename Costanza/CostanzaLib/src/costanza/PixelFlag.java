@@ -87,7 +87,7 @@ public class PixelFlag implements Data_t {
      * @return
      */
     public boolean isUnmarked( int x, int y, int z ){
-         return flags[x*xIncrem + y*zDim + z] == UNMARKED_FLAG;
+			return flags[x*xIncrem + y*zDim + z] == UNMARKED_FLAG;
     }
     
 //    /**
