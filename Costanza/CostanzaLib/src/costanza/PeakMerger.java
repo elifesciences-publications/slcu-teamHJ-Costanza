@@ -1,5 +1,7 @@
 package costanza;
 
+import java.util.Vector;
+
 /**
  * PeakMerger merges peaks if they are closer than some threshold.
  * @author pontus
@@ -16,6 +18,8 @@ public class PeakMerger extends Processor {
     @Override
     public Case process(Case c, Options o) throws Exception {
 
+        Vector<Integer> indMap = new Vector<Integer>(c.sizeOfCells());
+        
 	float R2 = ((Float) o.getOptionValue("radius")).floatValue();
         R2 *= R2;
         
@@ -70,7 +74,9 @@ public class PeakMerger extends Processor {
             }
 	}
 
-        c.renumberCells();
+        c.renumberCells(indMap);
+        PixelFlag pf = (PixelFlag)c.getStackData(DataId.PIXEL_FLAG);
+        pf.changeAll(indMap);
 	return c;
 
     }

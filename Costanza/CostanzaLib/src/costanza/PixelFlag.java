@@ -7,6 +7,7 @@ package costanza;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -129,16 +130,26 @@ public class PixelFlag implements Data_t {
      */
     public int count(int id) {
         int counter = 0;
-        for (int ix = 0; ix < xDim; ++ix) {
-            for (int iy = 0; iy < yDim; ++iy) {
-                for (int iz = 0; iz < zDim; ++iz) {
-                    if (getFlag(ix, iy, iz) == id) {
-                        ++counter;
-                    }
-                }
+        for (int i = 0; i < flags.length; ++i) {
+            if (flags[i] == id) {
+                ++counter;
             }
         }
         return counter;
+    }
+
+    /**
+     * changes all values from source to dest
+     * @param source value to be changed 
+     * @param dest new value
+     */
+    public void changeAll(int source, int dest) {
+        for (int i = 0; i < flags.length; ++i) {
+            if (flags[i] == source) {
+                flags[i] = dest;
+            }
+
+        }
     }
     
     /**
@@ -146,14 +157,12 @@ public class PixelFlag implements Data_t {
      * @param source value to be changed 
      * @param dest new value
      */
-    public void changeAll( int source, int dest ){
-        for( int ix = 0; ix < xDim; ++ix ){
-            for( int iy = 0; iy < yDim; ++iy ){
-                for( int iz = 0; iz < zDim; ++iz ){
-                    if( getFlag(ix,iy,iz) == source )
-                        setFlag(ix,iy,iz, dest);
-                }
-            }
+    public void changeAll(Vector<Integer> ind) {
+        for (int i = 0; i < flags.length; ++i) {
+            if(flags[i] >=0 && flags[i] < ind.size())
+                flags[i] = ind.get(flags[i]);
+            else
+                flags[i] = PixelFlag.BACKGROUND_FLAG;
         }
     }
 }

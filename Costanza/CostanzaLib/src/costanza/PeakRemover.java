@@ -2,6 +2,7 @@ package costanza;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * PeakRemover removes a peak if its smaller than some threshold size,
@@ -24,7 +25,9 @@ public class PeakRemover extends Processor {
         Stack stack = c.getStack();
 	float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
 	float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
-        System.out.println("intensity treshold.");
+        //System.out.println("intensity treshold.");
+        Vector<Integer> indMap = new Vector<Integer>(c.sizeOfCells());
+        
 	CellCenter[] centers = new CellCenter[c.sizeOfData(DataId.CENTERS)];
         c.getCellData(DataId.CENTERS, centers);
 	for (int i = 0; i < centers.length; ++i) {
@@ -33,31 +36,25 @@ public class PeakRemover extends Processor {
 	    int y = cc.getY();
 	    int z = cc.getZ();
 	    if (stack.getIntensity(x, y, z) < intensityThreshold) {
-		//c.removeAllCellData(cc.getCell());
-                Cell cell = cc.getCell();
-                if(cell == null)
-                    System.out.println("null cell.");
 		c.removeCell(cc.getCell());
 	    }
 	}
         
-        System.out.println("size treshold.");
+        //System.out.println("size treshold.");
+        
         Iterator<Cell> it = c.getCells().iterator();
         while(it.hasNext())
         {
             Cell cell = it.next();
-            if(cell == null)
-                    System.out.println("null cell.");
             float size = cell.size() *
 		    (stack.getXScale()) *
 		    (stack.getYScale()) *
 		    (stack.getZScale());
             if (size < sizeThreshold) {
-                System.out.println("size = " + size);
-		//c.removeCell(cell);
                 it.remove();
             }
         }
+        
 //	BOA[] boas =  new BOA[c.sizeOfData(DataId.BOAS)];
 //        c.getCellData(DataId.BOAS, boas);
 //        
@@ -105,8 +102,10 @@ public class PeakRemover extends Processor {
 //
 //            System.out.print(cell.getCellId() + ": " + dat + "\n");
 //        }
-        System.out.println("renumbering.");
-        c.renumberCells();
+        //System.out.println("renumbering.");
+        c.renumberCells(indMap);
+        PixelFlag pf = (PixelFlag)c.getStackData(DataId.PIXEL_FLAG);
+        pf.changeAll(indMap);
 	return c;
     }
 }

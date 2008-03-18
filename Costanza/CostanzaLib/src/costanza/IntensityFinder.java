@@ -59,8 +59,7 @@ public class IntensityFinder extends Processor {
                             intensities.setSize(flag+1);
                             for(int i = curSize; i <= flag; ++i){
                                 intensities.set(i, 0.0f);
-                            }
-                            
+                            } 
                         }
                         float pixIntens = stack.getIntensity(ix, iy, iz);
                         intensities.set(flag, intensities.get(flag) + pixIntens);
@@ -111,27 +110,47 @@ public class IntensityFinder extends Processor {
         // Add the total and mean intensity
         //Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
         String meanTag = stackTag + "mean";
-        for (int i = 0; i < intensities.size(); ++i) {
-            float intVal = intensities.get(i);
-            if (intVal > 0.0) {
-                Cell cell = c.getCell(i);
-                if(cell != null)
-                {
-                    int cellSize = cell.size();
-                    if(cellSize == 0)
-                        throw new Exception("Cell of size 0 pixels detected.");
-                    CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
+//        for (int i = 0; i < intensities.size(); ++i) {
+//            float intVal = intensities.get(i);
+//            if (intVal > 0.0) {
+//                Cell cell = c.getCell(i);
+//                if(cell != null)
+//                {
+//                    int cellSize = cell.size();
+//                    if(cellSize == 0)
+//                        throw new Exception("Cell of size 0 pixels detected.");
+//                    CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
+//
+//                    if (intens == null) {
+//                        intens = new CellIntensity(c);
+//                        c.attachCellData(intens, cell);
+//                    }
+//
+//                    //intens.addIntensity(stackTag + "total", intensity.get(i));
+//                    intens.addIntensity(meanTag, intVal/cellSize);
+//                }
+//            }
+//        }
 
-                    if (intens == null) {
-                        intens = new CellIntensity(c);
-                        c.attachCellData(intens, cell);
-                    }
-
-                    //intens.addIntensity(stackTag + "total", intensity.get(i));
-                    intens.addIntensity(meanTag, intVal/cellSize);
-                }
+        Iterator<Cell> iter = c.getCells().iterator();
+        while (iter.hasNext()) {
+            Cell cell = iter.next();
+            float intVal = intensities.get(cell.getCellId());
+            int cellSize = cell.size();
+            if (cellSize == 0) {
+                throw new Exception("Cell of size 0 pixels detected.");
             }
+            CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
+
+            if (intens == null) {
+                intens = new CellIntensity(c);
+                c.attachCellData(intens, cell);
+            }
+            //intens.addIntensity(stackTag + "total", intensity.get(i));
+            intens.addIntensity(meanTag, intVal / cellSize);
         }
+
+        
         System.out.println("IntensityCounter:" + c.sizeOfData(DataId.INTENSITIES));
         //System.out.println(c.getIntensityTagSet());
 

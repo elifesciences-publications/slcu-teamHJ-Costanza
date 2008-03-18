@@ -156,7 +156,7 @@ public class CellDataManipulator extends Data {
         //now merge boas in PixelFlag
         PixelFlag pf = (PixelFlag) getStackData(DataId.PIXEL_FLAG);
         if(pf != null)
-            pf.changeAll((short)c2.getCellId(), (short)c1.getCellId());
+            pf.changeAll(c2.getCellId(), c1.getCellId());
         removeCell(c2);
     }
     
@@ -219,7 +219,7 @@ public class CellDataManipulator extends Data {
 		    float I = e1.getIntensity(i)*c1.size() + e2.getIntensity(i)*c2.size();
                     e1.setIntensity(i, I/mergedSize);
 		}
-                c1.setSize((short)mergedSize);
+                c1.setSize(mergedSize);
 		break;
 	    }
 //	    case BOAS: {

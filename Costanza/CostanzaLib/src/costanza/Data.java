@@ -214,7 +214,7 @@ public class Data {
      * @param cellId Integer
      * @param size of the new cell
      */
-    public <T extends CellData_t> void attachCellData(T data, Integer cellId, short size) {
+    public <T extends CellData_t> void attachCellData(T data, Integer cellId, int size) {
 
         Cell cell = cells.get(cellId);
         if (cell == null) {
@@ -374,6 +374,41 @@ public class Data {
             map.put( counter, c);
             ++counter;
         }
+        
+        cells = map;
+    }
+    /**
+     * Renumbers cell ids to consecutive numbers
+     */
+    public void renumberCells(Vector<Integer> ind) {
+
+        for(int i = 0; i < ind.size(); ++i){
+            ind.set(i, PixelFlag.BACKGROUND_FLAG);
+        }
+        
+        Set<Map.Entry<Integer, Cell>> entries = cells.entrySet();
+        Iterator<Map.Entry<Integer, Cell>> iter = entries.iterator();
+        Map<Integer, Cell> map = new TreeMap<Integer, Cell>();
+        Integer counter = 0;
+        while (iter.hasNext()) {
+            Map.Entry<Integer, Cell> ent = iter.next();
+            
+            Integer i = ent.getKey();
+            int curSize = ind.size();
+            if (i >= curSize) {
+                ind.setSize(i + 1);
+                for (int j = curSize; j < i; ++j) {
+                    ind.set(j, PixelFlag.BACKGROUND_FLAG);
+                }
+            }
+            ind.set(i, counter);
+            
+            Cell c = ent.getValue();
+            c.seId(counter);
+            map.put( counter, c);
+            ++counter;
+        }
+        
         cells = map;
     }
 }

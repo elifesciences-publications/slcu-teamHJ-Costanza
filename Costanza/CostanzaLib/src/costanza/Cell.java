@@ -14,7 +14,7 @@ public class Cell implements Comparable<Cell>{
     /**Map of data types to the data objects */
     private Map<DataId, CellData_t> cell_data;
     /**number of pixels in the cell*/
-    private short cellSize;
+    private int cellSize;
     
     /**Constructs the cell of given id
      * @param i id of the new cell
@@ -33,7 +33,7 @@ public class Cell implements Comparable<Cell>{
         clear();
     }
     
-    public Cell(int i, short size) {
+    public Cell(int i, int size) {
         this(i);
         cellSize = size;
     }
@@ -45,7 +45,7 @@ public class Cell implements Comparable<Cell>{
         cell_data.put( data.getDataId(), data );
     }
     
-    public void setSize( short size){
+    public void setSize( int size){
         cellSize = size;
     }
     /**Retrives data of given type from the cell
@@ -56,7 +56,7 @@ public class Cell implements Comparable<Cell>{
         return cell_data.get( id );
     }
     
-    public short size(){
+    public int size(){
         return cellSize;
     }
     

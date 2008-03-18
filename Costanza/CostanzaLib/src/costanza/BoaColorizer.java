@@ -54,7 +54,7 @@ public class BoaColorizer extends Processor {
                 }
             }
         }
-        System.out.println( neg_counter + " negative flags");
+        //System.out.println( neg_counter + " negative flags");
         //System.out.println("Processing pixel flag.");
         for (int iz = 0; iz < zDim; ++iz) {
             BufferedImage bufferedImage = images[iz];
