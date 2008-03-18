@@ -15,7 +15,7 @@ import java.util.List;
 public class PixelFlag implements Data_t {
 
     /**array of flags for each stack pixel*/
-    private short flags[];
+    private int flags[];
     /**dimensions of the stack*/
     private int xDim;
     private int yDim;
@@ -23,8 +23,8 @@ public class PixelFlag implements Data_t {
     /**increment of array index for x stored for efficiency*/ 
     private int xIncrem;
     /**definition of value for background*/
-    public static final short BACKGROUND_FLAG = -1;
-    public static final short UNMARKED_FLAG = -2;
+    public static final int BACKGROUND_FLAG = -1;
+    public static final int UNMARKED_FLAG = -2;
     /**
      * Construct PixelFlag of given dimensions
      * @param x_dim
@@ -36,7 +36,7 @@ public class PixelFlag implements Data_t {
         yDim = y_dim;
         zDim = z_dim;
         xIncrem = yDim*zDim;
-        flags = new short[ xDim * yDim * zDim ];
+        flags = new int[ xDim * yDim * zDim ];
         for(int i = 0; i < flags.length; ++i)
             flags[i] = UNMARKED_FLAG;
     }
@@ -47,7 +47,7 @@ public class PixelFlag implements Data_t {
      * @param z
      * @param val
      */
-    public void setFlag( int x, int y, int z, short val ){
+    public void setFlag( int x, int y, int z, int val ){
         flags[x*yDim*zDim + y*zDim + z] = val;
     }
     /**
@@ -57,7 +57,7 @@ public class PixelFlag implements Data_t {
      * @param z
      * @return
      */
-    public short getFlag( int x, int y, int z ){
+    public int getFlag( int x, int y, int z ){
          return flags[x*xIncrem + y*zDim + z];
     }
     /**
@@ -109,7 +109,7 @@ public class PixelFlag implements Data_t {
      * @param id
      * @return Clollection of Pixels coresponding to value id
      */
-    public Collection<Pixel> findPixels( short id ){
+    public Collection<Pixel> findPixels( int id ){
         List<Pixel> pixels = new LinkedList<Pixel>();
         for( int ix = 0; ix < xDim; ++ix ){
             for( int iy = 0; iy < yDim; ++iy ){
@@ -127,7 +127,7 @@ public class PixelFlag implements Data_t {
      * @param id
      * @return number of pixels that have flag equal id
      */
-    public int count(short id) {
+    public int count(int id) {
         int counter = 0;
         for (int ix = 0; ix < xDim; ++ix) {
             for (int iy = 0; iy < yDim; ++iy) {
@@ -146,7 +146,7 @@ public class PixelFlag implements Data_t {
      * @param source value to be changed 
      * @param dest new value
      */
-    public void changeAll( short source, short dest ){
+    public void changeAll( int source, int dest ){
         for( int ix = 0; ix < xDim; ++ix ){
             for( int iy = 0; iy < yDim; ++iy ){
                 for( int iz = 0; iz < zDim; ++iz ){

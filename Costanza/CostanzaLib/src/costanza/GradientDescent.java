@@ -70,7 +70,7 @@ public class GradientDescent extends Processor {
             for (int yStart = 0; yStart < height; ++yStart) {
                 for (int xStart = 0; xStart < width; ++xStart) {
                     if (pf.isBackground(xStart, yStart, zStart) == false) {
-                        pf.setFlag(xStart, yStart, zStart, (short) -2);
+                        pf.setFlag(xStart, yStart, zStart, -2);
                     }
                 }
             }
@@ -176,13 +176,13 @@ public class GradientDescent extends Processor {
                     // the maximum
                     if (pf.isUnmarked(x, y, z)) { //new maximum
                         max.add(new Pixel(x, y, z));
-                        short n = (short) max.size();//count++?
+                        int n = max.size();//count++?
                         int numWalk = walkTmp.size();
                         for (int a = 0; a < numWalk; ++a) {
                             pf.setFlag(walkTmp.elementAt(a).getX(), walkTmp.elementAt(a).getY(), walkTmp.elementAt(a).getZ(), n);
                         }
                     } else { //old maximum or background
-                        short n = pf.getFlag(x, y, z);
+                        int n = pf.getFlag(x, y, z);
                         int numWalk = walkTmp.size();
                         for (int a = 0; a < numWalk; ++a) {
                             pf.setFlag(walkTmp.elementAt(a).getX(), walkTmp.elementAt(a).getY(), walkTmp.elementAt(a).getZ(), n);

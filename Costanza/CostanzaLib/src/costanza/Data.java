@@ -306,8 +306,9 @@ public class Data {
      * @param cId id of the cell to remove
      */
     public void removeCell(int cId) {
-        Cell cell = cells.get(cId);
-        removeCell( cell );
+//        Cell cell = cells.get(cId);
+//        removeCell( cell );
+        cells.remove(cId);
     }
 
     /**Removes all data from Data set with id DataId

@@ -53,7 +53,7 @@ public class BoaColorizerIntensity extends Processor {
             BufferedImage bufferedImage = images[iz];
             for (int iy = 0; iy < yDim; ++iy) {
                 for (int ix = 0; ix < xDim; ++ix) {
-                    short flag = pf.getFlag(ix, iy, iz);
+                    int flag = pf.getFlag(ix, iy, iz);
                     if (flag != PixelFlag.BACKGROUND_FLAG) {
                         int color;
                         if (flag >= curSize) {

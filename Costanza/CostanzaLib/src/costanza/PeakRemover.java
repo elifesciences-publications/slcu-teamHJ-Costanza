@@ -24,7 +24,7 @@ public class PeakRemover extends Processor {
         Stack stack = c.getStack();
 	float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
 	float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
-
+        System.out.println("intensity treshold.");
 	CellCenter[] centers = new CellCenter[c.sizeOfData(DataId.CENTERS)];
         c.getCellData(DataId.CENTERS, centers);
 	for (int i = 0; i < centers.length; ++i) {
@@ -32,21 +32,30 @@ public class PeakRemover extends Processor {
 	    int x = cc.getX();
 	    int y = cc.getY();
 	    int z = cc.getZ();
-	    if (c.getStack().getIntensity(x, y, z) < intensityThreshold) {
+	    if (stack.getIntensity(x, y, z) < intensityThreshold) {
 		//c.removeAllCellData(cc.getCell());
+                Cell cell = cc.getCell();
+                if(cell == null)
+                    System.out.println("null cell.");
 		c.removeCell(cc.getCell());
 	    }
 	}
+        
+        System.out.println("size treshold.");
         Iterator<Cell> it = c.getCells().iterator();
         while(it.hasNext())
         {
             Cell cell = it.next();
+            if(cell == null)
+                    System.out.println("null cell.");
             float size = cell.size() *
 		    (stack.getXScale()) *
 		    (stack.getYScale()) *
 		    (stack.getZScale());
             if (size < sizeThreshold) {
-		c.removeCell(cell);
+                System.out.println("size = " + size);
+		//c.removeCell(cell);
+                it.remove();
             }
         }
 //	BOA[] boas =  new BOA[c.sizeOfData(DataId.BOAS)];
@@ -69,13 +78,13 @@ public class PeakRemover extends Processor {
 //        int size2 = keys.size();
 //        System.out.println("Peak remover sizes :  " + size1 + "; " + size2);
 //        System.out.println("Peak remover set :  " + keys);
-//        Iterator<Integer> iter = keys.iterator();
-//        while (iter.hasNext()) {
-//            Cell cell = c.getCell(iter.next());
 //            Vector<Object> dat = new Vector<Object>();
 //            if (cell.get(DataId.CENTERS) != null) {
 //                dat.add("cent");
 //            } else {
+//        Iterator<Integer> iter = keys.iterator();
+//        while (iter.hasNext()) {
+//            Cell cell = c.getCell(iter.next());
 //                dat.add(null);
 //            }
 //            if (cell.get(DataId.BOAS) != null) {
@@ -96,6 +105,7 @@ public class PeakRemover extends Processor {
 //
 //            System.out.print(cell.getCellId() + ": " + dat + "\n");
 //        }
+        System.out.println("renumbering.");
         c.renumberCells();
 	return c;
     }

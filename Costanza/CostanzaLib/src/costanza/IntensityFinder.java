@@ -52,7 +52,7 @@ public class IntensityFinder extends Processor {
         for (int ix = 0; ix < xDim; ++ix) {
             for (int iy = 0; iy < yDim; ++iy) {
                 for (int iz = 0; iz < zDim; ++iz) {
-                    short flag = pf.getFlag(ix, iy, iz);
+                    int flag = pf.getFlag(ix, iy, iz);
                     if(flag != PixelFlag.BACKGROUND_FLAG){
                         int curSize = intensities.size();
                         if(flag >= curSize){
