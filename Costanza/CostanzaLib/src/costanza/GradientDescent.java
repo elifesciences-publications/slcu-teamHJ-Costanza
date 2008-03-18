@@ -192,14 +192,25 @@ public class GradientDescent extends Processor {
             }
         }
         int numCell = max.size();
-        System.out.println("Gradient descent found " + numCell + " cells.");
+        Vector<Integer> cellSize = new Vector<Integer>();
+        for (int i=0; i<numCell; ++i)
+					cellSize.add(0);
+				
+        for (int z = 0; z < depth; ++z)
+					for (int y = 0; y < height; ++y)
+						for (int x = 0; x < width; ++x) {
+							int val=pf.getFlag(x,y,z);
+							if (val>=0)
+								cellSize.set(val,cellSize.get(val)+1);
+						}
+				//System.out.println("Gradient descent found " + numCell + " cells.");
         // Attach the cell positions to the data in the case
         for (int i = 0; i < numCell; ++i) {
-            //System.out.println(i + ":  " + max.get(i));
-            c.attachCellData(new CellCenter(max.get(i)), i);
-        //c.attachCellData(boa.elementAt(i), i);
+					//System.out.println(i + ":  " + max.get(i));
+					c.attachCellData(new CellCenter(max.get(i)), i, (int)cellSize.get(i));
+					//c.attachCellData(boa.elementAt(i), i);
         }
-
+				
         //System.out.println("Gradient descent numCell :  " + numCell);
         //        int size1 = c.sizeOfCells();
         //        Set<Integer> keys = c.getCellIds();
