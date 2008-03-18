@@ -54,7 +54,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     public int getIndex(String tag) throws Exception {
         Integer pos = tag_map.get(tag);
         if (pos == null) {
-            throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
+            throw (new Exception("Tag: " + tag + " not in the map of available intensities."));
         }
         return pos;
     }
@@ -96,7 +96,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     public float getIntensity(String tag) throws Exception {
         Integer pos = tag_map.get(tag);
         if (pos == null) {
-            throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
+            throw (new Exception("Tag: " + tag + " not in the map of available intensities."));
         }
         return elementAt(pos);
     }
@@ -109,7 +109,7 @@ public class CellIntensity extends Vector<Float> implements CellData_t {
     public float setIntensity(String tag, float value) throws Exception {
         Integer pos = tag_map.get(tag);
         if (pos == null) {
-            throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
+            throw (new Exception("Tag: " + tag + " not in the map of available intensities."));
         }
         return set(pos, value);
     }

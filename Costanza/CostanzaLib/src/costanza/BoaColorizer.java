@@ -35,18 +35,35 @@ public class BoaColorizer extends Processor {
             throw new Exception("Lengths differ!");
         }
 
+        //System.out.println("Colors done.");
         int xDim = images[0].getWidth();
         int yDim = images[0].getHeight();
         int zDim = images.length;
         int curSize = boaColors.length;
         PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
-
+        int neg_counter = 0;
         for (int iz = 0; iz < zDim; ++iz) {
             BufferedImage bufferedImage = images[iz];
             for (int iy = 0; iy < yDim; ++iy) {
                 for (int ix = 0; ix < xDim; ++ix) {
-                    short flag = pf.getFlag(ix, iy, iz);
+                    int flag = pf.getFlag(ix, iy, iz);
                     if (flag != PixelFlag.BACKGROUND_FLAG) {
+                        if (flag < 0)
+                            ++neg_counter;
+                    }
+                }
+            }
+        }
+        System.out.println( neg_counter + " negative flags");
+        //System.out.println("Processing pixel flag.");
+        for (int iz = 0; iz < zDim; ++iz) {
+            BufferedImage bufferedImage = images[iz];
+            for (int iy = 0; iy < yDim; ++iy) {
+                for (int ix = 0; ix < xDim; ++ix) {
+                    int flag = pf.getFlag(ix, iy, iz);
+                    if (flag != PixelFlag.BACKGROUND_FLAG) {
+                        if (flag < 0)
+                        System.out.println("flag : "+ flag);
                         int color;
                         if (flag >= curSize) {
                             color = randomColor();

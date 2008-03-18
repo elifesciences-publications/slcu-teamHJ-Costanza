@@ -352,7 +352,7 @@ public class Data {
     public int getIntensityIndex(String tag) throws Exception {
         Integer pos = tag_map.get(tag);
         if (pos == null) {
-            throw (new Exception("Tag: " + tag + "not in the map of available intensities."));
+            throw (new Exception("Tag: " + tag + " not in the map of available intensities."));
         }
         return pos;
     }

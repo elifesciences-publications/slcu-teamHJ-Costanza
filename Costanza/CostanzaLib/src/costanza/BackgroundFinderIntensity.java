@@ -43,8 +43,8 @@ public class BackgroundFinderIntensity extends Processor {
 			//bgPixel.add(new Pixel(x, y, z));
                         pf.setBackground(x, y, z);
 		    }
-                    else
-                        pf.setFlag(x, y, z, (short)0);
+//                    else
+//                        pf.setFlag(x, y, z, (short)0);
                         
 		}
 	    }

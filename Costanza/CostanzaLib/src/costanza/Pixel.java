@@ -82,8 +82,9 @@ public class Pixel implements Comparable<Pixel> {
         this.y = (short) y;
         this.z = (short) z;
     }
+    
+//@Override
 
-	//@Override
     public int compareTo(Pixel p) {
         if (x < p.x) {
             return -1;
