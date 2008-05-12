@@ -22,10 +22,15 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	public static int REQUEST_CELL_MARKER = 4;
 	public static int REQUEST_WORKING_STACK = 8;
 
-	private enum PluginStatus {
+	private void printOutOfMemoryError() {
+		stop(PluginStatus.OUT_OF_MEMORY);
+	}
+
+	public enum PluginStatus {
 
 		RUN_APPLICATION,
-		EXIT_APPLICATION
+		EXIT_APPLICATION,
+		OUT_OF_MEMORY
 	}
 	private Case IJCase;
 	private Stack stack;
@@ -65,7 +70,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	}
 
 	/**
-	 * This is the second point of execution. The used is asked to enter the
+	 * This is the second point of execution. The user is asked to enter the
 	 * scale of the image and this function is called after the user presses 
 	 * Continue.
 	 */
@@ -87,38 +92,50 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			printExceptionMessage(exception);
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
 			return;
+		} catch (Error error) {
+			if (OutOfMemoryError.class.isInstance(error)) {
+				printOutOfMemoryError();
+			}
+			throw error;
 		}
 	}
 
 	/** 
-	 * This is the option third point of execution. The user is being asked to
+	 * This is the optional third point of execution. The user is being asked to
 	 * active a second stack and this function is called after the user presses
 	 * Continue.
 	 */
 	void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
-		ij.ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
-		secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus);
+		try {
+			ij.ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
+			secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus);
 
-		Options options = new Options();
-		options.addOption("OverrideStack", secondaryStack);
-		Job job = new Job("intensityfinder", options);
-		Queue secondaryStackJobs = new Queue();
-		secondaryStackJobs.addJob(job);
+			Options options = new Options();
+			options.addOption("OverrideStack", secondaryStack);
+			Job job = new Job("intensityfinder", options);
+			Queue secondaryStackJobs = new Queue();
+			secondaryStackJobs.addJob(job);
 
-		Driver driver = new Driver(secondaryStackJobs, IJCase, factory);
-		driver.run();
+			Driver driver = new Driver(secondaryStackJobs, IJCase, factory);
+			driver.run();
 
-		showFinalResults();
-		frame.setMenuAndButtonsEnabled(true);
+			showFinalResults();
+			frame.setMenuAndButtonsEnabled(true);
+		} catch (Error error) {
+			if (OutOfMemoryError.class.isInstance(error)) {
+				printOutOfMemoryError();
+			}
+			throw error;
+		}
 	}
-	
+
 	/**
 	 * Stop the plugin.
 	 */
-	public void stop() {
+	public void stop(PluginStatus status) {
 		frame.setVisible(false);
 		frame.dispose();
-		status = PluginStatus.EXIT_APPLICATION;
+		this.status = status;
 	}
 
 	/** 
@@ -141,7 +158,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			frame = new MainFrame(this);
 			frame.setVisible(true);
 			status = PluginStatus.RUN_APPLICATION;
-			while (status != PluginStatus.EXIT_APPLICATION) {
+			while (status == PluginStatus.RUN_APPLICATION) {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException ex) {
@@ -150,6 +167,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			}
 		} catch (Exception ex) {
 			Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		if (status == PluginStatus.OUT_OF_MEMORY)
+		{
+			ij.IJ.showMessage("Out of memory", "Out of memory: Please consult the Costanza user manual for further information.");
 		}
 	}
 
@@ -261,7 +282,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			CellCenter cellCenter = (CellCenter) IJCase.getCellData(DataId.CENTERS, i);
 			CellIntensity cellIntensity = (CellIntensity) IJCase.getCellData(DataId.INTENSITIES, i);
 			//BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
-                        int cellSize = IJCase.getCell(i).size();
+			int cellSize = IJCase.getCell(i).size();
 
 			float x = cellCenter.getX() * xScale;
 			float y = cellCenter.getY() * yScale;

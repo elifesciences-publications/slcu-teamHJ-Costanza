@@ -233,7 +233,7 @@ public class MainFrame extends java.awt.Frame {
         }// </editor-fold>//GEN-END:initComponents
 	/** Exit the Application */
 	private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
-		plugin.stop();
+		plugin.stop(Costanza_Plugin.PluginStatus.EXIT_APPLICATION);
 	}//GEN-LAST:event_exitForm
 
 	private void ioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ioMenuItemActionPerformed
@@ -265,7 +265,7 @@ public class MainFrame extends java.awt.Frame {
 	}//GEN-LAST:event_documentationMenuItemActionPerformed
 
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		plugin.stop();
+		plugin.stop(Costanza_Plugin.PluginStatus.EXIT_APPLICATION);
 	}//GEN-LAST:event_cancelButtonActionPerformed
 
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
