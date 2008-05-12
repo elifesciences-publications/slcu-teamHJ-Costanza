@@ -58,7 +58,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			try {
 				imagePlus = ij.IJ.getImage();
 			} catch (Exception exception) {
-				// Do nothing as we assume ImageJ is displaying a message about this exception.
+				frame.setMenuAndButtonsEnabled(true);
 				return;
 			}
 			frame.askForScale(imagePlus.getCalibration());
