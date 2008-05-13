@@ -1,9 +1,6 @@
 package costanza;
 
 import java.awt.image.BufferedImage;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Vector;
 
 /**Implementation of a Processor that colors each BOA with a unique color.
  * @author michael
@@ -21,56 +18,34 @@ public class BoaColorizer extends Processor {
     @Override
     @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
-        // Get the basin of attractors from data in case
-//	Collection<BOA> boaCollection = (Collection<BOA>) c.getCellData(DataId.BOAS);
-//	if (boaCollection == null) {
-//	    return c;
-//	}
-        //System.out.println("Starting BoaColorizer");
+
         int[] boaColors = genColors(c.sizeOfCells());
-        //System.out.println("Colors generated");
         BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
-        Object[] cells = c.getCells().toArray();
-        if (boaColors.length != cells.length) {
+        if (boaColors.length != c.sizeOfCells()) {
             throw new Exception("Lengths differ!");
         }
 
-        //System.out.println("Colors done.");
         int xDim = images[0].getWidth();
         int yDim = images[0].getHeight();
         int zDim = images.length;
         int curSize = boaColors.length;
         PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
-        int neg_counter = 0;
+
         for (int iz = 0; iz < zDim; ++iz) {
             BufferedImage bufferedImage = images[iz];
             for (int iy = 0; iy < yDim; ++iy) {
                 for (int ix = 0; ix < xDim; ++ix) {
                     int flag = pf.getFlag(ix, iy, iz);
                     if (flag != PixelFlag.BACKGROUND_FLAG) {
-                        if (flag < 0)
-                            ++neg_counter;
-                    }
-                }
-            }
-        }
-        //System.out.println( neg_counter + " negative flags");
-        //System.out.println("Processing pixel flag.");
-        for (int iz = 0; iz < zDim; ++iz) {
-            BufferedImage bufferedImage = images[iz];
-            for (int iy = 0; iy < yDim; ++iy) {
-                for (int ix = 0; ix < xDim; ++ix) {
-                    int flag = pf.getFlag(ix, iy, iz);
-                    if (flag != PixelFlag.BACKGROUND_FLAG) {
-                        if (flag < 0)
-                        System.out.println("flag : "+ flag);
+                        if (flag < 0) {
+                            throw new Exception("Negative flag in PixelFlag!");
+                        }
                         int color;
                         if (flag >= curSize) {
                             color = randomColor();
                         } else {
                             color = boaColors[flag];
                         }
-
 
                         int prevColor = bufferedImage.getRGB(ix, iy);
                         int newColor = color;
@@ -79,41 +54,12 @@ public class BoaColorizer extends Processor {
                             newColor = combine(prevColor, color);
                         }
                         bufferedImage.setRGB(ix, iy, newColor);
-
                     }
                 }
             }
         }
-
-        //System.out.println("Colorizing Boas");
-//	for (int i = 0; i < boas.length; ++i) {
-//	    colorizeBoa((BOA) boas[i], images, boaColors[i]);
-//	}
         c.setResultImages(images);
-
-//	System.out.println("Number of collected BOAs: " + boaCollection.size());
         return c;
-    }
-
-    /**Color the BOA in the specified BufferedImages with the specified color.
-     * 
-     * @param boa the BOA to color.
-     * @param images the images the BOA may reside in.
-     * @param boaColor the color to use for the BOA.
-     */
-    private void colorizeBoa(BOA boa, BufferedImage[] images, int boaColor) {
-
-        for (Pixel p : boa) {
-            BufferedImage bufferedImage = images[p.getZ()];
-            int prevColor = bufferedImage.getRGB(p.getX(), p.getY());
-            int newColor = boaColor;
-            if (isGrayScale(prevColor) == false) {
-                System.out.println("Combining colors from BOA!");
-                newColor = combine(prevColor, boaColor);
-            }
-            bufferedImage.setRGB(p.getX(), p.getY(), newColor);
-        }
-
     }
 
     /**Combine to colors into one.
