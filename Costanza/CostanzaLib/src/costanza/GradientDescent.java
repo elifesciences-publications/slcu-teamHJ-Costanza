@@ -31,21 +31,21 @@ public class GradientDescent extends Processor {
      * @param c a Case to work on.
      * @param o Options related to the Processor.
      * @return a modified Case.
-     * @todo Recursively add plateau pixels.
-     * @todo Expand the background appropriately.
      * @throws java.lang.Exception
      */
     @Override
     public Case process(Case c, Options o) throws Exception {
 
-        System.out.println("GradientDescent::process");
+//        System.out.println("GradientDescent::process");
         if (c.getStack() == null) {
             throw new Exception("No working stack initialised in case from gradientdescent");
         }
 
         int extendedNeighborhoodFlag = 1;
         boolean plateauPixelsFlag = true;
-        final double INTENSITY_TRESHOLD = -1.0e-5;
+
+        int INTENSITY_LEVELS = 256;
+        double INTENSITY_TRESHOLD = 1.0 / (float) INTENSITY_LEVELS;
         //        Integer tmpFlag = (Integer) (o.getOptionValue("extendedNeighborhood"));
         //        if (tmpFlag != null) {
         //            extendedNeighborhoodFlag = tmpFlag.intValue();
@@ -174,62 +174,53 @@ public class GradientDescent extends Processor {
                             walkTmp.add(new Pixel(x, y, z));
                         } while (newValue > value && pf.isUnmarked(x, y, z));
                     }//end if unmarked
+
                     // Collect path data and add one visit for the maximum
                     if (pf.isUnmarked(x, y, z)) { //new maximum
-                        if(plateauPixelsFlag) {
-                        //visit all neighbor to maximum pixels and collect equivqlent maximas
-                        Set<Pixel> equivMax = new HashSet<Pixel>();
-                        LinkedList<Pixel> deck = new LinkedList<Pixel>();
-                        Pixel p = new Pixel(x, y, z);
-                        equivMax.add(p);
-                        deck.add(p);
-                        final int RAD = 1;
-                        while (!deck.isEmpty()) {
-                            p = deck.removeFirst();
-                            int tx = p.getX();
-                            int ty = p.getY();
-                            int tz = p.getZ();
-                            float intensity = c.getStack().getIntensity(tx, ty, tz);
-//                            System.out.println("center = (" + p + ") = " + intensity );
-//                            int count = 0;
-                            for (int zz = tz - RAD; zz <= tz + RAD; ++zz) {
-                                for (int yy = ty - RAD; yy <= ty + RAD; ++yy) {
-                                    for (int xx = tx - RAD; xx <= tx + RAD; ++xx) {
-                                        if (xx >= 0 && yy >= 0 && zz >= 0 &&
-                                                xx < width && yy < height && zz < depth &&
-                                                (tx != xx || ty != yy || tz != zz)) {
-//                                            ++count;
-                                            float newIntensity = c.getStack().getIntensity(xx, yy, zz);
-//                                            if (intensity <= newIntensity) {
-                                            if (newIntensity-intensity >= INTENSITY_TRESHOLD) {
-                                                Pixel pp = new Pixel(xx, yy, zz);
-                                                if (!equivMax.contains(pp) && pf.isUnmarked(xx, yy, zz)) {
-//                                                    System.out.println("added (" + pp + ") = " + newIntensity);
-                                                    deck.addLast(pp);
-                                                    equivMax.add(pp);
+                        if (plateauPixelsFlag) {
+                            //visit all neighbor to maximum pixels and collect equivqlent maximas
+                            Set<Pixel> equivMax = new HashSet<Pixel>();
+                            LinkedList<Pixel> deck = new LinkedList<Pixel>();
+                            Pixel p = new Pixel(x, y, z);
+                            equivMax.add(p);
+                            deck.add(p);
+                            final int RAD = 1;
+                            while (!deck.isEmpty()) {
+                                p = deck.removeFirst();
+                                int tx = p.getX();
+                                int ty = p.getY();
+                                int tz = p.getZ();
+                                float intensity = c.getStack().getIntensity(tx, ty, tz);
+                                for (int zz = tz - RAD; zz <= tz + RAD; ++zz) {
+                                    for (int yy = ty - RAD; yy <= ty + RAD; ++yy) {
+                                        for (int xx = tx - RAD; xx <= tx + RAD; ++xx) {
+                                            if (xx >= 0 && yy >= 0 && zz >= 0 &&
+                                                    xx < width && yy < height && zz < depth &&
+                                                    (tx != xx || ty != yy || tz != zz)) {
+                                                float newIntensity = c.getStack().getIntensity(xx, yy, zz);
+                                                double diff = Math.abs(newIntensity - intensity);
+                                                if (diff <= INTENSITY_TRESHOLD) {
+                                                    Pixel pp = new Pixel(xx, yy, zz);
+                                                    if (!equivMax.contains(pp) && pf.isUnmarked(xx, yy, zz)) {
+                                                        deck.addLast(pp);
+                                                        equivMax.add(pp);
+                                                    }
                                                 }
-//                                                else
-//                                                    System.out.println("skipped (" + pp + ") = "+ newIntensity);
                                             }
-//                                            else
-//                                                    System.out.println("intensity diff = " + (newIntensity-intensity));
                                         }
                                     }
                                 }
                             }
-//                            System.out.println("pixel count = " + count);
-                        }
-                        if(equivMax.size() > 1)
-                        {
-                            Pixel e_p = equivMax.iterator().next();
-                            System.out.println("size of equivalent max = " + equivMax.size() + ", intensity = " + c.getStack().getIntensity(e_p.getX(), e_p.getY(), e_p.getZ()));
-                            Pixel avg = getAverage(equivMax);
-                            x = avg.getX(); 
-                            y = avg.getY(); 
-                            z = avg.getZ(); 
-                            walkTmp.addAll(equivMax);
-                        }
-                        }
+                            if (equivMax.size() > 1) {
+//                            System.out.println("size of equivalent max = " + equivMax.size() + ", intensity = " + c.getStack().getIntensity(e_p.getX(), e_p.getY(), e_p.getZ()));
+                                Pixel avg = getAverage(equivMax);
+                                x = avg.getX();
+                                y = avg.getY();
+                                z = avg.getZ();
+                                walkTmp.addAll(equivMax);
+                            }
+                        }//end if plateu
+                        
                         int n = max.size();
                         max.add(new Pixel(x, y, z));
                         int numWalk = walkTmp.size();
@@ -257,7 +248,7 @@ public class GradientDescent extends Processor {
                 for (int x = 0; x < width; ++x) {
                     int val = pf.getFlag(x, y, z);
                     if (val >= numCell) {
-                        throw new Exception("Cell index out of range(" + val  +")");
+                        throw new Exception("Cell index out of range(" + val + ")");
                     }
                     if (val >= 0) {
                         cellSize.set(val, cellSize.get(val) + 1);
@@ -284,29 +275,28 @@ public class GradientDescent extends Processor {
         //System.out.println("Gradient Descent found " + max.size() + " cells");
         return c;
     }
+
     /**
      * Method calcultes average pixel poistion from given cloud of pixels
      * @param c collections of pixels to average
      * @return average pixel position
      */
-    private Pixel getAverage(Collection<Pixel> c)
-    {
+    private Pixel getAverage(Collection<Pixel> c) {
         Iterator<Pixel> iter = c.iterator();
         int X = 0;
         int Y = 0;
         int Z = 0;
-        while(iter.hasNext())
-        {
+        while (iter.hasNext()) {
             Pixel p = iter.next();
-            X+=p.getX();
-            Y+=p.getY();
-            Z+=p.getZ();
+            X += p.getX();
+            Y += p.getY();
+            Z += p.getZ();
         }
-        int size =c.size();
-        X/=size;
-        Y/=size;
-        Z/=size;
-        return new Pixel(X,Y,Z);
+        int size = c.size();
+        X /= size;
+        Y /= size;
+        Z /= size;
+        return new Pixel(X, Y, Z);
     }
     }
 

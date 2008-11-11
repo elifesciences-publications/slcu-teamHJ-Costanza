@@ -116,7 +116,7 @@ public class Cell implements Comparable<Cell>{
      * *Sets internal id of the cell. Use with caution as cells are maped to ids in Data too.
      * @param id
      */
-    void seId( int id){
+    void setId( int id){
         this.id = id; 
     }
     

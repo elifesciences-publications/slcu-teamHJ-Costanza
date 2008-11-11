@@ -1,7 +1,6 @@
 package costanza;
 
 import java.awt.image.BufferedImage;
-import java.util.Vector;
 
 /**
  * Case class holds Data and image Stack information that will be used by the Processor.

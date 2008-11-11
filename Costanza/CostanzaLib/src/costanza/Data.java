@@ -9,7 +9,9 @@ import java.util.Iterator;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-/**Data is a container for different types of data used by Processor.
+/**
+ * Data is a container for different types of data used by Processor.
+ * @author pawel
  */
 public class Data {
 
@@ -370,7 +372,7 @@ public class Data {
         while (iter.hasNext()) {
             Map.Entry<Integer, Cell> ent = iter.next();
             Cell c = ent.getValue();
-            c.seId(counter);
+            c.setId(counter);
             map.put( counter, c);
             ++counter;
         }
@@ -404,7 +406,7 @@ public class Data {
             ind.set(i, counter);
             
             Cell c = ent.getValue();
-            c.seId(counter);
+            c.setId(counter);
             map.put( counter, c);
             ++counter;
         }

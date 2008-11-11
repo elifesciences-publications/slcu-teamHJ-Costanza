@@ -13,6 +13,7 @@ public class BoaColorizerIntensity extends Processor {
     @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 
+//        System.out.println("BoaColorizerIntensity::process");
         if (options != null && options.hasOption("OverrideStack")) {
             stack = (Stack) options.getOptionValue("OverrideStack");
 
@@ -84,7 +85,11 @@ public class BoaColorizerIntensity extends Processor {
             ++count;
         }
         for (int i = 0; i < value.length; ++i) {
-            value[i] = (value[i] - min) / (max - min);
+            double diff = max - min;
+            if(diff != 0.0)
+                value[i] = (value[i] - min) / (max - min);
+            else
+                value[i] = 1.0f;
         }
         int[] colors = new int[size];
         for (int i = 0; i < colors.length; ++i) {

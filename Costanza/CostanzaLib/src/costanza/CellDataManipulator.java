@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-/** Class holds methods for manipulating cell data*/
+/** Class holds methods for manipulating cell data
+ * @author pawel
+ */
 public class CellDataManipulator extends Data {
 
     /** Creates a new instance of CellDataManipulator */
@@ -41,14 +43,13 @@ public class CellDataManipulator extends Data {
 	if (checkToken(stok, StreamTokenizer.TT_NUMBER)) {
 	    return;
 	}
-	int nDim = (int) stok.nval;
+//	int nDim = (int) stok.nval;
 
 	stok.nextToken();
 	if (checkToken(stok, StreamTokenizer.TT_EOL)) {
 	    return;
 	}
 
-	int counter = 0;
 	for (int i = 0; i < nCells && stok.ttype != StreamTokenizer.TT_EOF; ++i) {
 	    lnr.setLineNumber(i + 2);
 	    stok.nextToken();
@@ -138,7 +139,7 @@ public class CellDataManipulator extends Data {
 
     }
 
-    /**Merges all data for given cells. Final data are put in the first cell. 
+    /**Merges all data for given cells. Final data are put in the first cell. Stack data(PixelFlags) are untouched
      * @param c1 Cell
      * @param c2 Cell
      * @throws java.lang.Exception
@@ -147,16 +148,17 @@ public class CellDataManipulator extends Data {
        
         Set<DataId> ids = getDataKeys( DataGroup.CELL );
 	Iterator iter = ids.iterator();
-        
+        int mergedSize = c1.size() + c2.size();
+        c1.setSize(mergedSize);
 	while (iter.hasNext()) {
 	    DataId id = (DataId) iter.next();
             merge(id, c1, c2);
 	}
         //System.out.println("Cells: " + c1id + " and " + c2id + " merged into " + cfinal );
         //now merge boas in PixelFlag
-        PixelFlag pf = (PixelFlag) getStackData(DataId.PIXEL_FLAG);
-        if(pf != null)
-            pf.changeAll(c2.getCellId(), c1.getCellId());
+//        PixelFlag pf = (PixelFlag) getStackData(DataId.PIXEL_FLAG);
+//        if(pf != null)
+//            pf.changeAll(c2.getCellId(), c1.getCellId());
         removeCell(c2);
     }
     
@@ -194,7 +196,6 @@ public class CellDataManipulator extends Data {
 		int x = (e2.getX() + e1.getX()) / 2;
 		int y = (e2.getY() + e1.getY()) / 2;
 		int z = (e2.getZ() + e1.getZ()) / 2;
-		//CellCenter midC = new CellCenter(x, y, z);
                 
 		Pixel pix = (Pixel)c1.get(id);
                 pix.setXYZ(x, y, z);
@@ -208,33 +209,13 @@ public class CellDataManipulator extends Data {
 		    return -1;
 		}
                 
-                //for below reason intensities must be merged before boas
-//		BOA b1 = (BOA)c1.get(DataId.BOAS), b2 = (BOA)c2.get(DataId.BOAS);
-//                if (b1 == null || b2 == null) {
-//		    throw new Exception("There is no BOA associated with this Intensity");
-//		}
-
-		int mergedSize = c1.size() + c2.size();
+		int mergedSize = c1.size();
 		for (int i=0; i < e1.size(); ++i) {
 		    float I = e1.getIntensity(i)*c1.size() + e2.getIntensity(i)*c2.size();
                     e1.setIntensity(i, I/mergedSize);
 		}
-                c1.setSize(mergedSize);
 		break;
 	    }
-//	    case BOAS: {
-//
-//                BOA e1 = (BOA)c1.get(id), e2 = (BOA)c2.get(id);
-//
-//		if (e1 == null || e2 == null) {
-//		    //System.out.println("Cell data: " + id + " not found in cell " + c1.getCellId() + ", or cell " + c2.getCellId() );
-//		    return -1;
-//		}
-//
-//		e1.addPixels(e2);
-//
-//		break;
-//	    }
 	}
         removeCellData( id, c2);
         return c1.getCellId();
