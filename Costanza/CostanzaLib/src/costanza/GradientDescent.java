@@ -40,16 +40,12 @@ public class GradientDescent extends Processor {
         if (c.getStack() == null) {
             throw new Exception("No working stack initialised in case from gradientdescent");
         }
+    
+        final boolean extendedNeighborhoodFlag = ((Boolean) o.getOptionValue("useExtendedNeighborhood")).booleanValue();
+        final boolean plateauPixelsFlag = ((Boolean) o.getOptionValue("usePlateau")).booleanValue();
 
-        int extendedNeighborhoodFlag = 1;
-        boolean plateauPixelsFlag = true;
-
-        int INTENSITY_LEVELS = 256;
-        double INTENSITY_TRESHOLD = 1.0 / (float) INTENSITY_LEVELS;
-        //        Integer tmpFlag = (Integer) (o.getOptionValue("extendedNeighborhood"));
-        //        if (tmpFlag != null) {
-        //            extendedNeighborhoodFlag = tmpFlag.intValue();
-        //        }
+        final int INTENSITY_LEVELS = ((Integer) o.getOptionValue("intensityLevelsNumber")).intValue();
+        final double INTENSITY_TRESHOLD = 1.0 / (float) INTENSITY_LEVELS;
 
         int depth = c.getStack().getDepth();
         int height = c.getStack().getHeight();
@@ -59,14 +55,15 @@ public class GradientDescent extends Processor {
         float xFac = c.getStack().getXScale();
         float yFac = c.getStack().getYScale();
         float zFac = c.getStack().getZScale();
-        if (extendedNeighborhoodFlag == 0) {
-            xFac = 1.0f / xFac;
-            yFac = 1.0f / yFac;
-            zFac = 1.0f / zFac;
-        } else {
+        if (extendedNeighborhoodFlag) {
             xFac *= xFac;
             yFac *= yFac;
             zFac *= zFac;
+        } else {
+            
+            xFac = 1.0f / xFac;
+            yFac = 1.0f / yFac;
+            zFac = 1.0f / zFac;
         }
         //Get the PixelFlag from the case (where the boas will be stored)
         PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
@@ -103,7 +100,7 @@ public class GradientDescent extends Processor {
                             float maxGradient = 0.0f;
                             float oldIntensity = value;//c.getStack().getIntensity(x, y, z);
 
-                            if (extendedNeighborhoodFlag != 0) {
+                            if (extendedNeighborhoodFlag) {
                                 //Check all pixels around a given pixel
                                 for (int zz = z - 1; zz <= z + 1; ++zz) {
                                     for (int yy = y - 1; yy <= y + 1; ++yy) {
@@ -219,7 +216,7 @@ public class GradientDescent extends Processor {
                                 z = avg.getZ();
                                 walkTmp.addAll(equivMax);
                             }
-                        }//end if plateu
+                        }//end if plateau
                         
                         int n = max.size();
                         max.add(new Pixel(x, y, z));

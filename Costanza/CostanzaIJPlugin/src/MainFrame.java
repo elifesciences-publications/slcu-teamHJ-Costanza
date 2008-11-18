@@ -2,251 +2,253 @@
 import costanza.Job;
 import costanza.Options;
 import costanza.Queue;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 public class MainFrame extends java.awt.Frame {
 
-	void setMenuAndButtonsEnabled(boolean arg) {
-		cancelButton.setEnabled(arg);
-		startButton.setEnabled(arg);
-		documentationMenuItem.setEnabled(arg);
-		ioMenuItem.setEnabled(arg);
-		postProcessorMenuItem.setEnabled(arg);
-		preProcessorMenuItem.setEnabled(arg);
-		websiteMenuItem.setEnabled(arg);
-	}
+    void setMenuAndButtonsEnabled(boolean arg) {
 
-	void askForScale(ij.measure.Calibration calibration) {
-		scaleOptionPanel.setCalibration(calibration);
-		setActivePanel(MainFrame.PanelId.SCALE);
-	}
+        startButton.setEnabled(arg);
+        documentationMenuItem.setEnabled(arg);
+        websiteMenuItem.setEnabled(arg);
+    }
 
-	void askForSecondaryStack() {
-		setActivePanel(MainFrame.PanelId.SECONDARY_STACK);
-	}
+    void askForScale(ij.measure.Calibration calibration) {
+        scaleOptionPanel.setCalibration(calibration);
+    }
 
-	void scaleOptionPanelContinueButtonPressed() {
-		cardLayout.show(panel, "IOOptionPanel");
-		update();
-		plugin.scaleOptionPanelContinueButtonPressed();
-	}
+    void askForSecondaryStack() {
+        SecondaryStackOptionDialog d = new SecondaryStackOptionDialog(this);
+//            d.addNotify();
+        d.setVisible(true);
+    }
 
-	void scaleOptionPanelCancelButtonPressed() {
-		cardLayout.show(panel, "IOOptionPanel");
-		update();
-	}
+    void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
+        update();
+        plugin.secondaryStackOptionPanelContinueButtonPressed();
+    }
 
-	void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
-		cardLayout.show(panel, "IOOptionPanel");
-		update();
-		plugin.secondaryStackOptionPanelContinueButtonPressed();
-	}
+    void secondaryStackOptionPanelCancelButtonPressed() {
+        update();
+    }
+    private IOOptionPanel ioOptionPanel;
+    private ProcessorOptionPanel preProcessorOptionPanel;
+    private ProcessorOptionPanel postProcessorOptionPanel;
+    private ScaleOptionPanel scaleOptionPanel;
+    private ConfigurationFileManager fc;
+    private Costanza_Plugin plugin;
+    private Font menuFont;
+    private Font font;
+    private Color backgroundColor;
 
-	void secondaryStackOptionPanelCancelButtonPressed() {
-		cardLayout.show(panel, "IOOptionPanel");
-		update();
-	}
+    public MainFrame(Costanza_Plugin plugin) throws Exception {
+        super("Costanza");
+        menuFont = ij.Menus.getFont();
+        font = ij.ImageJ.SansSerif12;
+        backgroundColor = ij.ImageJ.backgroundColor;
 
-	private enum PanelId {
+        initComponents();
+        this.plugin = plugin;
+        initOptionPanels();
+        fc = new ConfigurationFileManager(this);
+        setPreferredSize(new java.awt.Dimension(450, 450));
+        pack();
+    }
 
-		IO,
-		PRE_PROCESSING,
-		POST_PROCESSING,
-		SECONDARY_STACK,
-		SCALE
-	}
-	private IOOptionPanel ioOptionPanel;
-	private ProcessorOptionPanel preProcessorOptionPanel;
-	private ProcessorOptionPanel postProcessorOptionPanel;
-	private SecondaryStackOptionPanel secondaryStackOptionPanel;
-	private ScaleOptionPanel scaleOptionPanel;
-	private Costanza_Plugin plugin;
-	private java.awt.CardLayout cardLayout;
-	private Font menuFont;
-	private Font font;
-	private Color backgroundColor;
+    Font getFrameFont(){
+        return font;
+    }
+    
+    public int getResultRequest() {
+        return ioOptionPanel.getResultRequest();
+    }
 
-	public MainFrame(Costanza_Plugin plugin) throws Exception {
-		menuFont = ij.Menus.getFont();
-		font = ij.ImageJ.SansSerif12;
-		backgroundColor = ij.ImageJ.backgroundColor;
+    public IOOptionPanel getIOPanel() {
+        return ioOptionPanel;
+    }
 
-		initComponents();
-		this.plugin = plugin;
-		initOptionPanels();
-		setActivePanel(PanelId.IO);
-		pack();
-	}
+    public ProcessorOptionPanel getPreProcessorPanel() {
+        return preProcessorOptionPanel;
+    }
 
-	public int getResultRequest() {
-		return ioOptionPanel.getResultRequest();
-	}
+    public ProcessorOptionPanel getPostProcessorPanel() {
+        return postProcessorOptionPanel;
+    }
 
-	private void initOptionPanels() throws Exception {
-		cardLayout = new CardLayout();
-		panel.setLayout(cardLayout);
+    public ScaleOptionPanel getScaleOptionPanel() {
+        return scaleOptionPanel;
+    }
 
-		ioOptionPanel = new IOOptionPanel(this);
-		panel.add(ioOptionPanel, "IOOptionPanel");
+    public int getIntensityLevelsNumber() {
+        return new Integer(ioOptionPanel.getIntensityLevels());
+    }
 
-		preProcessorOptionPanel = new ProcessorOptionPanel(this);
+    public void setIntensityLevelsNumber(Integer i) {
+        ioOptionPanel.setIntensityLevels(i);
+    }
 
-		preProcessorOptionPanel.addProcessorOptionToMenu("Invert image", InvertOption.class);
-		preProcessorOptionPanel.addProcessorOptionToMenu("Smoothing", MeanFilterOption.class);
-		preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
-		preProcessorOptionPanel.addOptionPanel("Invert image");
-		preProcessorOptionPanel.addOptionPanel("Background extraction");
-		preProcessorOptionPanel.addOptionPanel("Smoothing");
-		panel.add(preProcessorOptionPanel, "PreProcessorOptionPanel");
+    private void initOptionPanels() throws Exception {
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(450, 380));
+        ioOptionPanel = new IOOptionPanel(this);
+        jTabbedPane1.addTab("general", ioOptionPanel);
 
-		postProcessorOptionPanel = new ProcessorOptionPanel(this);
-		postProcessorOptionPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
-		postProcessorOptionPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
-		postProcessorOptionPanel.addOptionPanel("Peak remover");
-		postProcessorOptionPanel.addOptionPanel("Peak merger");
-		panel.add(postProcessorOptionPanel, "PostProcessorOptionPanel");
+        preProcessorOptionPanel = new ProcessorOptionPanel(this);
 
-		secondaryStackOptionPanel = new SecondaryStackOptionPanel(this);
-		panel.add(secondaryStackOptionPanel, "SecondaryStackOptionPanel");
+        preProcessorOptionPanel.addProcessorOptionToMenu("Invert image", InvertOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu("Mean filter", MeanFilterOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu("Median filter", MedianFilterOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
+        preProcessorOptionPanel.addOptionPanel("Background extraction");
+        preProcessorOptionPanel.addOptionPanel("Mean filter");
 
-		scaleOptionPanel = new ScaleOptionPanel(this);
-		panel.add(scaleOptionPanel, "ScaleOptionPanel");
+        jTabbedPane1.addTab("pre-processor", preProcessorOptionPanel);
+        postProcessorOptionPanel = new ProcessorOptionPanel(this);
+        postProcessorOptionPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
+        postProcessorOptionPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
+        postProcessorOptionPanel.addOptionPanel("Peak remover");
+        postProcessorOptionPanel.addOptionPanel("Peak merger");
 
-		cardLayout.show(panel, "IOOptionPanel");
-	}
+        jTabbedPane1.addTab("post-processor", postProcessorOptionPanel);
+//		secondaryStackOptionPanel = new SecondaryStackOptionPanel(this);
 
-	public void update() {
-		pack();
-		repaint();
-	}
+        scaleOptionPanel = new ScaleOptionPanel(this);
 
-	/** This method is called from within the constructor to
-	 * initialize the form.
-	 * WARNING: Do NOT modify this code. The content of this method is
-	 * always regenerated by the Form Editor.
-	 */
-        // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-        private void initComponents() {
+        jTabbedPane1.addTab("scaling", scaleOptionPanel);
+        jTabbedPane1.setFont(font);
+    }
 
-                panel = new java.awt.Panel();
-                buttonPanel = new java.awt.Panel();
-                cancelButton = new java.awt.Button();
-                startButton = new java.awt.Button();
-                menuBar = new java.awt.MenuBar();
-                optionsMenu = new java.awt.Menu();
-                ioMenuItem = new java.awt.MenuItem();
-                preProcessorMenuItem = new java.awt.MenuItem();
-                postProcessorMenuItem = new java.awt.MenuItem();
-                helpMenu = new java.awt.Menu();
-                websiteMenuItem = new java.awt.MenuItem();
-                documentationMenuItem = new java.awt.MenuItem();
+    public void update() {
+        pack();
+        repaint();
+    }
 
-                setBackground(backgroundColor);
-                setName("Costanza Plugin"); // NOI18N
-                setResizable(false);
-                addWindowListener(new java.awt.event.WindowAdapter() {
-                        public void windowClosing(java.awt.event.WindowEvent evt) {
-                                exitForm(evt);
-                        }
-                });
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-                panel.setFont(font);
-                panel.setLayout(new java.awt.CardLayout());
-                add(panel, java.awt.BorderLayout.NORTH);
+        buttonPanel = new java.awt.Panel();
+        startButton = new java.awt.Button();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        cancelButton = new java.awt.Button();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        menuBar = new java.awt.MenuBar();
+        fileMenu = new java.awt.Menu();
+        openFile = new java.awt.MenuItem();
+        saveFile = new java.awt.MenuItem();
+        quitMenuItem = new java.awt.MenuItem();
+        helpMenu = new java.awt.Menu();
+        websiteMenuItem = new java.awt.MenuItem();
+        documentationMenuItem = new java.awt.MenuItem();
 
-                cancelButton.setLabel("Close plugin");
-                cancelButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                cancelButtonActionPerformed(evt);
-                        }
-                });
-                buttonPanel.add(cancelButton);
+        setBackground(backgroundColor);
+        setMinimumSize(new java.awt.Dimension(450, 450));
+        setName("Costanza Plugin"); // NOI18N
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                exitForm(evt);
+            }
+        });
 
-                startButton.setLabel("Start analyze");
-                startButton.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                startButtonActionPerformed(evt);
-                        }
-                });
-                buttonPanel.add(startButton);
+        buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
-                add(buttonPanel, java.awt.BorderLayout.SOUTH);
+        startButton.setLabel("Start analysis");
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(startButton);
 
-                menuBar.setFont(menuFont);
+        jProgressBar1.setMaximumSize(new java.awt.Dimension(32767, 20));
+        jProgressBar1.setMinimumSize(new java.awt.Dimension(200, 20));
+        jProgressBar1.setPreferredSize(new java.awt.Dimension(230, 20));
+        buttonPanel.add(jProgressBar1);
 
-                optionsMenu.setLabel("Options");
+        cancelButton.setLabel("Cancel analysis");
+        cancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelButtonActionPerformed(evt);
+            }
+        });
+        buttonPanel.add(cancelButton);
 
-                ioMenuItem.setLabel("Input and output");
-                ioMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                ioMenuItemActionPerformed(evt);
-                        }
-                });
-                optionsMenu.add(ioMenuItem);
+        add(buttonPanel, java.awt.BorderLayout.SOUTH);
 
-                preProcessorMenuItem.setLabel("Pre-processing");
-                preProcessorMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                preProcessorMenuItemActionPerformed(evt);
-                        }
-                });
-                optionsMenu.add(preProcessorMenuItem);
+        jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane1.setDoubleBuffered(true);
+        jTabbedPane1.setMinimumSize(new java.awt.Dimension(300, 300));
+        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        jTabbedPane1.getAccessibleContext().setAccessibleName("null");
 
-                postProcessorMenuItem.setLabel("Post-processing");
-                postProcessorMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                postProcessorMenuItemActionPerformed(evt);
-                        }
-                });
-                optionsMenu.add(postProcessorMenuItem);
+        menuBar.setFont(menuFont);
 
-                menuBar.add(optionsMenu);
+        fileMenu.setLabel("File");
 
-                helpMenu.setLabel("Help");
+        openFile.setLabel("Load configuration");
+        openFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openConfFile(evt);
+            }
+        });
+        fileMenu.add(openFile);
 
-                websiteMenuItem.setLabel("Costanza's homepage");
-                websiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                websiteMenuItemActionPerformed(evt);
-                        }
-                });
-                helpMenu.add(websiteMenuItem);
+        saveFile.setLabel("Save configuration");
+        saveFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveConfigurationFile(evt);
+            }
+        });
+        fileMenu.add(saveFile);
 
-                documentationMenuItem.setLabel("Online documentation");
-                documentationMenuItem.addActionListener(new java.awt.event.ActionListener() {
-                        public void actionPerformed(java.awt.event.ActionEvent evt) {
-                                documentationMenuItemActionPerformed(evt);
-                        }
-                });
-                helpMenu.add(documentationMenuItem);
+        quitMenuItem.setLabel("Quit");
+        quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                quitRequest(evt);
+            }
+        });
+        fileMenu.add(quitMenuItem);
 
-                menuBar.add(helpMenu);
+        menuBar.add(fileMenu);
 
-                setMenuBar(menuBar);
+        helpMenu.setLabel("Help");
 
-                pack();
-        }// </editor-fold>//GEN-END:initComponents
+        websiteMenuItem.setLabel("Costanza's homepage");
+        websiteMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                websiteMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(websiteMenuItem);
+
+        documentationMenuItem.setLabel("Online documentation");
+        documentationMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                documentationMenuItemActionPerformed(evt);
+            }
+        });
+        helpMenu.add(documentationMenuItem);
+
+        menuBar.add(helpMenu);
+
+        setMenuBar(menuBar);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 	/** Exit the Application */
 	private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
 		plugin.stop(Costanza_Plugin.PluginStatus.EXIT_APPLICATION);
 	}//GEN-LAST:event_exitForm
-
-	private void ioMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ioMenuItemActionPerformed
-		setActivePanel(MainFrame.PanelId.IO);
-	}//GEN-LAST:event_ioMenuItemActionPerformed
-
-	private void preProcessorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preProcessorMenuItemActionPerformed
-		setActivePanel(MainFrame.PanelId.PRE_PROCESSING);
-	}//GEN-LAST:event_preProcessorMenuItemActionPerformed
-
-	private void postProcessorMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_postProcessorMenuItemActionPerformed
-		setActivePanel(MainFrame.PanelId.POST_PROCESSING);
-	}//GEN-LAST:event_postProcessorMenuItemActionPerformed
 
 	private void websiteMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_websiteMenuItemActionPerformed
 		try {
@@ -264,16 +266,14 @@ public class MainFrame extends java.awt.Frame {
 		}
 	}//GEN-LAST:event_documentationMenuItemActionPerformed
 
-	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		plugin.stop(Costanza_Plugin.PluginStatus.EXIT_APPLICATION);
-	}//GEN-LAST:event_cancelButtonActionPerformed
-
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
 		Queue jobs = new Queue();
 		try {
 			preProcessorOptionPanel.addJobs(jobs);
 			Options gradientDescentOption = new Options();
-			gradientDescentOption.addOption("extendedNeighborhood", new Integer("0"));
+                        gradientDescentOption.addOption("useExtendedNeighborhood", new Boolean(ioOptionPanel.getExtendedNeighborhoodOption()));
+                        gradientDescentOption.addOption("usePlateau", new Boolean(ioOptionPanel.getPlateauOption()));
+                        gradientDescentOption.addOption("intensityLevelsNumber", getIntensityLevelsNumber());
 			jobs.addJob(new Job("gradientdescent", gradientDescentOption));
 			postProcessorOptionPanel.addJobs(jobs);
 			Options intensityFinderOption = new Options();
@@ -285,44 +285,46 @@ public class MainFrame extends java.awt.Frame {
 		plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
 	}//GEN-LAST:event_startButtonActionPerformed
 
-	private void setActivePanel(PanelId id) {
-		switch (id) {
-			case IO:
-				cardLayout.show(panel, "IOOptionPanel");
-				update();
-				break;
-			case PRE_PROCESSING:
-				cardLayout.show(panel, "PreProcessorOptionPanel");
-				update();
-				break;
-			case POST_PROCESSING:
-				cardLayout.show(panel, "PostProcessorOptionPanel");
-				update();
-				break;
-			case SECONDARY_STACK:
-				cardLayout.show(panel, "SecondaryStackOptionPanel");
-				update();
-				break;
-			case SCALE:
-				cardLayout.show(panel, "ScaleOptionPanel");
-				update();
-				break;
-			default:
-				ij.IJ.showMessage("Unexpected error in setActivePanel()");
-		}
-	}
-        // Variables declaration - do not modify//GEN-BEGIN:variables
-        private java.awt.Panel buttonPanel;
-        private java.awt.Button cancelButton;
-        private java.awt.MenuItem documentationMenuItem;
-        private java.awt.Menu helpMenu;
-        private java.awt.MenuItem ioMenuItem;
-        private java.awt.MenuBar menuBar;
-        private java.awt.Menu optionsMenu;
-        private java.awt.Panel panel;
-        private java.awt.MenuItem postProcessorMenuItem;
-        private java.awt.MenuItem preProcessorMenuItem;
-        private java.awt.Button startButton;
-        private java.awt.MenuItem websiteMenuItem;
-        // End of variables declaration//GEN-END:variables
+        private void quitRequest(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitRequest
+            fc.saveProperties(new File(ConfigurationFileManager.LAST_FILE));
+            plugin.stop(Costanza_Plugin.PluginStatus.EXIT_APPLICATION);
+        }//GEN-LAST:event_quitRequest
+
+        private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
+            // TODO add your handling code here:
+}//GEN-LAST:event_cancelButtonActionPerformed
+
+        private void openConfFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openConfFile
+            int returnVal = fc.showOpenDialog(this);
+
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                fc.loadProperties(file);
+            } 
+        }//GEN-LAST:event_openConfFile
+
+        private void saveConfigurationFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveConfigurationFile
+            int returnVal = fc.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                fc.saveProperties(file);
+            } 
+        }//GEN-LAST:event_saveConfigurationFile
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Panel buttonPanel;
+    private java.awt.Button cancelButton;
+    private java.awt.MenuItem documentationMenuItem;
+    private java.awt.Menu fileMenu;
+    private java.awt.Menu helpMenu;
+    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private java.awt.MenuBar menuBar;
+    private java.awt.MenuItem openFile;
+    private java.awt.MenuItem quitMenuItem;
+    private java.awt.MenuItem saveFile;
+    private java.awt.Button startButton;
+    private java.awt.MenuItem websiteMenuItem;
+    // End of variables declaration//GEN-END:variables
 }

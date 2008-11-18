@@ -18,8 +18,8 @@ public class BackgroundFinderIntensity extends Processor {
 	//System.out.println("BackgroundFinderIntensity::process");
 
 	// Get threshold value from options
-	Float tmpThreshold = (Float) (options.getOptionValue("threshold"));
-	float threshold = tmpThreshold.floatValue();
+        final int INTENSITY_LEVELS = ((Integer) options.getOptionValue("intensityLevelsNumber")).intValue();
+	final double threshold = ((Float) options.getOptionValue("threshold")).floatValue()/(float)INTENSITY_LEVELS;
 
 	// Check that there is an working stack in case
 	if (c.getStack() == null) {

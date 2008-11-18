@@ -1,7 +1,7 @@
 package costanza;
-
-import java.lang.Exception;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class Options {
     /** Container with options. */
@@ -18,7 +18,7 @@ public class Options {
     /** Returns option value. */
     public Object getOptionValue(String key) throws Exception {
         if (!options.containsKey(key)) {
-            throw new Exception("Option key not available.");
+            throw new Exception("Option key (" +  key +") not available.");
         }
         return options.get(key);
     }
@@ -30,5 +30,16 @@ public class Options {
         } else {
             throw new Exception("Option key already exists.");
         }
+    }
+    
+    /** Get set of map enties for these options. */
+    public Set<Map.Entry<String, Object>> entrySet()
+    {
+        return options.entrySet();
+    }
+    
+    @Override
+    public String toString(){
+        return options.toString();
     }
 }

@@ -1,6 +1,6 @@
 
+//public class OptionPanel extends java.awt.Panel {
 public class OptionPanel extends java.awt.Panel {
-
 	ProcessorOptionPanel parentPanel;
 	ProcessorOption processorOption;
 
@@ -10,11 +10,16 @@ public class OptionPanel extends java.awt.Panel {
 		initComponents();
 		optionPanel.add(processorOption.getPanel());
 		processorNameLabel.setText(processorOption.getProcessorName());
+
 	}
 
 	public ProcessorOption getProcessorOption() {
 		return processorOption;
 	}
+        
+        ProcessorOptionPanel getParentPanel(){
+            return parentPanel;
+        }
 
 	/** This method is called from within the constructor to
 	 * initialize the form.
@@ -54,6 +59,8 @@ public class OptionPanel extends java.awt.Panel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(optionPanel, gridBagConstraints);
+
+        getAccessibleContext().setAccessibleParent(this);
     }// </editor-fold>//GEN-END:initComponents
 	private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
 		parentPanel.removeOption(this);

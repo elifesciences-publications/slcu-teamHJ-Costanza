@@ -27,6 +27,8 @@ public class MedianFilter extends Processor {
             throw new Exception("No working stack initialised in case");
         }
         final float radius = ((Float) options.getOptionValue("medianFilterRadius")).floatValue();
+        final int repeat = ((Integer) options.getOptionValue("medianFilterRepeat")).intValue();
+
         int zSize = stack.getDepth();
         int ySize = stack.getHeight();
         int xSize = stack.getWidth();
@@ -39,67 +41,68 @@ public class MedianFilter extends Processor {
         int xmin = -kXRadius;
         int xmax = xSize + kXRadius;
         int cacheWidth = xmax - xmin;
-        
+
         float[] medianBuf1 = new float[kNPoints];
         float[] medianBuf2 = new float[kNPoints];
         int[] newLineRadius0 = new int[kYSize];
-        
+
         float cache[] = new float[kZSize * kYSize * cacheWidth]; // 3D image stripe
 
-        //Fill in first stripe
-        for (int y = -kYRadius, iCache = 0; y < kYRadius; ++y) {
-            for (int z = -kZRadius; z <= kZRadius; ++z) {
-                Image img = stack.getImage(z < 0 ? 0 : z >= zSize ? zSize - 1 : z);
+        for (int rep = 0; rep < repeat; ++rep) {
+            //Fill in first stripe
+            for (int y = -kYRadius,  iCache = 0; y < kYRadius; ++y) {
+                for (int z = -kZRadius; z <= kZRadius; ++z) {
+                    Image img = stack.getImage(z < 0 ? 0 : z >= zSize ? zSize - 1 : z);
 
-                for (int x = xmin; x < xmax; ++x, ++iCache) {
-                    cache[iCache] = img.getIntensity(x < 0 ? 0 : x >= xSize ? xSize - 1 : x, y < 0 ? 0 : y >= ySize ? ySize - 1 : y);
+                    for (int x = xmin; x < xmax; ++x, ++iCache) {
+                        cache[iCache] = img.getIntensity(x < 0 ? 0 : x >= xSize ? xSize - 1 : x, y < 0 ? 0 : y >= ySize ? ySize - 1 : y);
+                    }
                 }
             }
-        }
 
-        int nextPlaneInCache = 2 * kYRadius; //next X-Z plane to fill in
-        float median = cache[0];
-        for (int z = 0; z < zSize; ++z) {
+            int nextPlaneInCache = 2 * kYRadius; //next X-Z plane to fill in
+            float median = cache[0];
+            for (int z = 0; z < zSize; ++z) {
 
-            for (int y = 0; y < ySize; ++y) {
-                int ynext = y + kYRadius;		
-                if (ynext >= ySize) {
-                    ynext = ySize - 1;
-                }
+                for (int y = 0; y < ySize; ++y) {
+                    int ynext = y + kYRadius;
+                    if (ynext >= ySize) {
+                        ynext = ySize - 1;
+                    }
 
-                int iCache = cacheWidth * kZSize * nextPlaneInCache; //place in chache where nextPlaneInCache is
-                //fill the X-Z plane
-                for (int curZ = z - kZRadius; curZ <= z + kZRadius; ++curZ) {
-                    Image img = stack.getImage(curZ < 0 ? 0 : curZ >= zSize ? zSize - 1 : curZ);
+                    int iCache = cacheWidth * kZSize * nextPlaneInCache; //place in chache where nextPlaneInCache is
+                    //fill the X-Z plane
+                    for (int curZ = z - kZRadius; curZ <= z + kZRadius; ++curZ) {
+                        Image img = stack.getImage(curZ < 0 ? 0 : curZ >= zSize ? zSize - 1 : curZ);
+                        float pixels[] = img.getPixels();
+                        //pixels out of bounds replaced by the edge values
+                        float leftpxl = img.getIntensity(0, ynext);
+                        float rightpxl = img.getIntensity(xSize - 1, ynext);
+
+                        for (int x = xmin; x < 0; x++, iCache++) {
+                            cache[iCache] = leftpxl;
+                        }
+                        System.arraycopy(pixels, xSize * ynext, cache, iCache, xSize);
+                        iCache += xSize;
+                        for (int x = xSize; x < xmax; x++, iCache++) {
+                            cache[iCache] = rightpxl;
+                        }
+                    }
+                    nextPlaneInCache = (nextPlaneInCache + 1) % kYSize; //wrap around kernel to the next plane
+
+                    Image img = stack.getImage(z);
                     float pixels[] = img.getPixels();
-                    //pixels out of bounds replaced by the edge values
-                    float leftpxl = img.getIntensity(0, ynext);	
-                    float rightpxl = img.getIntensity(xSize - 1, ynext);
 
-                    for (int x = xmin; x < 0; x++, iCache++) {
-                        cache[iCache] = leftpxl;
-                    }
-                    System.arraycopy(pixels, xSize * ynext, cache, iCache, xSize);
-                    iCache += xSize;
-                    for (int x = xSize; x < xmax; x++, iCache++) {
-                        cache[iCache] = rightpxl;
-                    }
-                }
-                nextPlaneInCache = (nextPlaneInCache + 1) % kYSize; //wrap around kernel to the next plane
-
-                Image img = stack.getImage(z);
-                float pixels[] = img.getPixels();
-
-                for (int x = 0,  p = x + y * xSize,  xCache0 = kXRadius; x < xSize; x++, p++, xCache0++) {
-                    median = getMedian(cache, cacheWidth, xCache0, lineRadius, kYSize, kZSize, medianBuf1, medianBuf2, median);
-                    pixels[p] = median;
-                }//for x
-                        System.arraycopy(lineRadius, (kYSize-1)*kZSize, newLineRadius0, 0, kYSize);
-			System.arraycopy(lineRadius, 0, lineRadius, kYSize, (kYSize-1)*kZSize);
-                        System.arraycopy(newLineRadius0, 0, lineRadius, 0, kYSize);
-            }//for y
-        }//for z
-
+                    for (int x = 0,  p = x + y * xSize,  xCache0 = kXRadius; x < xSize; x++, p++, xCache0++) {
+                        median = getMedian(cache, cacheWidth, xCache0, lineRadius, kYSize, kZSize, medianBuf1, medianBuf2, median);
+                        pixels[p] = median;
+                    }//for x
+                    System.arraycopy(lineRadius, (kYSize - 1) * kZSize, newLineRadius0, 0, kYSize);
+                    System.arraycopy(lineRadius, 0, lineRadius, kYSize, (kYSize - 1) * kZSize);
+                    System.arraycopy(newLineRadius0, 0, lineRadius, 0, kYSize);
+                }//for y
+            }//for z
+        }
         return c;
     }
 
@@ -120,12 +123,12 @@ public class MedianFilter extends Processor {
         int half = kNPoints / 2;
         int nAbove = 0, nBelow = 0;
         int yIncr = cacheWidth * kZSize;
-        for (int y = 0; y < kYSize; y++) {	
+        for (int y = 0; y < kYSize; y++) {
             int yInd = y * yIncr;
             int yIncr2 = y * kZSize;
             for (int z = 0; z < kZSize; z++) {
                 int lineInd = yIncr2 + z;
-                for (int x = xCache0 - lineRadius[lineInd],  iCache =  yInd + z * cacheWidth + x; x <= xCache0 + lineRadius[lineInd]; x++, iCache++) {
+                for (int x = xCache0 - lineRadius[lineInd],  iCache = yInd + z * cacheWidth + x; x <= xCache0 + lineRadius[lineInd]; x++, iCache++) {
                     float v = cache[iCache];
                     if (v > guess) {
                         aboveBuf[nAbove] = v;
@@ -146,7 +149,7 @@ public class MedianFilter extends Processor {
         }
     }
 
-/**
+    /**
      * Prepares spherical kernel for processor. Kernel marks points that will be used in by filter.
      * Fills in values of member variables: lineRadius[], kXRadius, kYRadius, kZRadius, kNPoints
      * @param radius for the kernel
@@ -169,11 +172,11 @@ public class MedianFilter extends Processor {
 
         int kZSize = 2 * kZRadius + 1;
         int kYSize = 2 * kYRadius + 1;
-        
+
         //fill in values for y=0, z=0 
-        int yIncr = kYRadius* kZSize;
+        int yIncr = kYRadius * kZSize;
         lineRadius = new int[kZSize * kYSize];
-        lineRadius[ yIncr + kZRadius] = kXRadius;
+        lineRadius[yIncr + kZRadius] = kXRadius;
         kNPoints = (2 * kXRadius + 1);
 
         for (int y = 1; y <= kYRadius; ++y) {
@@ -217,7 +220,7 @@ public class MedianFilter extends Processor {
 
             kNPoints += rad < 0 ? 0 : 4 * rad + 2;
         }
-        
+
 //        for (int y = 0; y < kYSize; ++y) {
 //            for (int z = 0; z < kZSize; ++z) {
 //                System.out.print(lineRadius[y*kZSize+z] + ",");
@@ -226,37 +229,45 @@ public class MedianFilter extends Processor {
 //        }
     }
 
-    
-    	/** Find the n-th lowest number in part of an array
-	 *  @param buf The input array. Only values 0 ... bufLength are read. <code>buf</code> will be modified.
-	 *  @param bufLength Number of values in <code>buf</code> that should be read
-	 *  @param n which value should be found; n=0 for the lowest, n=bufLength-1 for the highest
-	 *  @return the value */
+    /** Find the n-th lowest number in part of an array
+     *  @param buf The input array. Only values 0 ... bufLength are read. <code>buf</code> will be modified.
+     *  @param bufLength Number of values in <code>buf</code> that should be read
+     *  @param n which value should be found; n=0 for the lowest, n=bufLength-1 for the highest
+     *  @return the value */
     public static float findNthLowestNumber(float[] buf, int bufLength, int n) {
-                // Courtesy of ImageJ source code
-		// Modified algorithm according to http://www.geocities.com/zabrodskyvlada/3alg.html
-		// Contributed by Heinz Klar
-        int i,j;
-        int l=0;
-        int m=bufLength-1;
-        float med=buf[n];
-        float dum ;
+        // Courtesy of ImageJ source code
+        // Modified algorithm according to http://www.geocities.com/zabrodskyvlada/3alg.html
+        // Contributed by Heinz Klar
+        int i, j;
+        int l = 0;
+        int m = bufLength - 1;
+        float med = buf[n];
+        float dum;
 
-        while (l<m) {
-            i=l ;
-            j=m ;
+        while (l < m) {
+            i = l;
+            j = m;
             do {
-                while (buf[i]<med) i++ ;
-                while (med<buf[j]) j-- ;
-                dum=buf[j];
-                buf[j]=buf[i];
-                buf[i]=dum;
-                i++ ; j-- ;
-            } while ((j>=n) && (i<=n)) ;
-            if (j<n) l=i ;
-            if (n<i) m=j ;
-            med=buf[n] ;
+                while (buf[i] < med) {
+                    i++;
+                }
+                while (med < buf[j]) {
+                    j--;
+                }
+                dum = buf[j];
+                buf[j] = buf[i];
+                buf[i] = dum;
+                i++;
+                j--;
+            } while ((j >= n) && (i <= n));
+            if (j < n) {
+                l = i;
+            }
+            if (n < i) {
+                m = j;
+            }
+            med = buf[n];
         }
-    return med ;
+        return med;
     }
 }

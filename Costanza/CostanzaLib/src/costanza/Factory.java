@@ -15,7 +15,9 @@ public class Factory <T>{
     public void register(String processorId, Class<? extends T> processorClass) {
         objectClasses.put(processorId, processorClass);
     }
-    
+    public boolean hasItem(String n){
+        return objectClasses.containsKey(n);
+    }
     /** Create object using processorId. */
     public T create(String processorId) throws Exception {
         if (!objectClasses.containsKey(processorId)) {

@@ -1,9 +1,6 @@
-
 import costanza.Case;
 import costanza.CellCenter;
 import costanza.CellIntensity;
-import costanza.BOA;
-import costanza.Cell;
 import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
@@ -58,10 +55,12 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			try {
 				imagePlus = ij.IJ.getImage();
 			} catch (Exception exception) {
-				frame.setMenuAndButtonsEnabled(true);
+				// Do nothing as we assume ImageJ is displaying a message about this exception.
+                                frame.setMenuAndButtonsEnabled(true);
 				return;
 			}
 			frame.askForScale(imagePlus.getCalibration());
+                         scaleOptionPanelContinueButtonPressed();
 		} catch (Exception exception) {
 			printExceptionMessage(exception);
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
@@ -181,6 +180,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory = new Factory<Processor>();
 		factory.register("invert", costanza.Inverter.class);
 		factory.register("meanfilter", costanza.MeanFilter.class);
+                factory.register("medianfilter", costanza.MedianFilter.class);
 		factory.register("null", costanza.NullProcessor.class);
 		factory.register("gradientdescent", costanza.GradientDescent.class);
 		factory.register("peakremover", costanza.PeakRemover.class);

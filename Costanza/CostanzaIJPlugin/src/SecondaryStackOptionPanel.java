@@ -60,7 +60,7 @@ public class SecondaryStackOptionPanel extends java.awt.Panel {
 	}
 
 	private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButtonActionPerformed
-		frame.secondaryStackOptionPanelCancelButtonPressed();
+//		frame.secondaryStackOptionPanelCancelButtonPressed();
 	}//GEN-LAST:event_cancelButtonActionPerformed
 	
 	

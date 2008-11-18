@@ -26,6 +26,20 @@ public class PixelFlag implements Data_t {
     /**definition of value for background*/
     public static final int BACKGROUND_FLAG = -1;
     public static final int UNMARKED_FLAG = -2;
+    
+    public int getIndex(int x, int y, int z){
+        return x*yDim*zDim + y*zDim + z;
+    }
+    
+    public int[] getInverseIndex(int ind){
+        int[] ret = new int[3];
+        ret[0] = ind/xIncrem;
+        int temp = ind - ret[0] * xIncrem;
+        
+        ret[1] = temp/zDim;
+        ret[2] = temp - ret[1]*zDim;
+        return ret;
+    }
     /**
      * Construct PixelFlag of given dimensions
      * @param x_dim
@@ -49,7 +63,7 @@ public class PixelFlag implements Data_t {
      * @param val
      */
     public void setFlag( int x, int y, int z, int val ){
-        flags[x*yDim*zDim + y*zDim + z] = val;
+        flags[getIndex(x,y,z)] = val;
     }
     /**
      * get flag at given position
@@ -59,7 +73,7 @@ public class PixelFlag implements Data_t {
      * @return
      */
     public int getFlag( int x, int y, int z ){
-         return flags[x*xIncrem + y*zDim + z];
+         return flags[getIndex(x,y,z)];
     }
     /**
      * set flag at given position to the background value
@@ -68,7 +82,7 @@ public class PixelFlag implements Data_t {
      * @param z
      */
     public void setBackground( int x, int y, int z ){
-        flags[x*yDim*zDim + y*zDim + z] = BACKGROUND_FLAG;
+        flags[getIndex(x,y,z)] = BACKGROUND_FLAG;
     }
     /**
      * check if flag at given position is set to background
@@ -78,7 +92,7 @@ public class PixelFlag implements Data_t {
      * @return
      */
     public boolean isBackground( int x, int y, int z ){
-         return flags[x*xIncrem + y*zDim + z] == BACKGROUND_FLAG;
+         return flags[getIndex(x,y,z)] == BACKGROUND_FLAG;
     }
     /**
      * check if flag at given position is set to unmarked
@@ -88,7 +102,7 @@ public class PixelFlag implements Data_t {
      * @return
      */
     public boolean isUnmarked( int x, int y, int z ){
-			return flags[x*xIncrem + y*zDim + z] == UNMARKED_FLAG;
+			return flags[getIndex(x,y,z)] == UNMARKED_FLAG;
     }
     
 //    /**

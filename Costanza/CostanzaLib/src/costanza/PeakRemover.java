@@ -23,8 +23,9 @@ public class PeakRemover extends Processor {
     public Case process(Case c, Options o) throws Exception {
         Stack stack = c.getStack();
 	float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
-	float intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue();
-        //System.out.println("intensity treshold.");
+        final int INTENSITY_LEVELS = ((Integer) o.getOptionValue("intensityLevelsNumber")).intValue();
+	final double intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue()/(float) INTENSITY_LEVELS;
+        //System.out.println("intensity threshold.");
         Vector<Integer> indMap = new Vector<Integer>(c.sizeOfCells());
         
 	CellCenter[] centers = new CellCenter[c.sizeOfData(DataId.CENTERS)];
@@ -39,7 +40,7 @@ public class PeakRemover extends Processor {
 	    }
 	}
         
-        //System.out.println("size treshold.");
+        //System.out.println("size threshold.");
         
         Iterator<Cell> it = c.getCells().iterator();
         while(it.hasNext())
