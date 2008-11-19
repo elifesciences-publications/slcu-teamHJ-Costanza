@@ -17,17 +17,15 @@
 \section{Introduction}
 
 This document describes how to use COnfocal STack ANalyZer Application
-(Costanza), an ImageJ\cite{Abramoff2004} plugin for analyzing confocal
-stacks. The main purpose of Costanza is to segment nuclei marked cells
+(Costanza), an ImageJ\cite{Abramoff2004} plugin for analyzing
+stacks of image data. Such data come very often from confocal microscopy and that is where Costanza should prove to be most useful. The main purpose of Costanza is to segment nuclei marked cells
 in three dimensions, making available quantitative measures such as
 positions, sizes, and average intensities of GFP markers for the
-segmented compartments. The main algorithm is independent of intensity
+segmented compartments. However since user is given the control on the parameters used by Costanza filters and image processors, they may be tweaked and combine freley to give good results also for other image processing task. The main algorithm is independent of intensity
 thresholds, allowing for segmentation of data of varying intensity.
 
-Costanza assumes a greyscale stack of images as input, and work with
-real length units and x, y, and z scales should be provided either via
-ImageJ, or set by the user.
 
+Costanza assumes a greyscale stack of images as input. It gives the user the posibility to use ImageJ x, y, and z scales for the stack or define custom ones. The results are thus displayed in real length units. 
 \section{Installation instructions}
 
 In order to use Costanza you must have ImageJ
@@ -43,14 +41,14 @@ in the Plugins drop down menu.
 \section{Algorithms}
 
 The algorithms privided in Costanza can be divided into the main
-segmenter algorithm, preprocessing, and postprocessing.
+segmenter algorithm, preprocessing, and postprocessing. Important feature of Costanza is the fact that all the algorithms operate in three dimensions instead of performing tasks on the set of two dimensionnal images. This incrases the complexity and times of calculations but contributes to much more reliable results of segmentation and analysis, and is real strength of Costanza in comparison to other tools.
 
 \subsection{Steepest gradient descent for segmentation}
 
-This is the main algorithm for Costanza. It starts at each voxel in the stacks
-and tries to find local intensity maxima by ``walking'' uphill in intensity
-among its neighbors. All paths leading to the same maxima are saved to the
-basin of attractor of this maxima, and represents a compartment. If a neighbor
+This is the main algorithm for Costanza. It starts at each voxel in the stack
+and tries to find local intensity maximum by ``walking'' uphill in intensity landscape
+among its neighbors. All paths leading to the same maximum are saved to the
+basin of attractor of this maximum, and represent a compartment. If more than one neighbor
 has an intensity value higher then the current voxel, a step is performed to
 the neighbor with highest
 
@@ -59,152 +57,153 @@ the neighbor with highest
 \frac{I_{neigh}-I_{current}}{\mathbf{x}_{neigh}-\mathbf{x}_{current}}
 \end{equation}
 
-where $\mathbf{x}_{current}(\mathbf{x}_{current})$ is the current (neighbor)
-position, and $I$ are the respective intensities.
+where $\mathbf{x}_{current}(\mathbf{x}_{neigh})$ is the current (neighbor)
+position, and $\mathbf{I}_{current}(\mathbf{I}_{neigh})$ are the respective intensities.
 
-The neighborhood is defined by the closest voxels, i.e
-$(x\pm1,y,z)$, $(x,y\pm1,z)$, and $(x,y,z\pm1)$.
+The neighborhood of the voxel can be chosen either as the six closest voxels, 	\textit{i.e.}
+$(x\pm1,y,z)$, $(x,y\pm1,z)$, and $(x,y,z\pm1)$ or as all the twenty seven sorounding voxels ${({x,x\pm1},{y,y\pm1},{z,z\pm1})}-(x,y,z)$.
 
+Optionaly the treatment of intensity plateaus as one maximum can be turned on. This helps with analysis of data where large regions of identical intensities are present by choosing the maximum voxel for each of such regions to be the centroid of the plateau. 
 
 \subsection{Preprocessing}
 
 \subsubsection{Intensity inversion}
 
-Costanza assumes bright objects in a dark background. If the objects
-are dark in a bright surrounding, the stack should be inverted. This
+As gradient descent algorithm assumes bright objects in a dark background as imput, the stack intensity should be inverted if the objects of interest are dark in a bright surrounding. This
 algorithm replaces each voxel intensity $I$ with its inverted value
 $I_{max}-I$, where $I_{max}$ is the maximal value allowed in the
 greyscale images. This algorithm does not require any user provided
-parameter values.
+parameters.
 
 \subsubsection{Background extraction by thresholding}
 
-It may be benficial to remove voxels from treatment by the
-segmentation algorithm. Both to remove uninteresting regions of the
-stack, and for speeding up the algorithms. The background can be
+It may be benficial to remove some voxels before the aplication of the
+segmentation algorithm. This should be done both for removing uninteresting regions of the
+stack, and for speeding up the processing. The background can be
 extracted via a threshold filter, that assigns all voxels with
-intensity $I$ less than a threshold value $I_{threshold}$ to belong to
-the background, and will not be treated in the algorithms. The user
+intensity $I$ less than a threshold value $I_{threshold}$ to
+the background. The background voxels will be subsequently excluded from consideration by all the other algorithms. The user
 has to provide a value for the parameter $I_{threshold}$.
 
 \subsubsection{Mean filter for smoothing}
 
-Important for the segmentation to work is that the intensity noise is
-low and the stack provided is smooth. This can be done by different
-filters in ImageJ, but Costanza also provides a 3D filter for
-smoothing. It uses a spherical XXX and replaces each voxel intensity
+Segmentation by gradient descent works the best if intensity landscape is smooth and void from bogus maxima which can be present due to the noise. Elimination of the noise can be done by different
+filters in ImageJ, but Costanza provides two 3D filters for
+smoothing the data. As previously noted 3D filtering is preffered by the segmentation algotithm in Costanza. Thus even if a set of 2D filters was prevoiusly applied to the images in the stack it may be advanageus to apply Costanza's 3D mean filter before the analysis. Mean filter uses a spherical filtering kernel and replaces each voxel intensity
 $I$ by an average calculated from all voxels with a center positioned
-within a radius $R_{max}$ measured in real length. Since it can be
-beneficial to run the filter multiple times with smaller $R_{max}$,
-the user shopuld provide the two parameters, $R_{max}$ and the number
+within a radius $R_{max}$ measured in real length (\textit{i.e.} taking the scale in each dimension into account). Since it can be
+more beneficial to run the filter multiple times with smaller $R_{max}$, rather than to increase $R_{max}$,
+the user should provide the two parameters, $R_{max}$ and the number
 of times to run the filtering.
-
+Costanza provides also 3D median filter as an optional noise reduction processor. In principle median filter acts in very similar maner to the mean filterwith the difference that it assigns to the given pixel the value of intensity median of the pixels in the sourounding kernel rather than the intensity mean. Median filter tends to intensify differences between bright and dark regions and may be particularly useful in task like edge detection. The median filter also takes as input parameters radius of the filtering kernel $R_{max}$ and the number of repetitions.
 \subsection{Postprocessing}
 
-After gradient descent is applied for segmentation, two post-processing steps
+After gradient descent is applied the segmentation tahes place, positions of the maxima for each basin of atraction (BOA) are  identified and mean intensities for each BOA are comuted. As the next step two post-processing options
 are available.
 
 \subsubsection{Peak removal}
 
 Since the gradient descent algorithm is insensitive to absolute intensity
 values, it may happen that it finds compartments in the noisy
-background. There is a post-processor for removing these false positives by
-using thresholds in minimal size and minimal intensity for the extracted
-compartments. The user should provide a minimal size $S_{min}$ given in volume
+background. Thus we supply a post-processor for removing these false positives by
+using thresholds for minimal size of and minimal intensity in the extracted
+compartments. The user should provide a minimal size treshold $S_{min}$ given in volume
 units, and minimal intensity $I_{min}$.
 
 \subsubsection{Peak merging}
 
-Bright objects with dark regions within them might be interpreted as several
+Local intensity fluctuations may cause that the bright regions coresponding to single cell in reality
+are interpreted as several
 compartments by the gradient descent algorithm. The user has the possibility
-to merge such compartments, by setting a minimal distance
-$R_{min}$. Compartments with centers at a distance below $R_{min}$ will be
-merged into a single compartment. This algorithm is run recursively.
-
+to merge such compartments, by setting a minimal distance between maxima
+$R_{min}$. Compartments with the distance between centers below $R_{min}$ will be
+merged into a single compartment. This algorithm is runs recursively.
 
 \section{User interface}
 
 \subsection{Main}
 
-The main menu is used for running the Costanza application by chosing ``Start
-analyze''. The current active stack and selected processors and parameter
-values will be used. The main menu also includes a ``close'' function that
-will exit the Costanza plugin.
+Costazna plugin interface consist of one window which displays menu bar on the top, the tabbed panel which gives access to different program options and button panel on the bottom which is used to start and cancel the analysis. When user preses the "Start analysis" button the current active stack and selected processors and parameter values will be used to perform the task.
+ 
+\subsection{Menu bar}
 
-\subsection{Options}
+Costanza menu bar has two items: "File" and "Help". "File" submenu can be used to save and load configuration of all the options and processors. This helps user to quickly store and retrive previous settings which they found useful for particular task. The last option is "Quit" wich ends Costanza sesion. If user exits Costaza through the "Quit" the last used configuration will be saved in the file "last.ccfg" and automaticaly restored upon next start of the plugin. If this file is not available Costanza tries to open "default.ccfg" file and lastly uses hardcoded set of parameters. By default the configuration files are stored in "plugins/Costanza/" directory in the main ImageJ directory.
+ 
+\subsection{Option tabs}
 
-Options are used to set all features of Costanza. Three different views can be
-selected (Fig.~\ref{fig:gui}). 
+Option tabs are used to set all features of Costanza. They are grouped into four different tabs (Fig.~\ref{fig:gui}). 
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[width=0.5\columnwidth]{figures/GUI_input_output.eps}\\
-\includegraphics[width=0.5\columnwidth]{figures/GUI_pre.eps}\\
-\includegraphics[width=0.5\columnwidth]{figures/GUI_post.eps}
+\includegraphics[width=0.49\columnwidth]{figures1/general.eps}
+\includegraphics[width=0.49\columnwidth]{figures1/pre.eps}\\
+\includegraphics[width=0.49\columnwidth]{figures1/post.eps}
+\includegraphics[width=0.49\columnwidth]{figures1/scaling.eps}
 \caption{Graphical user interface for Costanza.}
 \label{fig:gui}
 \end{center}
+\label{fig:gui}
 \end{figure}
 %
 
-\subsubsection{Input-Output}
+\subsubsection{General tab}
 
-This view allows for selecting input and output options. As input the active
-stack is automatically chosen for segmentation. If an additional stack is to
-be used for measuring intensities, the box ``use secondary stack...'' have to
-be checked.
+This tab allows for setting options for segmentation, gradient descent algorithm as well as input and output options. The active
+stack is automatically chosen for segmentation input. If an additional stack is to
+be used for measuring other intensities in previously found compartments, the box ``use secondary stack to measure intensity levels'' have to be checked.
 
-As default, the segmentation result is provided in a table displayed by
-ImageJ. Additionally other types of output can be selected:
+As default, the segmentation results are provided in a table displayed by
+ImageJ upon completition of analysis. Additionally other types of graphical output can be selected:
 
 \begin{itemize}
 %
 \item Cell centers can be marked with red dots.
 %
-\item Basin of Attractions (BOAs), leading to the different cell centers can be
-	displayed with random colors.
+\item Basin of Attractions (BOAs), atributed to the different cell centers can be
+	colored with random colors.
 %
-\item BOAs can be displayed with colors from measured intensities can be
-	displayed. The color schema is from blue via green yellow to red.
+\item BOAs can be colored and displayed according to measured intensities. The color schema is from blue via green yellow to red.
 %
-\item The working stack can be displayed. This can be useful to see how the
-	preprocessing has changed the original stack.
+\item The working stack (after applying all the pre-processing options) can be displayed. This can be useful to see how the
+	pre-processing has changed the original images.
 %
 \end{itemize}
 
 \subsubsection{Pre-processing}
 
-Here different pre-processing step can be chosen, added and removed by the
-user. The alternatives at the moment are:
+Here different pre-processing steps can be chosen, added and removed by the
+user. Processors in the queue will be applied to the stack in top to bottom order. The alternatives at the moment are:
 
 \begin{itemize}
 %
-\item Invert, inverts the pixels in the stack. This is needed if the objects
+\item Invert - inverts the pixels in the stack. This is needed if the objects
 	are dark in a brighter background, e.g. if bright membranes are marking
 	cells.
 %
-\item Background threshold, this will set all pixels below a threshold
-	intensity to belong to the background, and hence will not be available in
-	the segmentation.
+\item Background threshold - this will put all pixels below a threshold
+	intensity to the background, and hence they will not be processed by other algorithms and 
+	the segmentation in particular.
 %
-\item Mean Filter, this will reduce noise in the images by applying a mean
+\item Mean Filter - this will reduce noise in the images by applying a 3D mean
 	filter with provided radius. As it is often useful to apply this more than
-	once, this option is also provided by the user.
+	once, repeat option is also provided for the user.
+%
+\item Median Filter - another alternative to reduce image noise is to apply 3D median filter.
+	Radius and repetion options are available to set by the user as in previous case.
 %
 \end{itemize}
 
 \subsubsection{Post-processing}
 
 After the gradient descent algorithm is applied for segmentation, it might be
-useful to do some post-processing. The available algorithms that can be
-chosen, added and removed are:
+useful to do some post-processing. As previously order of application of processors is from top to bottom. The available algorithms that can be chosen, added and removed are:
 
 \begin{itemize} 
 %
-\item Removal, where found compartments can be removed due to being too small
+\item BOA remover, where BOA regions attributed to compartments can be removed due to being too small
 	or having too low intensity.
 %
-\item Merger, where compartments with centers too close to each other can be
+\item BOA merger, where compartments with centers too close to each other can be
 	merged into a single compartment.
 %
 \end{itemize}
@@ -212,7 +211,7 @@ chosen, added and removed are:
 \section{Examples}
 
 The performance of the Costanza application is dependent on the
-parameters given to the different algorithms used. Here we provide
+parameter values given to the different algorithms used. This values will be most likely different for diferent tasks or even set of images. Thus getting satisfactory results in each case may require some experimenting and tweaking diffent parameters. Here we provide
 some examples of applications where also the parameter values used are
 presented to guide users into setting reasonable parameter values.
 
@@ -236,7 +235,7 @@ in Fig.~\ref{fig:43zoom}.
 \end{figure}
 %
 Parameters used for these two runs are given in Table~\ref{tab:43zoom}, and
-represents reasonable values also for 3D stacks.
+should represent reasonable values also for 3D stacks.
 
 \begin{table}
 	\begin{center}
