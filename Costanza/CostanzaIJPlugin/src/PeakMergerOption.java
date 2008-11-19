@@ -5,6 +5,7 @@ import costanza.Queue;
 
 public class PeakMergerOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "BOA merger";
     public PeakMergerOption() {
         initComponents();
     }
@@ -41,7 +42,7 @@ public class PeakMergerOption extends java.awt.Panel implements ProcessorOption 
     }
     
     public String getProcessorName() {
-        return "Peak merger";
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

@@ -6,6 +6,7 @@ import java.awt.Panel;
 
 public class MeanFilterOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "Mean Filter";
     public MeanFilterOption() {
         initComponents();
     }
@@ -65,7 +66,7 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
     }
 
     public String getProcessorName() {
-        return new String("Mean Filter");
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

@@ -19,6 +19,11 @@ public class MainFrame extends java.awt.Frame {
         websiteMenuItem.setEnabled(arg);
     }
 
+    public void setProgress(int i) {
+        jProgressBar1.setValue(i);
+        buttonPanel.validate();
+    }
+
     void askForScale(ij.measure.Calibration calibration) {
         scaleOptionPanel.setCalibration(calibration);
     }
@@ -57,14 +62,15 @@ public class MainFrame extends java.awt.Frame {
         this.plugin = plugin;
         initOptionPanels();
         fc = new ConfigurationFileManager(this);
+        jProgressBar1.setVisible(false);
         setPreferredSize(new java.awt.Dimension(450, 450));
         pack();
     }
 
-    Font getFrameFont(){
+    Font getFrameFont() {
         return font;
     }
-    
+
     public int getResultRequest() {
         return ioOptionPanel.getResultRequest();
     }
@@ -100,19 +106,19 @@ public class MainFrame extends java.awt.Frame {
 
         preProcessorOptionPanel = new ProcessorOptionPanel(this);
 
-        preProcessorOptionPanel.addProcessorOptionToMenu("Invert image", InvertOption.class);
-        preProcessorOptionPanel.addProcessorOptionToMenu("Mean filter", MeanFilterOption.class);
-        preProcessorOptionPanel.addProcessorOptionToMenu("Median filter", MedianFilterOption.class);
-        preProcessorOptionPanel.addProcessorOptionToMenu("Background extraction", BackGroundFinderIntensityOption.class);
-        preProcessorOptionPanel.addOptionPanel("Background extraction");
-        preProcessorOptionPanel.addOptionPanel("Mean filter");
+        preProcessorOptionPanel.addProcessorOptionToMenu(InvertOption.NAME, InvertOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu(MeanFilterOption.NAME, MeanFilterOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu(MedianFilterOption.NAME, MedianFilterOption.class);
+        preProcessorOptionPanel.addProcessorOptionToMenu(BackGroundFinderIntensityOption.NAME, BackGroundFinderIntensityOption.class);
+        preProcessorOptionPanel.addOptionPanel(BackGroundFinderIntensityOption.NAME);
+        preProcessorOptionPanel.addOptionPanel(MeanFilterOption.NAME);
 
         jTabbedPane1.addTab("pre-processor", preProcessorOptionPanel);
         postProcessorOptionPanel = new ProcessorOptionPanel(this);
-        postProcessorOptionPanel.addProcessorOptionToMenu("Peak remover", PeakRemoverOption.class);
-        postProcessorOptionPanel.addProcessorOptionToMenu("Peak merger", PeakMergerOption.class);
-        postProcessorOptionPanel.addOptionPanel("Peak remover");
-        postProcessorOptionPanel.addOptionPanel("Peak merger");
+        postProcessorOptionPanel.addProcessorOptionToMenu(PeakRemoverOption.NAME, PeakRemoverOption.class);
+        postProcessorOptionPanel.addProcessorOptionToMenu(PeakMergerOption.NAME, PeakMergerOption.class);
+        postProcessorOptionPanel.addOptionPanel(PeakRemoverOption.NAME);
+        postProcessorOptionPanel.addOptionPanel(PeakMergerOption.NAME);
 
         jTabbedPane1.addTab("post-processor", postProcessorOptionPanel);
 //		secondaryStackOptionPanel = new SecondaryStackOptionPanel(this);
@@ -170,12 +176,14 @@ public class MainFrame extends java.awt.Frame {
         });
         buttonPanel.add(startButton);
 
+        jProgressBar1.setEnabled(false);
         jProgressBar1.setMaximumSize(new java.awt.Dimension(32767, 20));
         jProgressBar1.setMinimumSize(new java.awt.Dimension(200, 20));
-        jProgressBar1.setPreferredSize(new java.awt.Dimension(230, 20));
+        jProgressBar1.setPreferredSize(new java.awt.Dimension(210, 20));
         buttonPanel.add(jProgressBar1);
 
         cancelButton.setLabel("Cancel analysis");
+        cancelButton.setVisible(false);
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -189,7 +197,6 @@ public class MainFrame extends java.awt.Frame {
         jTabbedPane1.setDoubleBuffered(true);
         jTabbedPane1.setMinimumSize(new java.awt.Dimension(300, 300));
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
-        jTabbedPane1.getAccessibleContext().setAccessibleName("null");
 
         menuBar.setFont(menuFont);
 
@@ -259,30 +266,30 @@ public class MainFrame extends java.awt.Frame {
 }//GEN-LAST:event_websiteMenuItemActionPerformed
 
 	private void documentationMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_documentationMenuItemActionPerformed
-		try {
-			ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se/~henrik/Costanza/doc/userguide.pdf");
-		} catch (IOException ex) {
-			Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
-		}
+            try {
+                ij.plugin.BrowserLauncher.openURL("http://cbbp.thep.lu.se/~henrik/Costanza/doc/userguide.pdf");
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
 	}//GEN-LAST:event_documentationMenuItemActionPerformed
 
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-		Queue jobs = new Queue();
-		try {
-			preProcessorOptionPanel.addJobs(jobs);
-			Options gradientDescentOption = new Options();
-                        gradientDescentOption.addOption("useExtendedNeighborhood", new Boolean(ioOptionPanel.getExtendedNeighborhoodOption()));
-                        gradientDescentOption.addOption("usePlateau", new Boolean(ioOptionPanel.getPlateauOption()));
-                        gradientDescentOption.addOption("intensityLevelsNumber", getIntensityLevelsNumber());
-			jobs.addJob(new Job("gradientdescent", gradientDescentOption));
-			postProcessorOptionPanel.addJobs(jobs);
-			Options intensityFinderOption = new Options();
-			jobs.addJob(new Job("intensityfinder", intensityFinderOption));
-		} catch (Exception exception) {
-			Costanza_Plugin.printExceptionMessage(exception);
-		}
+            Queue jobs = new Queue();
+            try {
+                preProcessorOptionPanel.addJobs(jobs);
+                Options gradientDescentOption = new Options();
+                gradientDescentOption.addOption("useExtendedNeighborhood", new Boolean(ioOptionPanel.getExtendedNeighborhoodOption()));
+                gradientDescentOption.addOption("usePlateau", new Boolean(ioOptionPanel.getPlateauOption()));
+                gradientDescentOption.addOption("intensityLevelsNumber", getIntensityLevelsNumber());
+                jobs.addJob(new Job("gradientdescent", gradientDescentOption));
+                postProcessorOptionPanel.addJobs(jobs);
+                Options intensityFinderOption = new Options();
+                jobs.addJob(new Job("intensityfinder", intensityFinderOption));
+            } catch (Exception exception) {
+                Costanza_Plugin.printExceptionMessage(exception);
+            }
 
-		plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
+            plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
 	}//GEN-LAST:event_startButtonActionPerformed
 
         private void quitRequest(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitRequest

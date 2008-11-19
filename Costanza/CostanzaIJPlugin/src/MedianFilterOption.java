@@ -6,6 +6,7 @@ import java.awt.Panel;
 
 public class MedianFilterOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "Median Filter";
     public MedianFilterOption() {
         initComponents();
     }
@@ -61,7 +62,7 @@ public class MedianFilterOption extends java.awt.Panel implements ProcessorOptio
     }
 
     public String getProcessorName() {
-        return new String("Median Filter");
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

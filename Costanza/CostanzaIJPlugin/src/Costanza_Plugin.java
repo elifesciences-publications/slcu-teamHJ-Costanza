@@ -49,6 +49,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 	 */
 	public void start(Queue jobs, boolean secondaryStackOption) {
 		frame.setMenuAndButtonsEnabled(false);
+//                frame.setProgress(0);
 		this.jobs = jobs;
 		this.secondaryStackOption = secondaryStackOption;
 		try {
@@ -59,8 +60,10 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
                                 frame.setMenuAndButtonsEnabled(true);
 				return;
 			}
+//                        frame.setProgress(5);
 			frame.askForScale(imagePlus.getCalibration());
                          scaleOptionPanelContinueButtonPressed();
+//                         frame.setProgress(100);
 		} catch (Exception exception) {
 			printExceptionMessage(exception);
 			status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
@@ -157,13 +160,13 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			frame = new MainFrame(this);
 			frame.setVisible(true);
 			status = PluginStatus.RUN_APPLICATION;
-			while (status == PluginStatus.RUN_APPLICATION) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException ex) {
-					Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
-				}
-			}
+//			while (status == PluginStatus.RUN_APPLICATION) {
+//				try {
+//					Thread.sleep(1000);
+//				} catch (InterruptedException ex) {
+//					Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+//				}
+//			}
 		} catch (Exception ex) {
 			Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
 		}
@@ -222,11 +225,13 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 				options.addOption("OverrideStack", secondaryStack);
 			}
 			Job job = new Job("boaintensitycolorize", options);
-			displayResult("Costanza - Basins of attractions (BOA)", job);
+			displayResult("Costanza - Basins of attractions (BOA)-intensity", job);
 		}
 		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
-			Job job = new Job("cellmarker", null);
-			displayResult("Costanza - Cell centers", job);
+                    Options options = new Options();
+                    options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius());
+                    Job job = new Job("cellmarker", options);
+                    displayResult("Costanza - Cell centers", job);
 		}
 		if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
 			Stack workingStack = IJCase.getStack();

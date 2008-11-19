@@ -5,6 +5,7 @@ import costanza.Queue;
 
 public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "BOA remover";
     public PeakRemoverOption() {
         initComponents();
     }
@@ -54,7 +55,7 @@ public class PeakRemoverOption extends java.awt.Panel implements ProcessorOption
     }
 
     public String getProcessorName() {
-        return "Peak remover";
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

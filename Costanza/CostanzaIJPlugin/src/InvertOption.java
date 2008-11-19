@@ -6,6 +6,7 @@ import java.awt.Panel;
 
 public class InvertOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "Invert image";
     public InvertOption() {
         initComponents();
     }
@@ -32,7 +33,7 @@ public class InvertOption extends java.awt.Panel implements ProcessorOption {
     }
 
     public String getProcessorName() {
-        return new String("Invert image");
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

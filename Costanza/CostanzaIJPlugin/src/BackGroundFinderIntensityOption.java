@@ -5,6 +5,7 @@ import costanza.Queue;
 
 public class BackGroundFinderIntensityOption extends java.awt.Panel implements ProcessorOption {
 
+    public static final String NAME = "Background extraction";
     public BackGroundFinderIntensityOption() {
 
         initComponents();
@@ -41,7 +42,7 @@ public class BackGroundFinderIntensityOption extends java.awt.Panel implements P
     }
 
     public String getProcessorName() {
-        return "Background extraction";
+        return NAME;
     }
 
     public void addJobs(Queue jobs) throws Exception {

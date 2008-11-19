@@ -20,6 +20,9 @@ public class CellCenterMarker extends Processor {
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
 	Collection<CellCenter> cellCenters = (Collection<CellCenter>) c.getCellData(DataId.CENTERS);
+        int MARK_NEIGHBORS = 0;
+        if(options != null && options.hasOption("markNeighbors"))
+            MARK_NEIGHBORS = ((Integer)options.getOptionValue("markNeighbors")).intValue();
 	if (cellCenters == null) {
 	    return c;
 	}
@@ -30,23 +33,37 @@ public class CellCenterMarker extends Processor {
 	    CellCenter cc = (CellCenter) ccs[i];
 	    BufferedImage bufferedImage = images[cc.getZ()];
 	    //Color the center and the neighbouring pixels red.
-
-	    if (cc.getX() - 1 > 0 &&
-		    cc.getX() + 1 < bufferedImage.getWidth() &&
-		    cc.getY() - 1 > 0 &&
-		    cc.getY() + 1 < bufferedImage.getHeight()) {
-		bufferedImage.setRGB(cc.getX() - 1, cc.getY() - 1, redColor);
-		bufferedImage.setRGB(cc.getX(), cc.getY() - 1, redColor);
-		bufferedImage.setRGB(cc.getX() + 1, cc.getY() - 1, redColor);
-		bufferedImage.setRGB(cc.getX() - 1, cc.getY(), redColor);
-		bufferedImage.setRGB(cc.getX(), cc.getY(), redColor);
-		bufferedImage.setRGB(cc.getX() + 1, cc.getY(), redColor);
-		bufferedImage.setRGB(cc.getX() - 1, cc.getY() + 1, redColor);
-		bufferedImage.setRGB(cc.getX(), cc.getY() + 1, redColor);
-		bufferedImage.setRGB(cc.getX() + 1, cc.getY() + 1, redColor);
-	    } else {
-		bufferedImage.setRGB(cc.getX(), cc.getY(), redColor);
-	    }
+            
+            if ( MARK_NEIGHBORS != 0){
+                for( int x = cc.getX() - MARK_NEIGHBORS; x <= cc.getX() + MARK_NEIGHBORS; ++x )
+                {
+                    if(x < bufferedImage.getWidth() &&  x > 0){
+                        for( int y = cc.getY() - MARK_NEIGHBORS; y <= cc.getY() + MARK_NEIGHBORS; ++y ){
+                            if(y < bufferedImage.getHeight() &&  y > 0){
+                                bufferedImage.setRGB(x,y,redColor);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                bufferedImage.setRGB(cc.getX(), cc.getY(), redColor);
+            }
+//	    if ( MARK_NEIGHBORS != 0 && cc.getX() - MARK_NEIGHBORS > 0 &&
+//		    cc.getX() + MARK_NEIGHBORS < bufferedImage.getWidth() &&
+//		    cc.getY() - MARK_NEIGHBORS > 0 &&
+//		    cc.getY() + MARK_NEIGHBORS < bufferedImage.getHeight()) {
+//		bufferedImage.setRGB(cc.getX() - MARK_NEIGHBORS, cc.getY() - MARK_NEIGHBORS, redColor);
+//		bufferedImage.setRGB(cc.getX(), cc.getY() - MARK_NEIGHBORS, redColor);
+//		bufferedImage.setRGB(cc.getX() + MARK_NEIGHBORS, cc.getY() - MARK_NEIGHBORS, redColor);
+//		bufferedImage.setRGB(cc.getX() - MARK_NEIGHBORS, cc.getY(), redColor);
+//		
+//		bufferedImage.setRGB(cc.getX() + MARK_NEIGHBORS, cc.getY(), redColor);
+//		bufferedImage.setRGB(cc.getX() - MARK_NEIGHBORS, cc.getY() + MARK_NEIGHBORS, redColor);
+//		bufferedImage.setRGB(cc.getX(), cc.getY() + MARK_NEIGHBORS, redColor);
+//		bufferedImage.setRGB(cc.getX() + MARK_NEIGHBORS, cc.getY() + MARK_NEIGHBORS, redColor);
+//            }
 	}
 	c.setResultImages(images);
 
