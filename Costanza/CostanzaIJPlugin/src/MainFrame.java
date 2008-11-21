@@ -92,11 +92,11 @@ public class MainFrame extends java.awt.Frame {
     }
 
     public int getIntensityLevelsNumber() {
-        return new Integer(ioOptionPanel.getIntensityLevels());
+        return new Integer(scaleOptionPanel.getIntensityLevels());
     }
 
     public void setIntensityLevelsNumber(Integer i) {
-        ioOptionPanel.setIntensityLevels(i);
+        scaleOptionPanel.setIntensityLevels(i);
     }
 
     private void initOptionPanels() throws Exception {

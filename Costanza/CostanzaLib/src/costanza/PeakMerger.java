@@ -9,6 +9,8 @@ import java.util.Vector;
  */
 public class PeakMerger extends Processor {
 
+    public static final String RADIUS_OPT = "radius";
+    
     /**Implements the PeakMerger algorithm.
      * @param c the Case to work on. 
      * @param o the Option object to use.
@@ -18,7 +20,14 @@ public class PeakMerger extends Processor {
     @Override
     public Case process(Case c, Options o) throws Exception {
 
-        float R2 = ((Float) o.getOptionValue("radius")).floatValue();
+        float R2 = 0.0f;
+        if(o != null)
+        {
+            R2 = ((Float) o.getOptionValue(RADIUS_OPT)).floatValue();
+        }
+        else
+            throw new Exception("No valid options send to PeakMerger.");
+        
         R2 *= R2;
 
         float[] scale2 = c.getStack().getScale();

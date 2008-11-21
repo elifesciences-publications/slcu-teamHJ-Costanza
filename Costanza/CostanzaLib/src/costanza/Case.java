@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
  */
 public class Case extends CellDataManipulator {
 
+    public static final int COSTANZA_INTENSITY_LEVELS = 255;
     /**Data contained in the Case.*/
     //private Data mData;
     /**Image stack contained in the Case*/
@@ -22,25 +23,21 @@ public class Case extends CellDataManipulator {
      *
      * @param s a Stack of Image.
      */
-    public Case(Stack s) {
+    public Case(Stack s) throws Exception{
         //System.out.println("Case: Original Stack 1: " + s.getDepth());
         mOriginalStack = s;
         mStack = (Stack) s.clone();
-        //mData = new Data();
-        //manip = new CellDataManipulator(mData);
+        //initialize pixel flag data
+        PixelFlag pf = new PixelFlag(mStack.getWidth(), mStack.getHeight(), mStack.getDepth());
+        attachStackData(pf);
         //System.out.println("Case: New Stack 1: " + mStack.getDepth());
         //System.out.println("Case: Original Stack 2: " + s.getDepth());
         resultImages = null;
         if (mStack == null) {
-            System.out.println("Clone is empty!");
+            throw new Exception("Clone stack is empty!");
         }
     }
 
-    /*
-    public CellDataManipulator getManipulator() {	
-    return manip;
-    }
-     */
     
     /**Accessor for a working copy of Stack.
      *

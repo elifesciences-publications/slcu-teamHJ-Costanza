@@ -12,6 +12,9 @@ import java.util.Vector;
  */
 public class PeakRemover extends Processor {
 
+    public static final String SIZE_THRESHOLD_OPT = "sizeThreshold";
+    public static final String INTENSITY_TRESHOLD_OPT = "intensityThreshold";
+    public static final String INTENSITY_LEVELS_OPT = "intensityLevelsNumber";
     /**
      * Implements the PeakRemover algorithm.
      * @param c the Case to work on. 
@@ -21,10 +24,23 @@ public class PeakRemover extends Processor {
      */
     @Override
     public Case process(Case c, Options o) throws Exception {
+        
         Stack stack = c.getStack();
-	float sizeThreshold = ((Float) o.getOptionValue("sizeThreshold")).floatValue();
-        final int INTENSITY_LEVELS = ((Integer) o.getOptionValue("intensityLevelsNumber")).intValue();
-	final double intensityThreshold = ((Float) o.getOptionValue("intensityThreshold")).floatValue()/(float) INTENSITY_LEVELS;
+        
+	float sizeThreshold = 0.0f;
+        int INTENSITY_LEVELS = Case.COSTANZA_INTENSITY_LEVELS;
+	double intensityThreshold = 0.0;
+        
+        if(o != null)
+        {
+            sizeThreshold = ((Float) o.getOptionValue(SIZE_THRESHOLD_OPT)).floatValue();
+            if(o.hasOption(INTENSITY_LEVELS_OPT))
+                INTENSITY_LEVELS = ((Integer) o.getOptionValue(INTENSITY_LEVELS_OPT)).intValue();
+            intensityThreshold = ((Float) o.getOptionValue(INTENSITY_TRESHOLD_OPT)).floatValue()/(float) INTENSITY_LEVELS;
+        }
+        else
+            throw new Exception("No valid options send to PeakRemover.");
+        
         //System.out.println("intensity threshold.");
         Vector<Integer> indMap = new Vector<Integer>(c.sizeOfCells());
         

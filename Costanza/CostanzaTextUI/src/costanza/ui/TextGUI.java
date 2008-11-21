@@ -310,7 +310,7 @@ public class TextGUI {
 		Factory<Processor> factory = new Factory<Processor>();
 		factory.register("invert", costanza.Inverter.class);
 		factory.register("meanfilter", costanza.MeanFilter.class);
-		factory.register("null", costanza.NullProcessor.class);
+//		factory.register("null", costanza.NullProcessor.class);
 		factory.register("gradientdescent", costanza.GradientDescent.class);
 		factory.register("peakremover", costanza.PeakRemover.class);
 		factory.register("peakmerger", costanza.PeakMerger.class);

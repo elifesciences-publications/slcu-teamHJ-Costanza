@@ -13,47 +13,55 @@ public class BackgroundFinderIntensity extends Processor {
      * @return the processed Case.
      * @throws java.lang.Exception
      */
+    public static final String INTENSITY_LEVELS_OPT = "intensityLevelsNumber";
+    public static final String THRESHOLD_OPT = "threshold";
     @Override
     public Case process(Case c, Options options) throws Exception {
 	//System.out.println("BackgroundFinderIntensity::process");
 
 	// Get threshold value from options
-        final int INTENSITY_LEVELS = ((Integer) options.getOptionValue("intensityLevelsNumber")).intValue();
-	final double threshold = ((Float) options.getOptionValue("threshold")).floatValue()/(float)INTENSITY_LEVELS;
+        int INTENSITY_LEVELS = Case.COSTANZA_INTENSITY_LEVELS;
+        double threshold = 0;
+        if(options != null)
+        {
+            if(options.hasOption(INTENSITY_LEVELS_OPT))
+                INTENSITY_LEVELS = ((Integer) options.getOptionValue(INTENSITY_LEVELS_OPT)).intValue();
+            threshold = ((Float) options.getOptionValue(THRESHOLD_OPT)).floatValue()/(float)INTENSITY_LEVELS;
+        }
+        else
+            return c;
 
 	// Check that there is an working stack in case
 	if (c.getStack() == null) {
-	    throw new Exception("No working stack available in case.");
+	    throw new Exception("No working stack available in Case.");
 	}
       
-	int width = c.getStack().getWidth();
-	int height = c.getStack().getHeight();
-	int depth = c.getStack().getDepth();
+        Stack s = c.getStack();
+	int width = s.getWidth();
+	int height = s.getHeight();
+	int depth = s.getDepth();
        // Create vector with pixels that stores the background
 	//StackBackground bgPixel = new StackBackground();
         
-        PixelFlag pf = new PixelFlag(width, height, depth);
-        //bgPixel.ensureCapacity(width*height*depth);
+        PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
+        if (pf == null) {
+            throw new Exception("Pixel flags not set for the stack.");
+        }
+//        PixelFlag pf = new PixelFlag(width, height, depth);
+        
         
 	// Extract pixels with intensity lower than threshold into background
 	for (int x = 0; x < width; ++x) {
 	    for (int y = 0; y < height; ++y) {
 		for (int z = 0; z < depth; ++z) {
-		    if (c.getStack().getIntensity(x, y, z) < threshold) {
-			//bgPixel.add(new Pixel(x, y, z));
+		    if (s.getIntensity(x, y, z) < threshold) {
                         pf.setBackground(x, y, z);
-		    }
-//                    else
-//                        pf.setFlag(x, y, z, (short)0);
-                        
+		    }                      
 		}
 	    }
 	}
         
-        //bgPixel.trimToSize();
-	//c.attachStackData(bgPixel);
-        c.attachStackData(pf);
-
+//        c.attachStackData(pf);
 	return c;
     }
 }

@@ -12,7 +12,10 @@ package costanza;
  * @see Processor
  */
 public class MeanFilter extends Processor {
-
+    
+    public static final String RADIUS_OPT = "radius";
+    public static final String REPEAT_OPT = "meanFilterRepeat";
+    
     private short lineRadius[];
     private int kXRadius;
     private int kYRadius;
@@ -27,8 +30,16 @@ public class MeanFilter extends Processor {
         if (stack == null) {
             throw new Exception("No working stack initialised in case");
         }
-        final float radius = ((Float) options.getOptionValue("radius")).floatValue();
-        final int repeat = ((Integer) options.getOptionValue("meanFilterRepeat")).intValue();
+        
+        float radius = 0.0f;
+        int repeat = 0;        
+        if(options != null)
+        {
+            radius = ((Float) options.getOptionValue(RADIUS_OPT)).floatValue();
+            repeat = ((Integer) options.getOptionValue(REPEAT_OPT)).intValue();
+        }
+        else
+            throw new Exception("No valid options send to MeanFilter.");
 
         int zSize = stack.getDepth();
         int ySize = stack.getHeight();
@@ -36,7 +47,7 @@ public class MeanFilter extends Processor {
 
         PixelFlag pf = (PixelFlag) c.getStackData(DataId.PIXEL_FLAG);
         if (pf == null) {
-            throw new Exception("Pixel flags not set for the stack");
+            throw new Exception("Pixel flags not set for the stack.");
         }
 
         //prepare spherical kernel

@@ -184,7 +184,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		factory.register("invert", costanza.Inverter.class);
 		factory.register("meanfilter", costanza.MeanFilter.class);
                 factory.register("medianfilter", costanza.MedianFilter.class);
-		factory.register("null", costanza.NullProcessor.class);
+//		factory.register("null", costanza.NullProcessor.class);
 		factory.register("gradientdescent", costanza.GradientDescent.class);
 		factory.register("peakremover", costanza.PeakRemover.class);
 		factory.register("peakmerger", costanza.PeakMerger.class);
@@ -229,7 +229,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 		}
 		if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
                     Options options = new Options();
-                    options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius());
+                    options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius()-1);
                     Job job = new Job("cellmarker", options);
                     displayResult("Costanza - Cell centers", job);
 		}
@@ -293,7 +293,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
 			float y = cellCenter.getY() * yScale;
 			float z = cellCenter.getZ() * zScale;
 			float volume = cellSize * volumeScale;
-			float intensity = cellIntensity.getIntensity(id + "mean") * 255.0f;
+			float intensity = cellIntensity.getIntensity(id + "mean") * (float) Case.COSTANZA_INTENSITY_LEVELS;
 			line += i + tab + x + tab + y + tab + z + tab + volume + tab + intensity;
 			ij.IJ.write(line);
 		}

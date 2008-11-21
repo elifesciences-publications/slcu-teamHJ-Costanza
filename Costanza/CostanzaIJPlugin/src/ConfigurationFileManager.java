@@ -1,4 +1,5 @@
 
+import costanza.BackgroundFinderIntensity;
 import costanza.Options;
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +53,7 @@ public class ConfigurationFileManager extends JFileChooser {
         defaults.setProperty(EXTENDED_NEIGHBORHOOD_GUI, "false");
         defaults.setProperty(PLATAEU_MARKER_GUI, "false");
         defaults.setProperty(INTENSITY_LEVELS_GUI, "256");
-        defaults.setProperty(MARKER_RADIUS_GUI, "1");
+        defaults.setProperty(MARKER_RADIUS_GUI, "2");
         defaults.setProperty(SECONDARY_STACK_GUI, "false");
         defaults.setProperty(CELL_CENTERS_GUI, "true");
         defaults.setProperty(BOAS_GUI, "false");
@@ -85,7 +86,7 @@ public class ConfigurationFileManager extends JFileChooser {
 
     public void saveProperties(File f) {
         try {
-            System.out.println(f.getPath());
+//            System.out.println(f.getPath());
             retriveGUIProperties();
             FileOutputStream input;
             if(new ConfigurationFileFilter().getExtension(f) == null){
@@ -182,7 +183,6 @@ public class ConfigurationFileManager extends JFileChooser {
 
         props.setProperty(EXTENDED_NEIGHBORHOOD_GUI, String.valueOf(ioPanel.getExtendedNeighborhoodOption()));
         props.setProperty(PLATAEU_MARKER_GUI, String.valueOf(ioPanel.getPlateauOption()));
-        props.setProperty(INTENSITY_LEVELS_GUI, String.valueOf(ioPanel.getIntensityLevels()));
         props.setProperty(MARKER_RADIUS_GUI, String.valueOf(ioPanel.getMarkerRadius()));
         props.setProperty(SECONDARY_STACK_GUI, String.valueOf(ioPanel.getSecondaryStackOption()));
         props.setProperty(CELL_CENTERS_GUI, String.valueOf((ioPanel.getResultRequest() & Costanza_Plugin.REQUEST_CELL_MARKER) != 0));
@@ -221,7 +221,7 @@ public class ConfigurationFileManager extends JFileChooser {
         ScaleOptionPanel scalePanel = frame.getScaleOptionPanel();
         props.setProperty(IMAGEJCALIBRATION_GUI, String.valueOf(scalePanel.getIJCalibrationOption()));
         props.setProperty(SCALES_GUI, String.valueOf(scalePanel.getScaleX()) + " " + String.valueOf(scalePanel.getScaleY()) + " " + String.valueOf(scalePanel.getScaleZ()));
-
+        props.setProperty(INTENSITY_LEVELS_GUI, String.valueOf(scalePanel.getIntensityLevels()));
     }
 
     public void setGUIProperties() {
@@ -232,7 +232,6 @@ public class ConfigurationFileManager extends JFileChooser {
 
         ioPanel.setExtendedNeighborhoodOption(Boolean.parseBoolean(props.getProperty(EXTENDED_NEIGHBORHOOD_GUI)));
         ioPanel.setPlateauOption(Boolean.parseBoolean(props.getProperty(PLATAEU_MARKER_GUI)));
-        ioPanel.setIntensityLevels(Integer.parseInt(props.getProperty(INTENSITY_LEVELS_GUI)));
         ioPanel.setMarkerRadius(Integer.parseInt(props.getProperty(MARKER_RADIUS_GUI)));
         ioPanel.setSecondaryStackOption(Boolean.parseBoolean(props.getProperty(SECONDARY_STACK_GUI)));
         ioPanel.setCellCenterRequest(Boolean.parseBoolean(props.getProperty(CELL_CENTERS_GUI)));
@@ -277,6 +276,7 @@ public class ConfigurationFileManager extends JFileChooser {
         float z = Float.parseFloat(st.nextToken());
         scalePanel.setScale(x, y, z);
         scalePanel.setIJCalibrationOption(Boolean.parseBoolean(props.getProperty(IMAGEJCALIBRATION_GUI)));
+        scalePanel.setIntensityLevels(Integer.parseInt(props.getProperty(INTENSITY_LEVELS_GUI)));
     }
 
     public void addRequestedProcessors() {
@@ -298,7 +298,7 @@ public class ConfigurationFileManager extends JFileChooser {
             val = new String(o.getOptionValue("medianFilterRadius").toString() + " " + o.getOptionValue("medianFilterRepeat").toString());
         } else if (val.equals(BackGroundFinderIntensityOption.NAME)) {
             n = BACKGROUND_GUI + c.toString();
-            val = new String(o.getOptionValue("threshold").toString());
+            val = new String(o.getOptionValue(BackgroundFinderIntensity.THRESHOLD_OPT).toString());
         } else if (val.equals(PeakRemoverOption.NAME)) {
             n = PEAK_REMOVER_GUI + c.toString();
             val = new String(o.getOptionValue("sizeThreshold").toString() + " " + o.getOptionValue("intensityThreshold").toString());

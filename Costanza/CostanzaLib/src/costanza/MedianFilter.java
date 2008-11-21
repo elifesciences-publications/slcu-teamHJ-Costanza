@@ -12,6 +12,9 @@ package costanza;
  */
 public class MedianFilter extends Processor {
 
+    public static final String RADIUS_OPT = "medianFilterRadius";
+    public static final String REPEAT_OPT = "medianFilterRepeat";
+    
     private int lineRadius[];
     private int kXRadius;
     private int kYRadius;
@@ -26,9 +29,18 @@ public class MedianFilter extends Processor {
         if (stack == null) {
             throw new Exception("No working stack initialised in case");
         }
-        final float radius = ((Float) options.getOptionValue("medianFilterRadius")).floatValue();
-        final int repeat = ((Integer) options.getOptionValue("medianFilterRepeat")).intValue();
+        
+        float radius = 0.0f;
+        int repeat = 0;
 
+        if(options != null)
+        {
+            radius = ((Float) options.getOptionValue(RADIUS_OPT)).floatValue();
+            repeat = ((Integer) options.getOptionValue(REPEAT_OPT)).intValue();
+        }
+        else
+            throw new Exception("No valid options send to MedianFilter.");
+        
         int zSize = stack.getDepth();
         int ySize = stack.getHeight();
         int xSize = stack.getWidth();

@@ -22,7 +22,7 @@ public class BoaColorizer extends Processor {
         int[] boaColors = genColors(c.sizeOfCells());
         BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
         if (boaColors.length != c.sizeOfCells()) {
-            throw new Exception("Lengths differ!");
+            throw new Exception("Cells and generated colors lengths differ.");
         }
 
         int xDim = images[0].getWidth();
@@ -38,7 +38,7 @@ public class BoaColorizer extends Processor {
                     int flag = pf.getFlag(ix, iy, iz);
                     if (flag != PixelFlag.BACKGROUND_FLAG) {
                         if (flag < 0) {
-                            throw new Exception("Negative flag in PixelFlag!");
+                            throw new Exception("Negative flag in PixelFlag.");
                         }
                         int color;
                         if (flag >= curSize) {

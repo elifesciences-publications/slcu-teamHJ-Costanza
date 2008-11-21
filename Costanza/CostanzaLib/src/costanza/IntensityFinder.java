@@ -8,7 +8,7 @@ import java.util.Iterator;
  * @see Processor
  */
 public class IntensityFinder extends Processor {
-
+     public static final String STACK_OPT = "OverrideStack";
     /**Finds the intensities in several BOA. 
      * @param c the Case to work on.
      * @param options the Options containing an "OverrideStack" if it should be used.
@@ -23,10 +23,10 @@ public class IntensityFinder extends Processor {
 //        if (c.getOriginalStack() == null) {
 //            throw new Exception("No original stack available in case");
 //        }
-	Stack stack;
+	Stack stack = null;
 
-	if (options != null && options.hasOption("OverrideStack")) {
-	    stack = (Stack) options.getOptionValue("OverrideStack");
+	if (options != null && options.hasOption(STACK_OPT)) {
+	    stack = (Stack) options.getOptionValue(STACK_OPT);
 	//stackTag = (String)options.getOptionValue("StackTag");
 	} else {
 	    stack = c.getOriginalStack();
@@ -67,69 +67,7 @@ public class IntensityFinder extends Processor {
             }
         }
 
-
-//	// Get the basin of attractors from data in case
-//	Vector<BOA> boa = new Vector<BOA>();
-//	Collection boaCollection = c.getCellData(DataId.BOAS);
-//	if (boaCollection != null && boaCollection.iterator().hasNext()) {
-//	    //int count=0;
-//	    Iterator i = boaCollection.iterator();
-//	    while (i.hasNext()) {
-//		BOA boaTmp = (BOA) i.next();
-//		boa.add(boaTmp);
-//	    //++count;
-//	    }
-//	//System.out.println("Number of collected BOAs " + count);
-//	} else {//No boas found, nothing to do for this function
-//	    return c;
-//	}
-//	// Extract and save the intensities
-//	int numBoa = boa.size();
-//	Vector<Float> intensity = new Vector<Float>();
-//	Vector<Float> meanIntensity = new Vector<Float>();
-//	for (int i = 0; i < numBoa; ++i) {
-//	    intensity.add(0.0f);
-//	    meanIntensity.add(0.0f);
-//	}
-//	for (int i = 0; i < numBoa; ++i) {
-//	    Vector<Pixel> pixels = new Vector<Pixel>(boa.get(i));
-//	    int numPixel = pixels.size();
-//	    for (int j = 0; j < numPixel; ++j) {
-//		int x = pixels.get(j).getX();
-//		int y = pixels.get(j).getY();
-//		int z = pixels.get(j).getZ();
-//		intensity.set(i, intensity.get(i) +
-//			stack.getIntensity(x, y, z));
-//	    }
-//	}
-//	for (int i = 0; i < numBoa; ++i) {
-//	    int numPixel = (boa.get(i)).size();
-//	    meanIntensity.set(i, intensity.get(i) / numPixel);
-//	}
-        // Add the total and mean intensity
-        //Vector<CellIntensity> ciTmp = new Vector<CellIntensity>();
         String meanTag = stackTag + "mean";
-//        for (int i = 0; i < intensities.size(); ++i) {
-//            float intVal = intensities.get(i);
-//            if (intVal > 0.0) {
-//                Cell cell = c.getCell(i);
-//                if(cell != null)
-//                {
-//                    int cellSize = cell.size();
-//                    if(cellSize == 0)
-//                        throw new Exception("Cell of size 0 pixels detected.");
-//                    CellIntensity intens = (CellIntensity) cell.get(DataId.INTENSITIES);
-//
-//                    if (intens == null) {
-//                        intens = new CellIntensity(c);
-//                        c.attachCellData(intens, cell);
-//                    }
-//
-//                    //intens.addIntensity(stackTag + "total", intensity.get(i));
-//                    intens.addIntensity(meanTag, intVal/cellSize);
-//                }
-//            }
-//        }
 
         Iterator<Cell> iter = c.getCells().iterator();
         while (iter.hasNext()) {

@@ -37,10 +37,7 @@ public class IOOptionPanel extends java.awt.Panel {
     
     public void setCellCenterRequest(Boolean b) {
         cellCenterMarkerOption.setState(b);
-        if(cellCenterMarkerOption.getState() == true)
-            markerRadiusTextField.setEnabled(true);
-        else
-            markerRadiusTextField.setEnabled(false);
+        setMarkerSizeEnable();
     }
     
     public void setWorkingStackRequest(Boolean b) {
@@ -59,10 +56,6 @@ public class IOOptionPanel extends java.awt.Panel {
         return plateauOption.getState();
     }
 
-    public Integer getIntensityLevels() {
-        return new Integer(intensityLevelsTextField.getText());
-    }
-
     public Integer getMarkerRadius() {
         return new Integer(markerRadiusTextField.getText());
     }
@@ -79,12 +72,15 @@ public class IOOptionPanel extends java.awt.Panel {
         plateauOption.setState(b);
     }
 
-    public void setIntensityLevels(Integer i) {
-        intensityLevelsTextField.setText(i.toString());
-    }
-
     public void setMarkerRadius(Integer i) {
         markerRadiusTextField.setText(i.toString());
+    }
+    
+    private void setMarkerSizeEnable(){
+        if(cellCenterMarkerOption.getState() == true)
+            markerRadiusTextField.setEnabled(true);
+        else
+            markerRadiusTextField.setEnabled(false);
     }
     /** This method is called from within the constructor to
      * initialize the form.
@@ -106,9 +102,6 @@ public class IOOptionPanel extends java.awt.Panel {
         boaColourizeCheckbox = new java.awt.Checkbox();
         boaIntensityColourizeCheckbox = new java.awt.Checkbox();
         workingStackCheckbox = new java.awt.Checkbox();
-        otherLabel = new java.awt.Label();
-        label1 = new java.awt.Label();
-        intensityLevelsTextField = new java.awt.TextField();
 
         setBackground(new java.awt.Color(245, 245, 245));
         setLayout(new java.awt.GridBagLayout());
@@ -171,7 +164,7 @@ public class IOOptionPanel extends java.awt.Panel {
         add(cellCenterMarkerOption, gridBagConstraints);
 
         markerRadiusTextField.setColumns(1);
-        markerRadiusTextField.setText("0");
+        markerRadiusTextField.setText("1");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
@@ -197,35 +190,10 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(workingStackCheckbox, gridBagConstraints);
-
-        otherLabel.setFont(new java.awt.Font("Dialog", 1, 12));
-        otherLabel.setText("Other options:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(otherLabel, gridBagConstraints);
-
-        label1.setText("Number of intensity levels:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(label1, gridBagConstraints);
-
-        intensityLevelsTextField.setColumns(3);
-        intensityLevelsTextField.setText("255");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.ipadx = 8;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(intensityLevelsTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void cellCenterMarkerOptionItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cellCenterMarkerOptionItemStateChanged
-        if(cellCenterMarkerOption.getState() == true)
-            markerRadiusTextField.setEnabled(true);
-        else
-            markerRadiusTextField.setEnabled(false);
+        setMarkerSizeEnable();
     }//GEN-LAST:event_cellCenterMarkerOptionItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -234,11 +202,8 @@ public class IOOptionPanel extends java.awt.Panel {
     private java.awt.Checkbox cellCenterMarkerOption;
     private java.awt.Checkbox extendedNeighborhoodOption;
     private java.awt.Label inputOptionsLabel;
-    private java.awt.TextField intensityLevelsTextField;
-    private java.awt.Label label1;
     private java.awt.Label mainOptions;
     private java.awt.TextField markerRadiusTextField;
-    private java.awt.Label otherLabel;
     private java.awt.Label outputOptionsLabel;
     private java.awt.Checkbox plateauOption;
     private java.awt.Checkbox secondaryStackCheckbox;

@@ -11,7 +11,6 @@ import costanza.Stack;
 import costanza.Pixel;
 import costanza.DataId;
 import costanza.BOA;
-import costanza.StackBackground;
 import costanza.CellCenterMarker;
 import costanza.BoaColorizer;
 import costanza.BoaColorizerIntensity;
@@ -31,7 +30,6 @@ import ij.process.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 import java.util.Collection;
-import java.util.Iterator;
 
 
 public class CostanzaSimplistic_Plugin implements PlugInFilter {

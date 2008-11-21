@@ -26,6 +26,9 @@ import java.util.Vector;
  */
 public class GradientDescent extends Processor {
 
+    public static final String NEIGHBORHOOD_OPT = "useExtendedNeighborhood";
+    public static final String PLATEAU_OPT ="usePlateau" ;
+    public static final String INTENSITY_OPT = "intensityLevelsNumber";
     /**Implementation of the Gradient descent algorithm.
      * Note that no Options are needed for the Processor.
      * @param c a Case to work on.
@@ -38,13 +41,24 @@ public class GradientDescent extends Processor {
 
 //        System.out.println("GradientDescent::process");
         if (c.getStack() == null) {
-            throw new Exception("No working stack initialised in case from gradientdescent");
+            throw new Exception("No working stack initialised in Case");
         }
     
-        final boolean extendedNeighborhoodFlag = ((Boolean) o.getOptionValue("useExtendedNeighborhood")).booleanValue();
-        final boolean plateauPixelsFlag = ((Boolean) o.getOptionValue("usePlateau")).booleanValue();
-
-        final int INTENSITY_LEVELS = ((Integer) o.getOptionValue("intensityLevelsNumber")).intValue();
+        boolean extendedNeighborhoodFlag = false;
+        boolean plateauPixelsFlag = false;
+        int INTENSITY_LEVELS = Case.COSTANZA_INTENSITY_LEVELS;
+        if(o != null)
+        {
+            extendedNeighborhoodFlag = ((Boolean) o.getOptionValue(NEIGHBORHOOD_OPT)).booleanValue();
+            plateauPixelsFlag = ((Boolean) o.getOptionValue(PLATEAU_OPT)).booleanValue();
+            INTENSITY_LEVELS = ((Integer) o.getOptionValue(INTENSITY_OPT)).intValue();
+        }
+        else
+            return c;
+        
+//        final boolean extendedNeighborhoodFlag = ((Boolean) o.getOptionValue("useExtendedNeighborhood")).booleanValue();
+//        final boolean plateauPixelsFlag = ((Boolean) o.getOptionValue("usePlateau")).booleanValue();
+//        final int INTENSITY_LEVELS = ((Integer) o.getOptionValue("intensityLevelsNumber")).intValue();
         final double INTENSITY_TRESHOLD = 1.0 / (float) INTENSITY_LEVELS;
 
         int depth = c.getStack().getDepth();

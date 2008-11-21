@@ -9,6 +9,8 @@ import java.util.Collection;
  */
 public class CellCenterMarker extends Processor {
 
+    public static final String NEIGHBORS_OPT = "markNeighbors";
+    public static final String COLOR_OPT = "color";
     /**This colors the CellCenter using a red redColor. 
      * @param c the Case to process.
      * @param options not used in this Processor.
@@ -20,12 +22,17 @@ public class CellCenterMarker extends Processor {
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
 	Collection<CellCenter> cellCenters = (Collection<CellCenter>) c.getCellData(DataId.CENTERS);
-        int MARK_NEIGHBORS = 0;
-        if(options != null && options.hasOption("markNeighbors"))
-            MARK_NEIGHBORS = ((Integer)options.getOptionValue("markNeighbors")).intValue();
-	if (cellCenters == null) {
+        if (cellCenters == null) {
 	    return c;
 	}
+        
+        int MARK_NEIGHBORS = 0;
+        Object opt = options.getOptionValue(NEIGHBORS_OPT);
+        if(options != null && opt != null)
+            MARK_NEIGHBORS = ((Integer)opt).intValue();
+	if(MARK_NEIGHBORS < 0 )
+            MARK_NEIGHBORS = 0;
+        
 	BufferedImage[] images = getImagesFromStack(c.getOriginalStack());
 	Object[] ccs = cellCenters.toArray();
 	int redColor = 0xffff0000;

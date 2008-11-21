@@ -15,6 +15,7 @@ public class ScaleOptionPanel extends java.awt.Panel {
 
     public void setIJCalibrationOption(Boolean b) {
         checkbox1.setState(b);
+        setCalibrationEnable();
     }
 
     public float getScaleX() {
@@ -29,6 +30,10 @@ public class ScaleOptionPanel extends java.awt.Panel {
         return new Float(zScaleTextField.getText()).floatValue();
     }
 
+    public Integer getIntensityLevels() {
+        return new Integer(intensityLevelsTextField.getText());
+    }
+    
     public void setScale(float x, float y, float z) {
         xScaleTextField.setText(Float.toString(x));
         yScaleTextField.setText(Float.toString(y));
@@ -47,7 +52,18 @@ public class ScaleOptionPanel extends java.awt.Panel {
             calibration.pixelDepth = new Float(zScaleTextField.getText()).floatValue();
         }
     }
-
+    
+    public void setIntensityLevels(Integer i) {
+        intensityLevelsTextField.setText(i.toString());
+    }
+    
+    private void setCalibrationEnable(){
+            if (checkbox1.getState() == true) {
+                scalePanel.setEnabled(false);
+            } else {
+                scalePanel.setEnabled(true);
+            }
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -57,6 +73,8 @@ public class ScaleOptionPanel extends java.awt.Panel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        checkbox1 = new java.awt.Checkbox();
+        label = new java.awt.Label();
         scalePanel = new java.awt.Panel();
         xScaleLabel = new java.awt.Label();
         xScaleTextField = new java.awt.TextField();
@@ -64,11 +82,32 @@ public class ScaleOptionPanel extends java.awt.Panel {
         yScaleTextField = new java.awt.TextField();
         zScaleLabel = new java.awt.Label();
         zScaleTextField = new java.awt.TextField();
-        label = new java.awt.Label();
-        checkbox1 = new java.awt.Checkbox();
+        otherLabel = new java.awt.Label();
+        label1 = new java.awt.Label();
+        intensityLevelsTextField = new java.awt.TextField();
 
         setBackground(new java.awt.Color(245, 245, 245));
         setLayout(new java.awt.GridBagLayout());
+
+        checkbox1.setLabel("use ImageJ stack calibration");
+        checkbox1.setState(true);
+        scalePanel.setEnabled(false);
+        checkbox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                calibrationStateChanged(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.ipady = 10;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(checkbox1, gridBagConstraints);
+
+        label.setText("or enter scale of the stack:");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(label, gridBagConstraints);
 
         scalePanel.setLayout(new java.awt.GridBagLayout());
 
@@ -122,42 +161,43 @@ public class ScaleOptionPanel extends java.awt.Panel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
         add(scalePanel, gridBagConstraints);
 
-        label.setText("or enter scale of the stack:");
+        otherLabel.setFont(new java.awt.Font("Dialog", 1, 12));
+        otherLabel.setText("Other options:");
+        otherLabel.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(label, gridBagConstraints);
+        add(otherLabel, gridBagConstraints);
 
-        checkbox1.setLabel("use ImageJ stack calibration");
-        checkbox1.setState(true);
-        scalePanel.setEnabled(false);
-        checkbox1.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                calibrationStateChanged(evt);
-            }
-        });
+        label1.setText("Number of intensity levels:");
+        label1.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipady = 10;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        add(checkbox1, gridBagConstraints);
+        add(label1, gridBagConstraints);
+
+        intensityLevelsTextField.setColumns(3);
+        intensityLevelsTextField.setText("255");
+        intensityLevelsTextField.setVisible(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.ipadx = 8;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        add(intensityLevelsTextField, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
         private void calibrationStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_calibrationStateChanged
-            if (checkbox1.getState() == true) {
-                scalePanel.setEnabled(false);
-            } else {
-                scalePanel.setEnabled(true);
-            }
+            setCalibrationEnable();
         }//GEN-LAST:event_calibrationStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox checkbox1;
+    private java.awt.TextField intensityLevelsTextField;
     private java.awt.Label label;
+    private java.awt.Label label1;
+    private java.awt.Label otherLabel;
     private java.awt.Panel scalePanel;
     private java.awt.Label xScaleLabel;
     private java.awt.TextField xScaleTextField;
