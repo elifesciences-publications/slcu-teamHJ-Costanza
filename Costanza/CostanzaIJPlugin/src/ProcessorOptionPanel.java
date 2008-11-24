@@ -56,6 +56,57 @@ import java.util.logging.Logger;
 		frame.update();
 	}
         
+        public void swapOptions(int i, int j){
+            OptionPanel temp = optionPanelList.get(i);
+            optionPanelList.set(i, optionPanelList.get(j));
+            optionPanelList.set(j,temp);
+        }
+        
+        public void shiftOptionPanel(OptionPanel optionPanel) {
+            removeAllOptions();
+            displayPanel.notifyAll();
+            /*
+            try{
+            java.awt.Component[] arr = displayPanel.getComponents();
+//            int n = 0;
+//            while(n < arr.length && arr[n] != optionPanel)
+//                ++n;
+//            if(n == arr.length)
+//                throw new Exception("OptionPanel " + optionPanel.getProcessorOption().getProcessorName() + " not found in displayPanel component array." );
+            
+//            System.out.println("poisition = " + n );
+            java.awt.GridBagLayout lo = (java.awt.GridBagLayout)displayPanel.getLayout();
+            java.awt.GridBagConstraints con = lo.getConstraints(optionPanel);
+            int n = con.gridy;
+//            System.out.println(optionPanel.getProcessorOption().getProcessorName() + " " + n );
+            System.out.println(((OptionPanel)arr[n]).getProcessorOption().getProcessorName() + " " + n );
+//            displayPanel.remove(optionPanel);
+            java.awt.Component prev = arr[n+1];
+            System.out.println(((OptionPanel)prev).getProcessorOption().getProcessorName() + " " + (n+1));
+            java.awt.GridBagConstraints prevCon = lo.getConstraints(prev);
+            lo.setConstraints(optionPanel, prevCon);
+            lo.setConstraints(prev, con);
+            arr[n+1] = optionPanel;
+            arr[n] = prev;
+            arr = displayPanel.getComponents();
+            OptionPanel test = ((OptionPanel)arr[n]);
+            System.out.println(test.getProcessorOption().getProcessorName() + " " + n );
+//            lo.notifyAll();
+//            lo.removeLayoutComponent(optionPanel);
+            //swap components
+//            if( n > 0 )
+//            displayPanel.remove(n);
+////            displayPanel.remove(n-1);
+//            displayPanel.validate();
+//            frame.update();
+//            displayPanel.remove(n);
+//            displayPanel.add(optionPanel, n+1);
+            } catch (Exception e) {
+                ij.IJ.showMessage("Exception: " + e.getMessage());
+            }
+             * */
+        }
+        
         public void removeAllOptions() {
 		displayPanel.removeAll();
 		optionPanelList.clear();
@@ -150,6 +201,7 @@ import java.util.logging.Logger;
 		OptionPanel optionPanel = new OptionPanel(this, factory.create(name));
 		java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
 		gridBagConstraints.gridx = 0;
+//                gridBagConstraints.gridy = displayPanel.getComponentCount();
 		gridBagConstraints.anchor = GridBagConstraints.WEST;
 		displayPanel.add(optionPanel, gridBagConstraints);
 		optionPanelList.add(optionPanel);
