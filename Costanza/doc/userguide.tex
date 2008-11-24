@@ -112,10 +112,10 @@ merged into a single compartment. This algorithm is runs recursively.
 \section{User interface}
 
 \subsection{Main}
-Costazna plugin interface consist of one window which displays menu bar on the top, the tabbed panel which gives access to different program options and button panel on the bottom which is used to start the analysis. When user preses the "Start analysis" button the current active stack and selected processors and parameter values will be used to perform the task.
+Costazna plugin interface consist of one window which displays menu bar on the top, the tabbed panel which gives access to different program options and button panel on the bottom which is used to start the analysis. When user preses the \textbf{Start analysis} button the current active stack and selected processors and parameter values will be used to perform the task.
  
 \subsection{Menu bar}
-Costanza menu bar has two items: "File" and "Help". "File" submenu can be used to save and load configuration of all the options and processors. This helps user to quickly store and retrieve previous settings which they found useful for particular task. The last option is "Quit" which ends Costanza session. If user exits Costaza through the "Quit" the last used configuration will be saved in the file "last.ccfg" and automatically restored upon next start of the plugin. If this file is not available Costanza tries to open "default.ccfg" file and lastly uses hard coded set of parameters. By default the configuration files are stored in "plugins/Costanza/" directory in the main ImageJ directory.
+Costanza menu bar has two items: \textbf{File} and \textbf{Help}. \textbf{File} submenu can be used to save and load configuration of all the options and processors. This helps user to quickly store and retrieve previous settings which they found useful for particular task. The last option is \textbf{Quit} which ends Costanza session. If user exits Costaza through the \textbf{Quit} the last used configuration will be saved in the file \textit{last.ccfg} and automatically restored upon next start of the plugin. If this file is not available Costanza tries to open \textit{default.ccfg} file and lastly uses hard coded set of parameters. By default the configuration files are stored in \textit{plugins/Costanza/} directory in the main ImageJ directory.
  
 \subsection{Option tabs}
 Option tabs are used to set all features of Costanza. They are grouped into four different tabs (Fig.~\ref{fig:gui}). 
@@ -132,17 +132,20 @@ Option tabs are used to set all features of Costanza. They are grouped into four
 \end{figure}
 %
 
-\subsubsection{General tab}
-This tab allows for setting options for segmentation, gradient descent algorithm as well as input and output options. The active
+\subsubsection{General options tab}
+This tab allows for setting options for gradient descent algorithm as well as input and output options.
+The checkbox \textbf{Use extended (box) neighborhood} properties of the neighborhood of each pixel during segmentation by gradient descent algorithm. When the box is checked 26 pixel (box like) neighborhood will be used. Otherwise 6 pixel neighborhood (cross like) will be used.
+User has the option to treat intensity plateaus as a single BOA by checking \textbf{Mark intensity plateau with single maximum} checkbox.
+ The active
 stack is automatically chosen for segmentation input. If an additional stack is to
-be used for measuring other intensities in previously found compartments, the box ``use secondary stack to measure intensity levels'' have to be checked.
+be used for measuring other intensities in previously found compartments, the box \textbf{Use secondary stack to measure intensity levels} has to be checked.
 
 As default, the segmentation results are provided in a table displayed by
 ImageJ upon competition of analysis. Additionally other types of graphical output can be selected:
 
 \begin{itemize}
 %
-\item Cell centers can be marked with red dots of desired radius in pixels.
+\item Cell centers can be marked with red boxes of desired radius in pixels.
 %
 \item Basin of Attractions (BOAs), attributed to the different cell centers can be
 	colored with random colors.
@@ -154,9 +157,9 @@ ImageJ upon competition of analysis. Additionally other types of graphical outpu
 %
 \end{itemize}
 
-\subsubsection{Pre-processing}
+\subsubsection{Pre-processing options tab}
 Here different pre-processing steps can be chosen, added and removed by the
-user. Processors in the queue will be applied to the stack in top to bottom order. The alternatives at the moment are:
+user. Processors in the queue will be applied to the stack in top to bottom order. Order of the processors can be adjusted by up and down arrows to the right of the \textbf{Remove} button. The alternatives at the moment are:
 
 \begin{itemize}
 %
@@ -177,7 +180,7 @@ user. Processors in the queue will be applied to the stack in top to bottom orde
 %
 \end{itemize}
 
-\subsubsection{Post-processing}
+\subsubsection{Post-processing options tab}
 After the gradient descent algorithm is applied for segmentation, it might be
 useful to do some post-processing. As previously order of application of processors is from top to bottom. The available algorithms that can be chosen, added and removed are:
 
@@ -191,10 +194,13 @@ useful to do some post-processing. As previously order of application of process
 %
 \end{itemize}
 
+\subsubsection{Scaling options tab}
+By default Costanza will use stack scaling obtained from ImageJ. User can change this by setting the approporiate values for the scale in \textit{x}, \textit{y} and \textit{z} directions.
+
 \section{Examples}
 The performance of the Costanza application is dependent on the
-parameter values given to the different algorithms used. This values will be most likely different for different tasks or even set of images. Thus getting satisfactory results in each case may require some experimenting and tweaking different parameters. Here we provide
-some examples of applications where also the parameter values used are
+parameter values given to the different algorithms used for image processing. These values will be most likely different for different tasks or even set of images. Getting satisfactory results in each case may require some experimenting and tweaking different parameters. Here we provide
+some examples of applications. The used parameter values are also
 presented to guide users into setting reasonable parameter values.
 
 \subsection{SAM nuclei data in 3D}
