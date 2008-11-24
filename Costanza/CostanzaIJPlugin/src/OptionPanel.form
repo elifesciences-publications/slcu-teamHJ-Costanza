@@ -47,6 +47,11 @@
       </Constraints>
     </Component>
     <Container class="java.awt.Panel" name="optionPanel">
+      <AccessibilityProperties>
+        <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.RADVisualComponent$AccessibleParentEditor">
+          <ComponentRef name="optionPanel"/>
+        </Property>
+      </AccessibilityProperties>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
           <GridBagConstraints gridX="0" gridY="2" gridWidth="2" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="0" anchor="17" weightX="0.0" weightY="0.0"/>
@@ -60,9 +65,10 @@
         <Property name="blockIncrement" type="int" value="1"/>
         <Property name="maximum" type="int" value="3"/>
         <Property name="value" type="int" value="1"/>
-        <Property name="visibleAmount" type="int" value="1"/>
+        <Property name="visibleAmount" type="int" value="0"/>
       </Properties>
       <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="scrollbar1MouseClicked"/>
         <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollbar1AdjustmentValueChanged"/>
       </Events>
       <Constraints>

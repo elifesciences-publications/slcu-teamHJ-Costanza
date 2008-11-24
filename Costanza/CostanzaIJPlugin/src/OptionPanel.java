@@ -63,11 +63,17 @@ public class OptionPanel extends java.awt.Panel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         add(optionPanel, gridBagConstraints);
+        optionPanel.getAccessibleContext().setAccessibleParent(optionPanel);
 
         scrollbar1.setBlockIncrement(1);
         scrollbar1.setMaximum(3);
         scrollbar1.setValue(1);
-        scrollbar1.setVisibleAmount(1);
+        scrollbar1.setVisibleAmount(0);
+        scrollbar1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                scrollbar1MouseClicked(evt);
+            }
+        });
         scrollbar1.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 scrollbar1AdjustmentValueChanged(evt);
@@ -82,7 +88,10 @@ public class OptionPanel extends java.awt.Panel {
 	}//GEN-LAST:event_removeButtonActionPerformed
 
         private void scrollbar1AdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollbar1AdjustmentValueChanged
+           /*
             java.awt.Container parent = getParent();
+            if(parent == null)
+                return;
             java.awt.Component arr[] = parent.getComponents();
             int count = parent.getComponentCount();
             
@@ -120,7 +129,56 @@ public class OptionPanel extends java.awt.Panel {
 
             evt.getAdjustable().setValue(1);
             parent.validate();
+            //* */
         }//GEN-LAST:event_scrollbar1AdjustmentValueChanged
+
+        private void scrollbar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scrollbar1MouseClicked
+//            System.out.println(evt.paramString());
+//            if(!isValid())
+//            {
+//                System.out.println("component invalid");
+//                return;
+//            }
+            java.awt.Container parent = getParent();
+            java.awt.Component arr[] = parent.getComponents();
+            int count = parent.getComponentCount();
+            
+            int n = 0;
+            while (n < count && arr[n] != this) {
+                ++n;
+            }
+            if (n == arr.length || count == 1) {
+                return;
+            }
+            
+            java.awt.GridBagConstraints constr = new java.awt.GridBagConstraints();
+            constr.gridx = 0;
+            constr.anchor = GridBagConstraints.WEST;
+
+            int v = scrollbar1.getValue();
+//            System.out.println( v + "," + getProcessorOption().getProcessorName());
+            if (v == 2) {
+//                System.out.println("shift down");
+
+                if (n < count - 1) {
+                    parent.add(arr[n + 1], constr, n);
+                    parent.add(this, constr, n + 1);
+                    getParentPanel().swapOptions(n+1, n);
+                }
+            }
+            else if (v == 0) {
+//                System.out.println("shift up");
+                if ( n > 0) {
+                    parent.add(arr[n - 1], constr, n);
+                    parent.add(this, constr, n - 1);
+                    getParentPanel().swapOptions(n-1, n);               
+                }
+            }
+
+            scrollbar1.setValue(1);
+            parent.validate();
+ //* */
+        }//GEN-LAST:event_scrollbar1MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Panel optionPanel;
