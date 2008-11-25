@@ -7,7 +7,7 @@
 \PrerenderUnicode{åäöÅÄÖ}
 
 \title{Costanza Userguide}
-\author{M. Green, P. Krupinski, P. Melke, P. Sahlin, H. Jonsson}
+\author{M. Green, P. Krupinski, P. Melke, P. Sahlin, H. Jönsson}
 
 \begin{document}
 
@@ -21,7 +21,7 @@ This document describes how to use COnfocal STack ANalyZer Application
 stacks of image data. Such data come very often from confocal microscopy and that is where Costanza should prove to be most useful. The main purpose of Costanza is to segment nuclei marked cells
 in three dimensions, making available quantitative measures such as
 positions, sizes, and average intensities of GFP markers for the
-segmented compartments. However since user is given the control on the parameters used by Costanza filters and image processors, they may be tweaked and combine freley to give good results also for other image processing task. The main algorithm is independent of intensity
+segmented compartments. However since user is given the control on the parameters used by Costanza filters and image processors, they may be tweaked and combined freley to give good results also for other image processing tasks. The main algorithm is independent of intensity
 thresholds, allowing for segmentation of data of varying intensity.
 
 Costanza assumes a greyscale stack of images as input. It gives the user the possibility to use ImageJ x, y, and z scales for the stack or define custom ones. The results are thus displayed in real length units. 
@@ -134,7 +134,7 @@ Option tabs are used to set all features of Costanza. They are grouped into four
 
 \subsubsection{General options tab}
 This tab allows for setting options for gradient descent algorithm as well as input and output options.
-The checkbox \textbf{Use extended (box) neighborhood} properties of the neighborhood of each pixel during segmentation by gradient descent algorithm. When the box is checked 26 pixel (box like) neighborhood will be used. Otherwise 6 pixel neighborhood (cross like) will be used.
+The checkbox \textbf{Use extended (box) neighborhood} controls properties of the neighborhood of each pixel during segmentation by gradient descent algorithm. When the box is checked 26 pixel (box like) neighborhood will be used. Otherwise 6 pixel neighborhood (cross like) will be used.
 User has the option to treat intensity plateaus as a single BOA by checking \textbf{Mark intensity plateau with single maximum} checkbox.
  The active
 stack is automatically chosen for segmentation input. If an additional stack is to
