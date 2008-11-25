@@ -1,28 +1,25 @@
-
-import java.util.logging.Level;
-
 /*
  * SecondaryStackOptionDialog.java
  *
  * Created on November 13, 2008, 5:40 PM
  */
+
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
-
 
 /**
  *
  * @author  pawel
  */
 public class SecondaryStackOptionDialog extends java.awt.Dialog {
-    
+
     /** Creates new form SecondaryStackOptionDialog */
     public SecondaryStackOptionDialog(MainFrame f) {
         super(f, "Secondary stack option", false);
-        frame  = f;
+        frame = f;
         initComponents();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -76,29 +73,36 @@ public class SecondaryStackOptionDialog extends java.awt.Dialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
     /** Closes the dialog */
     private void closeDialog(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closeDialog
-        setVisible(false);
-        dispose();
+        try {
+            frame.secondaryStackOptionPanelCancelButtonPressed();
+            setVisible(false);
+            dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(SecondaryStackOptionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_closeDialog
 
     private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
         try {
-			frame.secondaryStackOptionPanelContinueButtonPressed();
-                        setVisible(false);
-                        dispose();
-		} catch (Exception ex) {
-			Logger.getLogger(SecondaryStackOptionPanel.class.getName()).log(Level.SEVERE, null, ex);
-		}
+            frame.secondaryStackOptionPanelContinueButtonPressed();
+            setVisible(false);
+            dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(SecondaryStackOptionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_continueButtonActionPerformed
 
     private void cancelButonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelButonActionPerformed
-        frame.secondaryStackOptionPanelCancelButtonPressed();
-        setVisible(false);
-        dispose();
+        try {
+            frame.secondaryStackOptionPanelCancelButtonPressed();
+            setVisible(false);
+            dispose();
+        } catch (Exception ex) {
+            Logger.getLogger(SecondaryStackOptionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cancelButonActionPerformed
-    
     /**
      * @param args the command line arguments
      */
@@ -116,12 +120,10 @@ public class SecondaryStackOptionDialog extends java.awt.Dialog {
 //            }
 //        });
 //    }
-    
     private MainFrame frame;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button cancelButon;
     private java.awt.Button continueButton;
     private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables
-    
 }

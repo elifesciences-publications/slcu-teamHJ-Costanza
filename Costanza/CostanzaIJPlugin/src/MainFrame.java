@@ -30,7 +30,6 @@ public class MainFrame extends java.awt.Frame {
 
     void askForSecondaryStack() {
         SecondaryStackOptionDialog d = new SecondaryStackOptionDialog(this);
-//            d.addNotify();
         d.setVisible(true);
     }
 
@@ -39,9 +38,11 @@ public class MainFrame extends java.awt.Frame {
         plugin.secondaryStackOptionPanelContinueButtonPressed();
     }
 
-    void secondaryStackOptionPanelCancelButtonPressed() {
+    void secondaryStackOptionPanelCancelButtonPressed() throws Exception {
+        plugin.secondaryStackOptionPanelCanceleButtonPressed();
         update();
     }
+    
     private IOOptionPanel ioOptionPanel;
     private ProcessorOptionPanel preProcessorOptionPanel;
     private ProcessorOptionPanel postProcessorOptionPanel;
