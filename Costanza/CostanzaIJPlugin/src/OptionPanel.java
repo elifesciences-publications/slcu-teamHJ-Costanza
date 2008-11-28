@@ -13,6 +13,7 @@ public class OptionPanel extends java.awt.Panel {
         this.processorOption = processorOption;
         initComponents();
         scrollbar1.setPreferredSize(new java.awt.Dimension(17, 25));
+//        scrollbar1.setSize(new java.awt.Dimension(17, 25));
         scrollbar1.setValue(1);
         processorNameLabel.setText(processorOption.getProcessorName());
         optionPanel.add(processorOption.getPanel());

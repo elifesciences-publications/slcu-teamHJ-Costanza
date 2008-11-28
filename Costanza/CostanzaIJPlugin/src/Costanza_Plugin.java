@@ -10,8 +10,12 @@ import costanza.Options;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
+import java.awt.EventQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 public class Costanza_Plugin implements ij.plugin.PlugIn {
 
@@ -39,7 +43,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     private ij.ImagePlus imagePlus;
     private Queue jobs;
     private boolean secondaryStackOption;
-
+    private ExecutorService executor;
     /**
      * This is the starting point of execution after the user starts the 
      * analyze.
@@ -48,9 +52,24 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      * @param secondaryStackOption True if a second stack is being used for
      * intensity measurements.
      */
+    public int countDisplayRequests(int request) {
+        int c; // c accumulates the total bits set in v
+        for (c = 0; request != 0; c++) {
+            request &= request - 1; // clear the least significant bit set
+        }
+        return c;
+    }
+
     public void start(Queue jobs, boolean secondaryStackOption) {
+
+        System.out.print("initializing... ");
+        System.out.print(Thread.currentThread().getName());
+        System.out.println( "; " + String.valueOf(EventQueue.isDispatchThread()));
+        
+
         frame.setMenuAndButtonsEnabled(false);
-//                frame.setProgress(0);
+        frame.setEnabledProcessingOptions(false);
+
         this.jobs = jobs;
         this.secondaryStackOption = secondaryStackOption;
         try {
@@ -59,6 +78,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             } catch (Exception exception) {
                 // Do nothing as we assume ImageJ is displaying a message about this exception.
                 frame.setMenuAndButtonsEnabled(true);
+                frame.setEnabledProcessingOptions(true);
                 return;
             }
 //                        frame.setProgress(5);
@@ -72,6 +92,18 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         }
     }
 
+    public MainFrame getFrame(){
+        return frame;
+    }
+    
+    public boolean getSecondatrStackOption(){
+        return secondaryStackOption;
+    }
+    
+    public void setSecondatrStackOption( boolean b){
+        secondaryStackOption = b;
+    }
+    
     /**
      * This is the second point of execution. The user is asked to enter the
      * scale of the image and this function is called after the user presses 
@@ -79,18 +111,49 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      */
     void scaleOptionPanelContinueButtonPressed() {
         try {
+            
             stack = Utility.createStackFromImagePlus(imagePlus);
             IJCase = new Case(stack);
-
-            Driver driver = new Driver(jobs, IJCase, factory);
-            driver.run();
-
-            if (secondaryStackOption == true) {
-                frame.askForSecondaryStack();
-            } else {
-                showFinalResults();
-                frame.setMenuAndButtonsEnabled(true);
-            }
+            GUIDriver driver = new GUIDriver(new GUIQueue(jobs, frame.getProgressTextField(), this), IJCase, factory);
+//            Driver driver = new Driver(jobs, IJCase, factory);
+//            driver.run();
+//            System.out.println(Thread.currentThread().getName());
+            String s = null;
+            if(executor == null)
+                executor = Executors.newFixedThreadPool(1);
+//            guiQueue.addPropertyChangeListener( new PropertyChangeListener() {
+//                 public  void propertyChange(PropertyChangeEvent evt) {
+//              if ("progress".equals(evt.getPropertyName())) {
+////                  progressBar.setValue((Integer)evt.getNewValue());
+//                  frame.getProgressTextField().setText(((Integer)evt.getNewValue()).toString());
+//              }
+//          }
+//      });
+//            FutureTask<String> future = new FutureTask<String>(driver, s);
+//            executor.execute(future);
+            executor.execute(driver);
+//            AWTEvent laste = null;
+//            while (!future.isDone()) {
+////                try {
+////                    Thread.sleep(500);
+//
+//                AWTEvent e = EventQueue.getCurrentEvent();
+//                if (e != laste) {
+//                    System.out.println(EventQueue.getCurrentEvent().paramString());
+//                    laste = e;
+//                }
+////                    System.out.println(EventQueue.getCurrentEvent().paramString());
+////                } catch (Exception ie) {
+////                    System.out.println("Will check after 1/2 sec.");
+////                }
+//            }
+//            executor.shutdown();
+//            if (secondaryStackOption == true) {
+//                frame.askForSecondaryStack();
+//            } else {
+//                showFinalResults();
+//                frame.setMenuAndButtonsEnabled(true);
+//            }
         } catch (Exception exception) {
             printExceptionMessage(exception);
             status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
@@ -130,12 +193,15 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             }
             throw error;
         }
-        frame.setMenuAndButtonsEnabled(true);
+//        frame.setMenuAndButtonsEnabled(true);
+//        frame.setEnabledProcessingOptions(true);
     }
 
     void secondaryStackOptionPanelCanceleButtonPressed() throws Exception {
         try {
-            secondaryStackOption = false;
+//            synchronized(this){
+                secondaryStackOption = false;
+//            }
             showFinalResults();
             secondaryStackOption = true;
         } catch (Error error) {
@@ -143,8 +209,9 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
                 printOutOfMemoryError();
             }
             throw error;
-        }  
-        frame.setMenuAndButtonsEnabled(true);
+        }
+//        frame.setMenuAndButtonsEnabled(true);
+//        frame.setEnabledProcessingOptions(true);
     }
 
     /**
@@ -159,11 +226,59 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     /** 
      * Display final results.
      */
-    private void showFinalResults() throws Exception {
-        processResultRequests(frame.getResultRequest());
-        printData();
+    public void showFinalResults() throws Exception {
+//        
+//        processResultRequests(frame.getResultRequest());
+//        frame.setEnabledDisplayOptions(false);
+        executor.execute(new RunnProcessResults(secondaryStackOption));
+//        printData(secondaryStackOption);
+
     }
 
+    private class RunnProcessResults implements Runnable {
+
+        private boolean secondaryStackOption;
+
+        RunnProcessResults(boolean b) {
+            secondaryStackOption = b;
+        }
+
+        public void run() {
+            try {
+                processResultRequests(frame.getResultRequest(), secondaryStackOption);
+                printData(secondaryStackOption);
+                EventQueue.invokeLater(new RunDisplayText("Finished"));
+                EventQueue.invokeLater(new RunSetEnabledDisplay());
+            } catch (Exception ex) {
+                Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        
+    }
+private class RunDisplayText implements Runnable {
+
+            private String message;
+
+            public RunDisplayText(String s) {
+                message = s;
+            }
+
+            public void run() {
+                frame.setProgressTextField(message);
+//                frame.setMenuAndButtonsEnabled(true);
+//                frame.setEnabledDisplayOptions(true);
+//                textField.setText(message);
+            }
+        }
+
+    private class RunSetEnabledDisplay implements Runnable {
+
+        public void run() {
+            frame.setMenuAndButtonsEnabled(true);
+            frame.setEnabledDisplayOptions(true);
+        }
+    }
     /**
      * Starting point of plugin.
      * @param arg ???
@@ -171,10 +286,23 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      */
     //@Override
     public void run(String arg) {
+        final Costanza_Plugin self = this;
         try {
+//            System.out.println(Thread.currentThread().getName());
             initFactory();
-            frame = new MainFrame(this);
-            frame.setVisible(true);
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    try {
+                        frame = new MainFrame(self);
+                    } catch (Exception ex) {
+                        Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    frame.setVisible(true);
+                }
+            });
+            
+//            frame = new MainFrame(this);
+//            frame.setVisible(true);
             status = PluginStatus.RUN_APPLICATION;
             while (status == PluginStatus.RUN_APPLICATION) {
                 try {
@@ -228,12 +356,23 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      * @param request Request from the user.
      * @throws java.lang.Exception
      */
-    private void processResultRequests(int request) throws Exception {
+    private void processResultRequests(int request, boolean secondaryStackOption) throws Exception {
+        int c = countDisplayRequests(frame.getResultRequest());
+        int counter = 0;
+        if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
+            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
+            Options options = new Options();
+            options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius() - 1);
+            Job job = new Job("cellmarker", options);
+            displayResult("Costanza - Cell centers", job);
+        }
         if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
+            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
             Job job = new Job("boacolorize", null);
             displayResult("Costanza - Basins of attractions (BOA)", job);
         }
         if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER) {
+            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
             Options options = new Options();
             if (secondaryStackOption == true) {
                 options.addOption("OverrideStack", secondaryStack);
@@ -241,13 +380,8 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             Job job = new Job("boaintensitycolorize", options);
             displayResult("Costanza - Basins of attractions (BOA)-intensity", job);
         }
-        if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
-            Options options = new Options();
-            options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius() - 1);
-            Job job = new Job("cellmarker", options);
-            displayResult("Costanza - Cell centers", job);
-        }
         if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
+            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
             Stack workingStack = IJCase.getStack();
             ij.ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(workingStack, "Costanza - Working stack");
             workingStackImagePlus.show();
@@ -275,7 +409,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      * 
      * @throws java.lang.Exception
      */
-    private void printData() throws Exception {
+    private void printData(boolean secondaryStackOption) throws Exception {
         float xScale = IJCase.getStack().getXScale();
         float yScale = IJCase.getStack().getYScale();
         float zScale = IJCase.getStack().getZScale();
@@ -286,12 +420,13 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         ij.IJ.setColumnHeadings("Cell id\tx\ty\tz\tBoa volume\tMean cell intensity");
 
         int id;
-        if (secondaryStackOption == true) {
-            id = secondaryStack.getId();
-        } else {
-            id = stack.getId();
-        }
-
+//        synchronized (this) {
+            if (secondaryStackOption == true) {
+                id = secondaryStack.getId();
+            } else {
+                id = stack.getId();
+            }
+//        }
         java.util.Set<Integer> cellIds = IJCase.getCellIds();
         java.util.Iterator<Integer> iterator = cellIds.iterator();
 

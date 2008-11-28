@@ -19,6 +19,21 @@ public class Queue {
         }
     }
     
+    /**
+     * Polls the Job from the Queue.
+     * @return job.
+     */
+    public Job poll(){
+        return jobs.poll();
+    }
+    
+    /**
+     * Gets the size of the queue.
+     * @return size.
+     */
+    public int size(){
+        return jobs.size();
+    }
     /**Process queue.
      * This member function steps through the queue and calls process() in all processors.
      * @param factory the Factory that creates each Processor.

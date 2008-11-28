@@ -17,10 +17,10 @@ import java.util.logging.Logger;
 		factory = new Factory<ProcessorOption>();
 		optionPanelList = new java.util.LinkedList<OptionPanel>();
 		initComponents();
-                setSize(new java.awt.Dimension(450, 450)); 
-                setPreferredSize(new java.awt.Dimension(450, 450));
-                scrollPane1.setSize(new java.awt.Dimension(300, 250)); 
-                scrollPane1.setPreferredSize(new java.awt.Dimension(300, 250));
+                setSize(new java.awt.Dimension(400, 450)); 
+//                setPreferredSize(new java.awt.Dimension(450, 450));
+                scrollPane1.setSize(new java.awt.Dimension(300, 270)); 
+//                scrollPane1.setPreferredSize(new java.awt.Dimension(300, 250));
 	}
 
         public MainFrame getFrame(){
@@ -52,8 +52,9 @@ import java.util.logging.Logger;
                 
 	public void removeOption(OptionPanel optionPanel) {
 		displayPanel.remove(optionPanel);
-		optionPanelList.remove(optionPanel);
-		frame.update();
+		optionPanelList.remove(optionPanel);	
+                validate();
+//                frame.update();
 	}
         
         public void swapOptions(int i, int j){
@@ -65,7 +66,8 @@ import java.util.logging.Logger;
         public void removeAllOptions() {
 		displayPanel.removeAll();
 		optionPanelList.clear();
-		frame.update();
+                validate();
+//		frame.update();
 	}
 	/** This method is called from within the constructor to
 	 * initialize the form.
@@ -160,7 +162,8 @@ import java.util.logging.Logger;
 		gridBagConstraints.anchor = GridBagConstraints.WEST;
 		displayPanel.add(optionPanel, gridBagConstraints);
 		optionPanelList.add(optionPanel);
-		frame.update();
+                validate();
+//		frame.update();
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button addButton;

@@ -19,28 +19,36 @@ public class MainFrame extends java.awt.Frame {
         websiteMenuItem.setEnabled(arg);
     }
 
-    public void setProgress(int i) {
-        jProgressBar1.setValue(i);
-        buttonPanel.validate();
-    }
-
     void askForScale(ij.measure.Calibration calibration) {
         scaleOptionPanel.setCalibration(calibration);
     }
 
+    void setEnabledProcessingOptions(boolean b){
+//        System.out.println("processing  options = " + String.valueOf(b));
+        ioOptionPanel.setEnabledProcessingOptions(b);
+        preProcessorOptionPanel.setEnabled(b);
+        postProcessorOptionPanel.setEnabled(b);
+        scaleOptionPanel.setEnabled(b);
+    }
+    
+    void setEnabledDisplayOptions(boolean b){
+//        System.out.println("display  options = " + String.valueOf(b));
+        ioOptionPanel.setEnabledDisplayOptions(b);
+    }
+    
     void askForSecondaryStack() {
         SecondaryStackOptionDialog d = new SecondaryStackOptionDialog(this);
         d.setVisible(true);
     }
 
     void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
-        update();
+//        update();
         plugin.secondaryStackOptionPanelContinueButtonPressed();
     }
 
     void secondaryStackOptionPanelCancelButtonPressed() throws Exception {
         plugin.secondaryStackOptionPanelCanceleButtonPressed();
-        update();
+//        update();
     }
     
     private IOOptionPanel ioOptionPanel;
@@ -63,9 +71,13 @@ public class MainFrame extends java.awt.Frame {
         this.plugin = plugin;
         initOptionPanels();
         fc = new ConfigurationFileManager(this);
-        jProgressBar1.setVisible(false);
-        setPreferredSize(new java.awt.Dimension(450, 450));
-        pack();
+//        setPreferredSize(new java.awt.Dimension(400, 450));
+//        setSize(new java.awt.Dimension(400, 450));
+//        textField1.setPreferredSize(new java.awt.Dimension(230, 30));
+//       buttonPanel.setSize(new java.awt.Dimension(400, 40));
+//       textField1.setSize(new java.awt.Dimension(230, 30));
+       textField1.setColumns(35);
+       pack();
     }
 
     Font getFrameFont() {
@@ -80,6 +92,14 @@ public class MainFrame extends java.awt.Frame {
         return ioOptionPanel;
     }
 
+    public java.awt.TextField getProgressTextField() {
+        return textField1;
+    }
+    
+    public void setProgressTextField(String s){
+        textField1.setText(s);
+    }
+    
     public ProcessorOptionPanel getPreProcessorPanel() {
         return preProcessorOptionPanel;
     }
@@ -101,7 +121,8 @@ public class MainFrame extends java.awt.Frame {
     }
 
     private void initOptionPanels() throws Exception {
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(450, 380));
+//        jTabbedPane1.setPreferredSize(new java.awt.Dimension(450, 380));
+        jTabbedPane1.setSize(new java.awt.Dimension(450, 380));
         ioOptionPanel = new IOOptionPanel(this);
         jTabbedPane1.addTab("general", ioOptionPanel);
 
@@ -145,7 +166,7 @@ public class MainFrame extends java.awt.Frame {
 
         buttonPanel = new java.awt.Panel();
         startButton = new java.awt.Button();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        textField1 = new java.awt.TextField();
         cancelButton = new java.awt.Button();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         menuBar = new java.awt.MenuBar();
@@ -177,11 +198,8 @@ public class MainFrame extends java.awt.Frame {
         });
         buttonPanel.add(startButton);
 
-        jProgressBar1.setEnabled(false);
-        jProgressBar1.setMaximumSize(new java.awt.Dimension(32767, 20));
-        jProgressBar1.setMinimumSize(new java.awt.Dimension(200, 20));
-        jProgressBar1.setPreferredSize(new java.awt.Dimension(210, 20));
-        buttonPanel.add(jProgressBar1);
+        textField1.setBackground(new java.awt.Color(240, 240, 240));
+        buttonPanel.add(textField1);
 
         cancelButton.setLabel("Cancel analysis");
         cancelButton.setVisible(false);
@@ -326,13 +344,13 @@ public class MainFrame extends java.awt.Frame {
     private java.awt.MenuItem documentationMenuItem;
     private java.awt.Menu fileMenu;
     private java.awt.Menu helpMenu;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private java.awt.MenuBar menuBar;
     private java.awt.MenuItem openFile;
     private java.awt.MenuItem quitMenuItem;
     private java.awt.MenuItem saveFile;
     private java.awt.Button startButton;
+    private java.awt.TextField textField1;
     private java.awt.MenuItem websiteMenuItem;
     // End of variables declaration//GEN-END:variables
 }

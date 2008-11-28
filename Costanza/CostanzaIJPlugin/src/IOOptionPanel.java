@@ -10,6 +10,20 @@ public class IOOptionPanel extends java.awt.Panel {
         setFont(frame.getFrameFont());
     }
 
+    public void setEnabledProcessingOptions(boolean b) {       
+        extendedNeighborhoodOption.setEnabled(b);
+        plateauOption.setEnabled(b);
+        secondaryStackCheckbox.setEnabled(b);
+    }
+    
+    public void setEnabledDisplayOptions(boolean b) {
+        boaColourizeCheckbox.setEnabled(b);
+        boaIntensityColourizeCheckbox.setEnabled(b);
+        cellCenterMarkerOption.setEnabled(b);
+        workingStackCheckbox.setEnabled(b);
+        markerRadiusTextField.setEnabled(b);
+    }
+    
     public int getResultRequest() {
         int request = 0;
         if (boaColourizeCheckbox.getState() == true) {
