@@ -11,8 +11,10 @@ import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
 import java.awt.EventQueue;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
@@ -44,6 +46,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     private Queue jobs;
     private boolean secondaryStackOption;
     private ExecutorService executor;
+
     /**
      * This is the starting point of execution after the user starts the 
      * analyze.
@@ -61,15 +64,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     }
 
     public void start(Queue jobs, boolean secondaryStackOption) {
-
-        System.out.print("initializing... ");
-        System.out.print(Thread.currentThread().getName());
-        System.out.println( "; " + String.valueOf(EventQueue.isDispatchThread()));
-        
-
         frame.setMenuAndButtonsEnabled(false);
-        frame.setEnabledProcessingOptions(false);
-
         this.jobs = jobs;
         this.secondaryStackOption = secondaryStackOption;
         try {
@@ -78,13 +73,12 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             } catch (Exception exception) {
                 // Do nothing as we assume ImageJ is displaying a message about this exception.
                 frame.setMenuAndButtonsEnabled(true);
-                frame.setEnabledProcessingOptions(true);
                 return;
             }
-//                        frame.setProgress(5);
+
             frame.askForScale(imagePlus.getCalibration());
             scaleOptionPanelContinueButtonPressed();
-//                         frame.setProgress(100);
+
         } catch (Exception exception) {
             printExceptionMessage(exception);
             status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
@@ -92,68 +86,37 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         }
     }
 
-    public MainFrame getFrame(){
+    public MainFrame getFrame() {
         return frame;
     }
-    
-    public boolean getSecondatrStackOption(){
+
+    public boolean getSecondatrStackOption() {
         return secondaryStackOption;
     }
-    
-    public void setSecondatrStackOption( boolean b){
+
+    public void setSecondatrStackOption(boolean b) {
         secondaryStackOption = b;
     }
-    
+
     /**
      * This is the second point of execution. The user is asked to enter the
      * scale of the image and this function is called after the user presses 
      * Continue.
      */
     void scaleOptionPanelContinueButtonPressed() {
+        frame.getProgressTextField().setText("Initializing...");
+        frame.setEnabledOptions(false);
         try {
-            
             stack = Utility.createStackFromImagePlus(imagePlus);
             IJCase = new Case(stack);
             GUIDriver driver = new GUIDriver(new GUIQueue(jobs, frame.getProgressTextField(), this), IJCase, factory);
-//            Driver driver = new Driver(jobs, IJCase, factory);
-//            driver.run();
+
 //            System.out.println(Thread.currentThread().getName());
-            String s = null;
-            if(executor == null)
+            if (executor == null) {
                 executor = Executors.newFixedThreadPool(1);
-//            guiQueue.addPropertyChangeListener( new PropertyChangeListener() {
-//                 public  void propertyChange(PropertyChangeEvent evt) {
-//              if ("progress".equals(evt.getPropertyName())) {
-////                  progressBar.setValue((Integer)evt.getNewValue());
-//                  frame.getProgressTextField().setText(((Integer)evt.getNewValue()).toString());
-//              }
-//          }
-//      });
-//            FutureTask<String> future = new FutureTask<String>(driver, s);
-//            executor.execute(future);
+            }
+
             executor.execute(driver);
-//            AWTEvent laste = null;
-//            while (!future.isDone()) {
-////                try {
-////                    Thread.sleep(500);
-//
-//                AWTEvent e = EventQueue.getCurrentEvent();
-//                if (e != laste) {
-//                    System.out.println(EventQueue.getCurrentEvent().paramString());
-//                    laste = e;
-//                }
-////                    System.out.println(EventQueue.getCurrentEvent().paramString());
-////                } catch (Exception ie) {
-////                    System.out.println("Will check after 1/2 sec.");
-////                }
-//            }
-//            executor.shutdown();
-//            if (secondaryStackOption == true) {
-//                frame.askForSecondaryStack();
-//            } else {
-//                showFinalResults();
-//                frame.setMenuAndButtonsEnabled(true);
-//            }
         } catch (Exception exception) {
             printExceptionMessage(exception);
             status = Costanza_Plugin.PluginStatus.EXIT_APPLICATION;
@@ -193,14 +156,13 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             }
             throw error;
         }
-//        frame.setMenuAndButtonsEnabled(true);
-//        frame.setEnabledProcessingOptions(true);
+        frame.setMenuAndButtonsEnabled(true);
     }
 
     void secondaryStackOptionPanelCanceleButtonPressed() throws Exception {
         try {
 //            synchronized(this){
-                secondaryStackOption = false;
+            secondaryStackOption = false;
 //            }
             showFinalResults();
             secondaryStackOption = true;
@@ -210,36 +172,37 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             }
             throw error;
         }
-//        frame.setMenuAndButtonsEnabled(true);
-//        frame.setEnabledProcessingOptions(true);
+        frame.setMenuAndButtonsEnabled(true);
     }
 
     /**
      * Stop the plugin.
      */
     public void stop(PluginStatus status) {
+        executor.shutdownNow();
         frame.setVisible(false);
         frame.dispose();
+        status = PluginStatus.EXIT_APPLICATION;
         this.status = status;
     }
 
     /** 
      * Display final results.
      */
-    public void showFinalResults() throws Exception {
-//        
-//        processResultRequests(frame.getResultRequest());
-//        frame.setEnabledDisplayOptions(false);
-        executor.execute(new RunnProcessResults(secondaryStackOption));
-//        printData(secondaryStackOption);
-
+    public void showFinalResults() {
+        try {
+            executor.execute(new RunDisplayResults(secondaryStackOption));
+        } catch (RejectedExecutionException e) {
+            System.out.println("Aborting");
+            status = PluginStatus.EXIT_APPLICATION;
+        }
     }
 
-    private class RunnProcessResults implements Runnable {
+    private class RunDisplayResults implements Runnable {
 
         private boolean secondaryStackOption;
 
-        RunnProcessResults(boolean b) {
+        RunDisplayResults(boolean b) {
             secondaryStackOption = b;
         }
 
@@ -247,38 +210,43 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
             try {
                 processResultRequests(frame.getResultRequest(), secondaryStackOption);
                 printData(secondaryStackOption);
-                EventQueue.invokeLater(new RunDisplayText("Finished"));
-                EventQueue.invokeLater(new RunSetEnabledDisplay());
+                EventQueue.invokeLater(new RunDisplayText("Finished."));
+                EventQueue.invokeLater(new RunSetEnabledOptions(true));
+            } catch (InterruptedException e) {
+                System.err.println("Costanza_Plugin caught an exception: " + e.getMessage());
             } catch (Exception ex) {
                 Logger.getLogger(Costanza_Plugin.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
-        
     }
-private class RunDisplayText implements Runnable {
 
-            private String message;
+    private class RunSetEnabledOptions implements Runnable {
 
-            public RunDisplayText(String s) {
-                message = s;
-            }
+        private boolean choice;
 
-            public void run() {
-                frame.setProgressTextField(message);
-//                frame.setMenuAndButtonsEnabled(true);
-//                frame.setEnabledDisplayOptions(true);
-//                textField.setText(message);
-            }
+        RunSetEnabledOptions(boolean b) {
+            choice = b;
         }
-
-    private class RunSetEnabledDisplay implements Runnable {
 
         public void run() {
-            frame.setMenuAndButtonsEnabled(true);
-            frame.setEnabledDisplayOptions(true);
+            frame.setEnabledOptions(choice);
+            frame.setMenuAndButtonsEnabled(choice);
         }
     }
+
+    private class RunDisplayText implements Runnable {
+
+        private String message;
+
+        public RunDisplayText(String s) {
+            message = s;
+        }
+
+        public void run() {
+            frame.getProgressTextField().setText(message);
+        }
+        }
+
     /**
      * Starting point of plugin.
      * @param arg ???
@@ -286,11 +254,13 @@ private class RunDisplayText implements Runnable {
      */
     //@Override
     public void run(String arg) {
+        executor = null;
         final Costanza_Plugin self = this;
         try {
 //            System.out.println(Thread.currentThread().getName());
             initFactory();
             SwingUtilities.invokeLater(new Runnable() {
+
                 public void run() {
                     try {
                         frame = new MainFrame(self);
@@ -300,7 +270,7 @@ private class RunDisplayText implements Runnable {
                     frame.setVisible(true);
                 }
             });
-            
+
 //            frame = new MainFrame(this);
 //            frame.setVisible(true);
             status = PluginStatus.RUN_APPLICATION;
@@ -359,20 +329,20 @@ private class RunDisplayText implements Runnable {
     private void processResultRequests(int request, boolean secondaryStackOption) throws Exception {
         int c = countDisplayRequests(frame.getResultRequest());
         int counter = 0;
-        if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER) {
-            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
+        if ((request & REQUEST_CELL_MARKER) == REQUEST_CELL_MARKER && !executor.isShutdown()) {
+            EventQueue.invokeLater(new RunDisplayText("task " + String.valueOf(++counter) + " out of " + String.valueOf(c) + " (display boa centers)"));
             Options options = new Options();
             options.addOption("markNeighbors", frame.getIOPanel().getMarkerRadius() - 1);
             Job job = new Job("cellmarker", options);
             displayResult("Costanza - Cell centers", job);
         }
-        if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER) {
-            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
+        if ((request & REQUEST_BOA_COLORIZER) == REQUEST_BOA_COLORIZER && !executor.isShutdown()) {
+            EventQueue.invokeLater(new RunDisplayText("task " + String.valueOf(++counter) + " out of " + String.valueOf(c) + " (display boas)"));
             Job job = new Job("boacolorize", null);
             displayResult("Costanza - Basins of attractions (BOA)", job);
         }
-        if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER) {
-            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
+        if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER && !executor.isShutdown()) {
+            EventQueue.invokeLater(new RunDisplayText("task " + String.valueOf(++counter) + " out of " + String.valueOf(c) + " (display intensity boas)"));
             Options options = new Options();
             if (secondaryStackOption == true) {
                 options.addOption("OverrideStack", secondaryStack);
@@ -380,11 +350,15 @@ private class RunDisplayText implements Runnable {
             Job job = new Job("boaintensitycolorize", options);
             displayResult("Costanza - Basins of attractions (BOA)-intensity", job);
         }
-        if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK) {
-            EventQueue.invokeLater(new RunDisplayText("Display task " + String.valueOf(++counter) + " out of "+ String.valueOf(c)));
+        if ((request & REQUEST_WORKING_STACK) == REQUEST_WORKING_STACK && !executor.isShutdown()) {
+            EventQueue.invokeLater(new RunDisplayText("task " + String.valueOf(++counter) + " out of " + String.valueOf(c) + " (display working stack)"));
             Stack workingStack = IJCase.getStack();
             ij.ImagePlus workingStackImagePlus = Utility.createImagePlusFromStack(workingStack, "Costanza - Working stack");
             workingStackImagePlus.show();
+        }
+        
+        if (executor.isShutdown()) {
+            throw new InterruptedException("Aborted by user");
         }
     }
 
@@ -421,11 +395,11 @@ private class RunDisplayText implements Runnable {
 
         int id;
 //        synchronized (this) {
-            if (secondaryStackOption == true) {
-                id = secondaryStack.getId();
-            } else {
-                id = stack.getId();
-            }
+        if (secondaryStackOption == true) {
+            id = secondaryStack.getId();
+        } else {
+            id = stack.getId();
+        }
 //        }
         java.util.Set<Integer> cellIds = IJCase.getCellIds();
         java.util.Iterator<Integer> iterator = cellIds.iterator();
