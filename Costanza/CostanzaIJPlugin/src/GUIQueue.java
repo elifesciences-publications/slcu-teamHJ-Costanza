@@ -58,18 +58,16 @@ public class GUIQueue {
         int total = queue.size();
         EventQueue.invokeLater(new RunSetEnabledOptions(false));
         while (true) {
+            if(Thread.interrupted()){
+                throw new InterruptedException("Aborted by user");
+            }
             Job job = queue.poll();
             if (job == null) {
                 break;
             }
-            Processor processor;
-
-            processor = factory.create(job.getProcessorId());
+            Processor processor = factory.create(job.getProcessorId());
 //            System.out.println(Thread.currentThread().getName());
             System.out.println("Running: " + job.getProcessorId());
-            if(Thread.interrupted()){
-                throw new InterruptedException("Aborted by user");
-            }
             String message = "task " + String.valueOf(++counter) + " out of " + String.valueOf(total) + " (" + job.getProcessorId() + ")";
             EventQueue.invokeLater(new RunDisplayText(message));
             processor.process(currentCase, job.getOptions());

@@ -15,27 +15,14 @@ public class MainFrame extends java.awt.Frame {
     void setMenuAndButtonsEnabled(boolean arg) {
 
         startButton.setEnabled(arg);
-        documentationMenuItem.setEnabled(arg);
-        websiteMenuItem.setEnabled(arg);
+//        documentationMenuItem.setEnabled(arg);
+//        websiteMenuItem.setEnabled(arg);
     }
 
     void askForScale(ij.measure.Calibration calibration) {
         scaleOptionPanel.setCalibration(calibration);
     }
 
-    void setEnabledProcessingOptions(boolean b){
-//        System.out.println("processing  options = " + String.valueOf(b));
-        ioOptionPanel.setEnabledProcessingOptions(b);
-        preProcessorOptionPanel.setEnabled(b);
-        postProcessorOptionPanel.setEnabled(b);
-        scaleOptionPanel.setEnabled(b);
-    }
-    
-    void setEnabledDisplayOptions(boolean b){
-//        System.out.println("display  options = " + String.valueOf(b));
-        ioOptionPanel.setEnabledDisplayOptions(b);
-    }
-    
     void askForSecondaryStack() {
         SecondaryStackOptionDialog d = new SecondaryStackOptionDialog(this);
         d.setVisible(true);
@@ -71,13 +58,10 @@ public class MainFrame extends java.awt.Frame {
         this.plugin = plugin;
         initOptionPanels();
         fc = new ConfigurationFileManager(this);
-//        setPreferredSize(new java.awt.Dimension(400, 450));
-//        setSize(new java.awt.Dimension(400, 450));
-//        textField1.setPreferredSize(new java.awt.Dimension(230, 30));
-//       buttonPanel.setSize(new java.awt.Dimension(400, 40));
-//       textField1.setSize(new java.awt.Dimension(230, 30));
-       textField1.setColumns(35);
-       pack();
+//        setPreferredSize(new java.awt.Dimension(450, 450));
+        setSize(new java.awt.Dimension(400, 450));
+//        textField1.setPreferredSize(new java.awt.Dimension(300, 30));
+        pack();
     }
 
     Font getFrameFont() {
@@ -95,11 +79,18 @@ public class MainFrame extends java.awt.Frame {
     public java.awt.TextField getProgressTextField() {
         return textField1;
     }
-    
-    public void setProgressTextField(String s){
-        textField1.setText(s);
+
+    public void setProgressTextField(String s) {
+         textField1.setText(s);
     }
-    
+
+    public void setEnabledOptions(boolean b) {
+        ioOptionPanel.setEnabled(b);
+        preProcessorOptionPanel.setEnabled(b);
+        postProcessorOptionPanel.setEnabled(b);
+        scaleOptionPanel.setEnabled(b);
+    }
+
     public ProcessorOptionPanel getPreProcessorPanel() {
         return preProcessorOptionPanel;
     }
@@ -122,7 +113,6 @@ public class MainFrame extends java.awt.Frame {
 
     private void initOptionPanels() throws Exception {
 //        jTabbedPane1.setPreferredSize(new java.awt.Dimension(450, 380));
-        jTabbedPane1.setSize(new java.awt.Dimension(450, 380));
         ioOptionPanel = new IOOptionPanel(this);
         jTabbedPane1.addTab("general", ioOptionPanel);
 
@@ -198,7 +188,9 @@ public class MainFrame extends java.awt.Frame {
         });
         buttonPanel.add(startButton);
 
-        textField1.setBackground(new java.awt.Color(240, 240, 240));
+        textField1.setCaretPosition(40);
+        textField1.setColumns(35);
+        textField1.setEditable(false);
         buttonPanel.add(textField1);
 
         cancelButton.setLabel("Cancel analysis");
