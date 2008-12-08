@@ -54,7 +54,10 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         add(repeatTextField, gridBagConstraints);
+
+        getAccessibleContext().setAccessibleParent(this);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Label radiusLabel;
     private java.awt.TextField radiusTextField;
@@ -70,10 +73,7 @@ public class MeanFilterOption extends java.awt.Panel implements ProcessorOption 
     }
 
     public void addJobs(Queue jobs) throws Exception {
-//        int repeat = new Integer(repeatTextField.getText()).intValue();
-//        for (int i = 0; i < repeat; ++i) {
             jobs.addJob(new Job("meanfilter", getOptions()));
-//        }
     }
 
     public Options getOptions() throws Exception {

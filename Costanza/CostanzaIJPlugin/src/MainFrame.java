@@ -13,10 +13,7 @@ import javax.swing.JFileChooser;
 public class MainFrame extends java.awt.Frame {
 
     void setMenuAndButtonsEnabled(boolean arg) {
-
         startButton.setEnabled(arg);
-//        documentationMenuItem.setEnabled(arg);
-//        websiteMenuItem.setEnabled(arg);
     }
 
     void askForScale(ij.measure.Calibration calibration) {
@@ -29,13 +26,11 @@ public class MainFrame extends java.awt.Frame {
     }
 
     void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
-//        update();
         plugin.secondaryStackOptionPanelContinueButtonPressed();
     }
 
     void secondaryStackOptionPanelCancelButtonPressed() throws Exception {
         plugin.secondaryStackOptionPanelCanceleButtonPressed();
-//        update();
     }
     
     private IOOptionPanel ioOptionPanel;
@@ -55,13 +50,38 @@ public class MainFrame extends java.awt.Frame {
         backgroundColor = ij.ImageJ.backgroundColor;
 
         initComponents();
+        startButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                synchronized(MainFrame.this)
+                {
+                    setProgress(0);
+                    setIndeterminate(true);
+                }
+            }
+        });
+        
         this.plugin = plugin;
         initOptionPanels();
         fc = new ConfigurationFileManager(this);
-//        setPreferredSize(new java.awt.Dimension(450, 450));
-        setSize(new java.awt.Dimension(400, 450));
-//        textField1.setPreferredSize(new java.awt.Dimension(300, 30));
+//        jProgressBar1.setSize(new java.awt.Dimension(200, 20));
+//        setSize(new java.awt.Dimension(350, 400));
         pack();
+    }
+
+    public String getProperty(String p){
+        return fc.getProperty(p);
+    }
+
+    public void setProgress(int i){
+        jProgressBar1.setValue(i);
+    }
+
+    public int getProgress(){
+        return jProgressBar1.getValue();
+    }
+
+    public void setIndeterminate(boolean b){
+        jProgressBar1.setIndeterminate(b);
     }
 
     Font getFrameFont() {
@@ -70,6 +90,10 @@ public class MainFrame extends java.awt.Frame {
 
     public int getResultRequest() {
         return ioOptionPanel.getResultRequest();
+    }
+
+    public int getStoredResultRequest() {
+        return fc.getResultRequest();
     }
 
     public IOOptionPanel getIOPanel() {
@@ -157,6 +181,7 @@ public class MainFrame extends java.awt.Frame {
         buttonPanel = new java.awt.Panel();
         startButton = new java.awt.Button();
         textField1 = new java.awt.TextField();
+        jProgressBar1 = new javax.swing.JProgressBar();
         cancelButton = new java.awt.Button();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         menuBar = new java.awt.MenuBar();
@@ -169,9 +194,8 @@ public class MainFrame extends java.awt.Frame {
         documentationMenuItem = new java.awt.MenuItem();
 
         setBackground(backgroundColor);
-        setMinimumSize(new java.awt.Dimension(450, 450));
+        setMinimumSize(new java.awt.Dimension(350, 100));
         setName("Costanza Plugin"); // NOI18N
-        setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
@@ -188,10 +212,14 @@ public class MainFrame extends java.awt.Frame {
         });
         buttonPanel.add(startButton);
 
-        textField1.setCaretPosition(40);
-        textField1.setColumns(35);
-        textField1.setEditable(false);
+        textField1.setBackground(new java.awt.Color(240, 240, 240));
+        textField1.setVisible(false);
         buttonPanel.add(textField1);
+
+        jProgressBar1.setDoubleBuffered(true);
+        jProgressBar1.setPreferredSize(new java.awt.Dimension(200, 20));
+        jProgressBar1.setStringPainted(true);
+        buttonPanel.add(jProgressBar1);
 
         cancelButton.setLabel("Cancel analysis");
         cancelButton.setVisible(false);
@@ -205,8 +233,14 @@ public class MainFrame extends java.awt.Frame {
         add(buttonPanel, java.awt.BorderLayout.SOUTH);
 
         jTabbedPane1.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane1.setAutoscrolls(true);
         jTabbedPane1.setDoubleBuffered(true);
         jTabbedPane1.setMinimumSize(new java.awt.Dimension(300, 300));
+        jTabbedPane1.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                jTabbedPane1ComponentResized(evt);
+            }
+        });
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
         menuBar.setFont(menuFont);
@@ -283,24 +317,30 @@ public class MainFrame extends java.awt.Frame {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
 	}//GEN-LAST:event_documentationMenuItemActionPerformed
-
 	private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
-            Queue jobs = new Queue();
-            try {
-                preProcessorOptionPanel.addJobs(jobs);
-                Options gradientDescentOption = new Options();
-                gradientDescentOption.addOption("useExtendedNeighborhood", new Boolean(ioOptionPanel.getExtendedNeighborhoodOption()));
-                gradientDescentOption.addOption("usePlateau", new Boolean(ioOptionPanel.getPlateauOption()));
-                gradientDescentOption.addOption("intensityLevelsNumber", getIntensityLevelsNumber());
-                jobs.addJob(new Job("gradientdescent", gradientDescentOption));
-                postProcessorOptionPanel.addJobs(jobs);
-                Options intensityFinderOption = new Options();
-                jobs.addJob(new Job("intensityfinder", intensityFinderOption));
-            } catch (Exception exception) {
-                Costanza_Plugin.printExceptionMessage(exception);
-            }
-
-            plugin.start(jobs, ioOptionPanel.getSecondaryStackOption());
+        setMenuAndButtonsEnabled(false);
+        setEnabledOptions(false);
+        fc.retriveGUIProperties();
+        boolean sso = ioOptionPanel.getSecondaryStackOption();
+        setProgress(0);
+        setIndeterminate(true);
+        setProgressTextField("Initializing...");
+        Queue jobs = new Queue();
+        try {
+            preProcessorOptionPanel.addJobs(jobs);
+            Options gradientDescentOption = new Options();
+            gradientDescentOption.addOption("useExtendedNeighborhood", new Boolean(ioOptionPanel.getExtendedNeighborhoodOption()));
+            gradientDescentOption.addOption("usePlateau", new Boolean(ioOptionPanel.getPlateauOption()));
+            gradientDescentOption.addOption("intensityLevelsNumber", getIntensityLevelsNumber());
+            jobs.addJob(new Job("gradientdescent", gradientDescentOption));
+            postProcessorOptionPanel.addJobs(jobs);
+            Options intensityFinderOption = new Options();
+            jobs.addJob(new Job("intensityfinder", intensityFinderOption));
+        } catch (Exception exception) {
+            Costanza_Plugin.printExceptionMessage(exception);
+        }
+        setEnabledOptions(true);
+        plugin.start(jobs, sso);
 	}//GEN-LAST:event_startButtonActionPerformed
 
         private void quitRequest(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitRequest
@@ -329,6 +369,10 @@ public class MainFrame extends java.awt.Frame {
             } 
         }//GEN-LAST:event_saveConfigurationFile
 
+        private void jTabbedPane1ComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_jTabbedPane1ComponentResized
+            doLayout();
+        }//GEN-LAST:event_jTabbedPane1ComponentResized
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Panel buttonPanel;
@@ -336,6 +380,7 @@ public class MainFrame extends java.awt.Frame {
     private java.awt.MenuItem documentationMenuItem;
     private java.awt.Menu fileMenu;
     private java.awt.Menu helpMenu;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private java.awt.MenuBar menuBar;
     private java.awt.MenuItem openFile;
