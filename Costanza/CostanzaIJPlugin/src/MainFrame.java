@@ -38,6 +38,7 @@ public class MainFrame extends java.awt.Frame {
     private ProcessorOptionPanel postProcessorOptionPanel;
     private ScaleOptionPanel scaleOptionPanel;
     private ConfigurationFileManager fc;
+    private BOAFileWriter bw;
     private Costanza_Plugin plugin;
     private Font menuFont;
     private Font font;
@@ -63,6 +64,7 @@ public class MainFrame extends java.awt.Frame {
         this.plugin = plugin;
         initOptionPanels();
         fc = new ConfigurationFileManager(this);
+        bw = new BOAFileWriter(plugin);
 //        jProgressBar1.setSize(new java.awt.Dimension(200, 20));
 //        setSize(new java.awt.Dimension(350, 400));
         pack();
@@ -188,6 +190,7 @@ public class MainFrame extends java.awt.Frame {
         fileMenu = new java.awt.Menu();
         openFile = new java.awt.MenuItem();
         saveFile = new java.awt.MenuItem();
+        saveBoas = new java.awt.MenuItem();
         quitMenuItem = new java.awt.MenuItem();
         helpMenu = new java.awt.Menu();
         websiteMenuItem = new java.awt.MenuItem();
@@ -262,6 +265,15 @@ public class MainFrame extends java.awt.Frame {
             }
         });
         fileMenu.add(saveFile);
+
+        saveBoas.setActionCommand("Save BOAs to file");
+        saveBoas.setLabel("Save BOAs to file");
+        saveBoas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveBoasFile(evt);
+            }
+        });
+        fileMenu.add(saveBoas);
 
         quitMenuItem.setLabel("Quit");
         quitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -373,6 +385,15 @@ public class MainFrame extends java.awt.Frame {
             doLayout();
         }//GEN-LAST:event_jTabbedPane1ComponentResized
 
+        private void saveBoasFile(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBoasFile
+//           System.out.println("saving boas: MainFrame");
+            int returnVal = bw.showSaveDialog(this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = bw.getSelectedFile();
+                bw.saveBOAs(file);
+            } 
+        }//GEN-LAST:event_saveBoasFile
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Panel buttonPanel;
@@ -385,6 +406,7 @@ public class MainFrame extends java.awt.Frame {
     private java.awt.MenuBar menuBar;
     private java.awt.MenuItem openFile;
     private java.awt.MenuItem quitMenuItem;
+    private java.awt.MenuItem saveBoas;
     private java.awt.MenuItem saveFile;
     private java.awt.Button startButton;
     private java.awt.TextField textField1;

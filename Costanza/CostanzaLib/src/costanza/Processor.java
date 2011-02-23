@@ -7,10 +7,10 @@ package costanza;
 public abstract class Processor {
 
     /** The Case to work on. */
-    public Case myCase;
+//    public Case myCase;
     
     /** The Processor to use. */
-    public Processor myProcessor;
+//    public Processor myProcessor;
 
     /** 
      * Abstract method for running the implemented process.

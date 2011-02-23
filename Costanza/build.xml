@@ -12,7 +12,7 @@
 	  <ant target="dist" dir="CostanzaLib" inheritAll="false"/>
 	  <ant target="dist" dir="CostanzaTextUI" inheritAll="false"/>
 	  <ant target="dist" dir="CostanzaIJPlugin" inheritAll="false"/>
-	  <ant target="dist" dir="CostanzaIJPluginSimplistic" inheritAll="false"/>
+	  <!-- <ant target="dist" dir="CostanzaIJPluginSimplistic" inheritAll="false"/> -->
   </target>
 
   <target name="clean" description="Clean up" >
@@ -20,6 +20,6 @@
 	  <ant target="clean" dir="CostanzaLib" inheritAll="false"/>
 	  <ant target="clean" dir="CostanzaTextUI" inheritAll="false"/>
 	  <ant target="clean" dir="CostanzaIJPlugin" inheritAll="false"/>
-	  <ant target="clean" dir="CostanzaIJPluginSimplistic" inheritAll="false"/>
+	  <!-- <ant target="clean" dir="CostanzaIJPluginSimplistic" inheritAll="false"/> -->
   </target>
 </project>

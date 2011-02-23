@@ -120,12 +120,13 @@ public class IOOptionPanel extends java.awt.Panel {
         setBackground(new java.awt.Color(245, 245, 245));
         setLayout(new java.awt.GridBagLayout());
 
-        mainOptions.setFont(new java.awt.Font("Dialog", 1, 12));
+        mainOptions.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         mainOptions.setText("Gradient descent options:");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(mainOptions, gridBagConstraints);
 
         extendedNeighborhoodOption.setLabel("Use extended (box) neighborhood");
@@ -133,6 +134,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(extendedNeighborhoodOption, gridBagConstraints);
 
         plateauOption.setLabel("Mark intensity plateau with single maximum");
@@ -140,6 +142,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(plateauOption, gridBagConstraints);
 
         inputOptionsLabel.setFont(new java.awt.Font("Dialog", 1, 12));
@@ -148,6 +151,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(inputOptionsLabel, gridBagConstraints);
 
         secondaryStackCheckbox.setLabel("Use secondary stack to measure intensity levels.");
@@ -155,6 +159,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(secondaryStackCheckbox, gridBagConstraints);
 
         outputOptionsLabel.setFont(new java.awt.Font("Dialog", 1, 12));
@@ -163,6 +168,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
         add(outputOptionsLabel, gridBagConstraints);
 
         cellCenterMarkerOption.setLabel("Mark cell centers. Marker pixel radius:");
@@ -175,6 +181,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(cellCenterMarkerOption, gridBagConstraints);
 
         markerRadiusTextField.setColumns(1);
@@ -189,6 +196,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(boaColourizeCheckbox, gridBagConstraints);
 
         boaIntensityColourizeCheckbox.setLabel("Display basins of attractions according to measured intensity.");
@@ -196,6 +204,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(boaIntensityColourizeCheckbox, gridBagConstraints);
 
         workingStackCheckbox.setLabel("Display internal working stack.");
@@ -203,6 +212,7 @@ public class IOOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.insets = new java.awt.Insets(0, 8, 0, 8);
         add(workingStackCheckbox, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 

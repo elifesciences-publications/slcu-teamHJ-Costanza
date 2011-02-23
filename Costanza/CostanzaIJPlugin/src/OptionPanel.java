@@ -75,11 +75,6 @@ public class OptionPanel extends java.awt.Panel {
                 scrollbar1MouseClicked(evt);
             }
         });
-        scrollbar1.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                scrollbar1AdjustmentValueChanged(evt);
-            }
-        });
         add(scrollbar1, new java.awt.GridBagConstraints());
 
         getAccessibleContext().setAccessibleParent(this);
@@ -87,51 +82,6 @@ public class OptionPanel extends java.awt.Panel {
 	private void removeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeButtonActionPerformed
             parentPanel.removeOption(this);
 	}//GEN-LAST:event_removeButtonActionPerformed
-
-        private void scrollbar1AdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollbar1AdjustmentValueChanged
-           /*
-            java.awt.Container parent = getParent();
-            if(parent == null)
-                return;
-            java.awt.Component arr[] = parent.getComponents();
-            int count = parent.getComponentCount();
-            
-            int n = 0;
-            while (n < count && arr[n] != this) {
-                ++n;
-            }
-            if (n == arr.length || count == 1) {
-                return;
-            }
-            
-            java.awt.GridBagConstraints constr = new java.awt.GridBagConstraints();
-            constr.gridx = 0;
-            constr.anchor = GridBagConstraints.WEST;
-
-            int v = evt.getValue();
-//            System.out.println("adjustment detected: " + evt.getAdjustmentType() + " " + v + "," + getProcessorOption().getProcessorName());
-            if (evt.getAdjustmentType() == java.awt.event.AdjustmentEvent.UNIT_INCREMENT && v == 2) {
-//                System.out.println("shift down");
-
-                if (n < count - 1) {
-                    parent.add(arr[n + 1], constr, n);
-                    parent.add(this, constr, n + 1);
-                    getParentPanel().swapOptions(n+1, n);
-                }
-            }
-            else if (v == 0) {
-//                System.out.println("shift up");
-                if (evt.getAdjustmentType() == java.awt.event.AdjustmentEvent.UNIT_DECREMENT && n > 0) {
-                    parent.add(arr[n - 1], constr, n);
-                    parent.add(this, constr, n - 1);
-                    getParentPanel().swapOptions(n-1, n);               
-                }
-            }
-
-            evt.getAdjustable().setValue(1);
-            parent.validate();
-            //* */
-        }//GEN-LAST:event_scrollbar1AdjustmentValueChanged
 
         private void scrollbar1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_scrollbar1MouseClicked
 //            System.out.println(evt.paramString());
@@ -154,7 +104,7 @@ public class OptionPanel extends java.awt.Panel {
             
             java.awt.GridBagConstraints constr = new java.awt.GridBagConstraints();
             constr.gridx = 0;
-            constr.anchor = GridBagConstraints.WEST;
+            constr.anchor = GridBagConstraints.NORTHWEST;
 
             int v = scrollbar1.getValue();
 //            System.out.println( v + "," + getProcessorOption().getProcessorName());

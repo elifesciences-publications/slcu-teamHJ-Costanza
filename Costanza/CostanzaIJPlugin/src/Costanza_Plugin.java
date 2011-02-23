@@ -9,7 +9,10 @@ import costanza.Options;
 import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
+import costanza.BOAWriter;
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
@@ -236,6 +239,17 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         }
     }
 
+    public void writeBoas(File f){
+        try {
+//            System.out.println("saving boas: Costanza_Plugin");
+            BOAWriter bw = new BOAWriter(IJCase);
+            bw.writeText(f);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() );
+//            status = PluginStatus.EXIT_APPLICATION;
+        }
+    }
+    
     private class RunDisplayResults implements Runnable {
 
         private boolean secondaryStackOption;
@@ -430,6 +444,120 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         driver.run();
         ij.ImagePlus displayImagePlus = Utility.createImagePlusFromResultStack(IJCase, name);
         displayImagePlus.show();
+//        ij.ImagePlus displayDensity = Utility.createCellDensityImagePlus(IJCase, "density plot");
+//        displayDensity.show();
+        /*
+        int width = stack.getWidth();
+        int hight = stack.getHeight();
+        
+//        Utility.writeCellDistanceHistogram( IJCase );
+        
+        Pixel p = new Pixel(225, 326, 0);
+        int id = Utility.findCellCenterFromPixel(IJCase, p);
+        File f = new File("./plugins/Costanza/0-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(268, 327, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/1-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(188, 360, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/2-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(308, 390, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/3-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1135,435, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/4-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1171,445, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/5-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1134,495, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/6-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(2382,820, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/7-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(2367,848, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/8-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(2369,881, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/9-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(2332,972, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/10-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(2301,1021, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/11-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1781,1429, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/12-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1798,1458, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/13-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(411,1459, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/14-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(1828,1478, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/15-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        p = new Pixel(436,1482, 0);
+        id = Utility.findCellCenterFromPixel(IJCase, p);
+        f = new File("./plugins/Costanza/16-all.hist");
+        Utility.writeCellDistanceHistogram(f, IJCase, id);
+*/
+//        Pixel p = new Pixel(width/2, hight/2, 0);
+//        int id = Utility.findCellCenterFromPixel(IJCase, p);
+//        File f = new File("./plugins/Costanza/center.hist");
+//        Utility.writeCellDistanceHistogram(f, IJCase, id);
+//        
+//        p = new Pixel(width/2, 0, 0);
+//        id = Utility.findCellCenterFromPixel(IJCase, p);
+//        f = new File("./plugins/Costanza/edge.hist");
+//        Utility.writeCellDistanceHistogram(f, IJCase, id);
+//        
+//        p = new Pixel(0, 0, 0);
+//        id = Utility.findCellCenterFromPixel(IJCase, p);
+//        f = new File("./plugins/Costanza/corner.hist");
+//        Utility.writeCellDistanceHistogram(f, IJCase, id);
+//        
+//        p = new Pixel(width/4, hight/4, 0);
+//        id = Utility.findCellCenterFromPixel(IJCase, p);
+//        f = new File("./plugins/Costanza/diagonal.hist");
+//        Utility.writeCellDistanceHistogram(f, IJCase, id);
+        
+        System.out.println("run finished");
     }
 
     /**

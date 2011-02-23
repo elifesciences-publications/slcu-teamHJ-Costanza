@@ -5,6 +5,10 @@ public class Job {
     private Options options;
 
     /** Constructor for Job class. */
+    public Job(String processorId) {
+        this.processorId = processorId;
+        this.options = new Options();
+    }
     public Job(String processorId, Options options) {
         this.processorId = processorId;
         this.options = options;

@@ -2,6 +2,7 @@ package costanza;
 
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.Vector;
 
 /**Implementation of a Processor that marks each CellCenter with red redColor.
  * @author michael
@@ -21,7 +22,7 @@ public class CellCenterMarker extends Processor {
     @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 	// Get the basin of attractors from data in case
-	Collection<CellCenter> cellCenters = (Collection<CellCenter>) c.getCellData(DataId.CENTERS);
+	Collection<CellCenter> cellCenters =  (Vector<CellCenter>) c.getCellData(DataId.CENTERS);
         if (cellCenters == null) {
 	    return c;
 	}

@@ -30,6 +30,15 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveConfigurationFile"/>
               </Events>
             </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="saveBoas">
+              <Properties>
+                <Property name="actionCommand" type="java.lang.String" value="Save BOAs to file"/>
+                <Property name="label" type="java.lang.String" value="Save BOAs to file"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveBoasFile"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="java.awt.MenuItem" name="quitMenuItem">
               <Properties>
                 <Property name="label" type="java.lang.String" value="Quit"/>

@@ -39,6 +39,12 @@ public class ConfigurationFileManager extends JFileChooser {
     public static final String LAST_FILE = WRK_DIR + "/last." + ConfigurationFileFilter.ext;
     public static final String DEFAULT_FILE = WRK_DIR + "/default." + ConfigurationFileFilter.ext;
 
+    private int request;
+
+    public int getResultRequest(){
+        return request;
+    }
+
     public ConfigurationFileManager(MainFrame f) {
         addChoosableFileFilter(new ConfigurationFileFilter());
         frame = f;
@@ -79,9 +85,10 @@ public class ConfigurationFileManager extends JFileChooser {
 //            System.out.println("Loading default configuration");
             loadProperties(def);
         }
-//        else{
-//
-//        }
+    }
+
+    public String getProperty(String p){
+        return props.getProperty(p);
     }
 
     public void saveProperties(File f) {
@@ -177,6 +184,7 @@ public class ConfigurationFileManager extends JFileChooser {
     }
 
     public void retriveGUIProperties() {
+        request = frame.getResultRequest();
         props.clear();
         props.setProperty(WORKING_DIR_GUI, getCurrentDirectory().getPath());
         IOOptionPanel ioPanel = frame.getIOPanel();

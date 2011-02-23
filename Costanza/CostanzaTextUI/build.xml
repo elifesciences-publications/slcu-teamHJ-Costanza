@@ -1,6 +1,6 @@
 <project name="Costanza" default="compile" basedir=".">
     <description>
-        This builds the Costanza TextGUI.
+        This builds the Costanza TextUI.
     </description>
   <!-- set global properties for this build -->
   <property name="src" location="src"/>
@@ -17,6 +17,9 @@
 
   <target name="compile" depends="init" description="compile the source ">
     <!-- Compile the java code from ${src} into ${build} -->
+    <exec executable="pwd">
+  </exec>
+
 	<javac target="1.5" 
 		source="1.5" 
 		srcdir="${src}" 
@@ -25,25 +28,25 @@
 		debug="on"
 		deprecation="on"
 		debuglevel="lines, vars, source"
-		verbose="no">
-		<compilerarg line="-Xlint:unchecked -cp CostanzaLib/dist/lib/CostanzaLib.jar:."/>
+		verbose="no"
+		classpath="../CostanzaLib/dist/CostanzaLib.jar">
+		<compilerarg line="-Xlint:unchecked"/>
 	</javac>
   </target>
 
   <target name="dist" depends="compile"
 	  description="generate the distribution" >
 	  <!-- Create the distribution directory -->
-	  <mkdir dir="${dist}/lib"/>
-	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${dist}/lib"/>
+	  <mkdir dir="${dist}"/>
+	  <copy file="../CostanzaLib/dist/CostanzaLib.jar" toDir="${dist}"/>
 
 	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
 	  <jar jarfile="${dist}/CostanzaTextUI.jar"
 		  basedir="${build}"
 		  excludes="**Test.class">
 		  <manifest>
-			  <attribute name="Built-By" value="Michael Green"/>
-			  <attribute name="Main-Class" value="costanza.ui.TextGUI"/>
-			  <attribute name="Class-Path" value="lib/CostanzaLib.jar"/>
+			  <attribute name="Main-Class" value="costanza.ui.TextUI"/>
+			  <attribute name="Class-Path" value="CostanzaLib.jar"/>
 		  </manifest>
 	  </jar>
   </target>

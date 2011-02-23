@@ -97,7 +97,7 @@ public class Data {
      * @param id DataId
      * @return Collection<? extends CellData_t >, null if no data of given type found
      */
-    public Collection<? extends CellData_t > getCellData(DataId id) {
+    public Vector<? extends CellData_t > getCellData(DataId id) {
         int size = cells.size();
         Vector<CellData_t> v  = new Vector<CellData_t>(size);
 

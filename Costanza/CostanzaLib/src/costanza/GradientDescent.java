@@ -51,6 +51,7 @@ public class GradientDescent extends Processor {
         {
             extendedNeighborhoodFlag = ((Boolean) o.getOptionValue(NEIGHBORHOOD_OPT)).booleanValue();
             plateauPixelsFlag = ((Boolean) o.getOptionValue(PLATEAU_OPT)).booleanValue();
+            if(o.hasOption(INTENSITY_OPT))
             INTENSITY_LEVELS = ((Integer) o.getOptionValue(INTENSITY_OPT)).intValue();
         }
         else

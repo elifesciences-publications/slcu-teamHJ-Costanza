@@ -33,14 +33,13 @@
   <target name="dist" depends="compile"
 	  description="generate the distribution" >
 	  <!-- Create the distribution directory -->
-	  <mkdir dir="${dist}/lib"/>
+	  <mkdir dir="${dist}"/>
 
 	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
-	  <jar jarfile="${dist}/lib/CostanzaLib.jar"
+	  <jar jarfile="${dist}/CostanzaLib.jar"
 		  basedir="${build}"
 		  excludes="**Test.class">
 		  <manifest>
-			  <attribute name="Built-By" value="Michael Green"/>
 			  <attribute name="Main-Class" value=""/>
 		  </manifest>
 	  </jar>

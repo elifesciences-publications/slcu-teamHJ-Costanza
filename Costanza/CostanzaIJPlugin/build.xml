@@ -25,8 +25,9 @@
 		debug="on"
 		deprecation="on"
 		debuglevel="lines, vars, source"
-		verbose="no">
-		<compilerarg line="-Xlint:unchecked -cp CostanzaIJPlugin/resources/ij.jar:CostanzaLib/dist/lib/CostanzaLib.jar:."/>
+		verbose="no"
+		classpath="../CostanzaLib/dist/CostanzaLib.jar;../resources/ij.jar">
+		<compilerarg line="-Xlint:unchecked"/>
 	</javac>
   </target>
 
@@ -34,7 +35,7 @@
 	  description="generate the distribution" >
 	  <!-- Create the distribution directory -->
 	  <mkdir dir="${dist}"/>
-	  <copy file="../CostanzaLib/dist/lib/CostanzaLib.jar" toDir="${dist}"/>
+	  <copy file="../CostanzaLib/dist/CostanzaLib.jar" toDir="${dist}"/>
 	  <!--
 	  <mkdir dir="${dist}/lib"/>
 	  <mkdir dir="${build}/lib"/>
@@ -46,7 +47,6 @@
 		  basedir="${build}"
 		  excludes="**Test.class">
 		  <manifest>
-			  <attribute name="Built-By" value="Michael Green"/>
 			  <attribute name="Main-Class" value=""/>
 			  <attribute name="Class-Path" value="CostanzaLib.jar"/>
 		  </manifest>
