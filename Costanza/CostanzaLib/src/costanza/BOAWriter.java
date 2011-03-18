@@ -1,10 +1,11 @@
 package costanza;
 
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.List;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.util.LinkedList;
 
 public class BOAWriter {
@@ -17,7 +18,7 @@ public class BOAWriter {
     
     public void writeText(File f) throws Exception {
 
-        System.out.println("saving boas: BOAWriter");
+//        System.out.println("saving boas: BOAWriter");
         int size = cs.sizeOfCells();
         Vector< List<Pixel> > boas = new Vector< List<Pixel> >(size);
         for(int i = 0; i < size; ++i){
@@ -27,7 +28,7 @@ public class BOAWriter {
         int xDim = cs.getStack().getWidth();
         int yDim = cs.getStack().getHeight();
         int zDim = cs.getStack().getDepth();
-        System.out.println("xDim = " + xDim + " yDim = " + yDim + " zDim = " + zDim );
+//        System.out.println("xDim = " + xDim + " yDim = " + yDim + " zDim = " + zDim );
         PixelFlag pf = (PixelFlag) cs.getStackData(DataId.PIXEL_FLAG);
 
         for (int iz = 0; iz < zDim; ++iz) {
@@ -47,17 +48,22 @@ public class BOAWriter {
             }
         }
         System.out.println("boas size = " + size);
-        FileOutputStream fo = new FileOutputStream(f);
-        DataOutputStream out = new DataOutputStream(fo);
-        out.writeChars( size +" boas\n");
+
+        FileWriter fstream = new FileWriter(f);
+        BufferedWriter out = new BufferedWriter(fstream);
+        out.write( size +" boas\n");
+
         for(int i = 0; i < size; ++i){
             List<Pixel> boa = boas.get(i);
             int boaSize = boa.size();
-            out.writeChars( i +": " + boaSize + " pixels\n");
-            for(int j = 0; j < boaSize; ++j){
-                out.writeChars( "\t" + boa.get(j).toString() + "\n");   
+            out.write( i +": " + boaSize + " pixels\n");
+            Iterator<Pixel> iterator = boa.iterator();
+            while (iterator.hasNext()) {
+                out.write( "\t" + iterator.next().toString() + "\n");   
             }
         }
+        out.close();
+        fstream.close();
         System.out.println("finished writing");
     }
 }

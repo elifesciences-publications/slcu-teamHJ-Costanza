@@ -13,7 +13,7 @@ public class StackImageFilter implements FilenameFilter{
     public StackImageFilter(File d, String name){
         dir = d;
         basename = name;
-        p = Pattern.compile(basename + "(\\d+)\\.(.[^\\.]+)");
+        p = Pattern.compile(basename + "(\\d*)\\.(.[^\\.]+)");
 //        p = Pattern.compile(basename + ".+");
     }
 

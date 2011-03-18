@@ -41,7 +41,7 @@
 	  <copy file="../CostanzaLib/dist/CostanzaLib.jar" toDir="${dist}"/>
 
 	  <!-- Put everything in ${build} into the Costanza-${DSTAMP}.jar file -->
-	  <jar jarfile="${dist}/CostanzaTextUI.jar"
+	  <jar jarfile="${dist}/costanza.jar"
 		  basedir="${build}"
 		  excludes="**Test.class">
 		  <manifest>

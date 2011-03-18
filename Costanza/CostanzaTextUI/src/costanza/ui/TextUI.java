@@ -3,11 +3,11 @@ package costanza.ui;
 import costanza.Image;
 import costanza.Stack;
 import costanza.Case;
+import costanza.CellCenter;
+import costanza.CellIntensity;
+import costanza.DataId;
 import costanza.Driver;
 import costanza.Factory;
-//import costanza.Options;
-//import costanza.Job;
-//import costanza.Pixel;
 import costanza.Job;
 import costanza.Processor;
 import costanza.Queue;
@@ -16,9 +16,10 @@ import costanza.ui.Options.Separator;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.awt.image.PixelGrabber;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-//import java.util.Vector;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -63,6 +64,7 @@ public class TextUI {
         String centersfile = "cell_centers_";
         String boafile = "boas_";
         String boaIntensityFile = "intensity_boas_";
+        String boaTextFile = null;
 
         if (opt.getSet().isSet("cf")) {
             centersfile = opt.getSet().getOption("cf").getResultValue(0);
@@ -74,7 +76,12 @@ public class TextUI {
         }
         if (opt.getSet().isSet("bif")) {
             boaIntensityFile = opt.getSet().getOption("bif").getResultValue(0);
+            boaTextFile = "data.txt";
 //            System.out.println("boa file = " + boaIntensityFile);
+        }
+         if (opt.getSet().isSet("df")) {
+            boaTextFile = opt.getSet().getOption("df").getResultValue(0);
+//            System.out.println("output file type = " + type);
         }
         if (opt.getSet().isSet("t")) {
             type = opt.getSet().getOption("t").getResultValue(0);
@@ -91,7 +98,6 @@ public class TextUI {
         Stack stack = readImageStack(baseName, n);
         Case myCase = new Case(stack);
         Factory<Processor> factory = initFactory();
-
 
         ConfigurationFileReader cf = new ConfigurationFileReader();
         File file = new File(cfgfile);
@@ -123,6 +129,16 @@ public class TextUI {
             Driver d = new Driver(writeJobs, myCase, factory);
             d.run();
             writeImages(outfile, myCase.getResultImages(), type);
+//            if (id.equals("boacolorizeintensity")) {
+            if (boaTextFile != null) {
+                try {
+                    File f = new File( boaTextFile);
+                    writeBOAIntensityTable(myCase, stack, f, false);
+                    
+                } catch (Exception e) {//Catch exception if any
+                    System.err.println("Error: " + e.getMessage());
+                }
+            }
         }
         if(Boolean.parseBoolean(cf.getProperty(ConfigurationFileReader.WORKING_STACK_GUI))){
             writeImageStack("working_stack_", myCase.getStack(), type);
@@ -138,8 +154,8 @@ public class TextUI {
      * @throws java.lang.Exception
      */
     private Stack readImageStack(String baseName, int numImages) throws Exception {
+       
         Stack stack = new Stack();
-
         File base = new File(baseName);
         String stackfile = base.getName().trim();
         File dir = base.getParentFile();
@@ -149,10 +165,13 @@ public class TextUI {
 
 //            System.out.println("parent name = " + dir + "|");
 //            System.out.println("stack name = " + stackfile + "|");
-
+        if(!dir.exists()){
+            System.out.println("Directory " + dir + " does not exist.");
+            System.exit(1);
+        }
+            
         StackImageFilter sif = new StackImageFilter(dir, stackfile);
         File[] files = dir.listFiles(sif);
-
         if (files.length == 0) {
             System.out.println("Not matching files to open the stack. Exiting...");
             System.exit(1);
@@ -288,6 +307,7 @@ public class TextUI {
             opt.getSet().addOption("cf", Separator.EQUALS, Multiplicity.ZERO_OR_ONE);
             opt.getSet().addOption("bf", Separator.EQUALS, Multiplicity.ZERO_OR_ONE);
             opt.getSet().addOption("bif", Separator.EQUALS, Multiplicity.ZERO_OR_ONE);
+            opt.getSet().addOption("df", Separator.EQUALS, Multiplicity.ZERO_OR_ONE);
             opt.getSet().addOption("t", Separator.EQUALS, Multiplicity.ZERO_OR_ONE);
 
             new costanza.ui.TextUI(opt);
@@ -325,13 +345,54 @@ public class TextUI {
 
     private void printUsage() {
 
-        System.out.println("<cfgfile> <stackbase> <nfiles> [-cf <cenersfile>] [-bf <boafile>] [-bif <boaintensityfile>]");
+        System.out.println("<cfgfile> <stackbase> <nfiles> [-cf <cenersfile>] [-bf <boafile>] [-bif <boaintensityfile>] [-df <datafile>]");
         System.out.println("[-cf=<cenersfile>] - optional name of the base of the files to output the marked centers of the segmented rgions.");
         System.out.println("[-bf=<boafile>] - optional name of the base of the files to output basins of attractions of segmented regions colored with random colors.");
         System.out.println("[-bif=<boaintensityfile>] - optional name of the base of the files to output basins of attractions of segmented regions colored according to intensity of the signal in the original stack.");
+        System.out.println("[-df=<datafile>] - optional name of the data file to store the table of BOA positions and average intensities in the csv format.");
         System.out.println("[-t=<extension>] - optional extension of the output image files determinig their type. The default is \"png\"");
         System.out.println("<cfgfile> - name of the costanza configuration file. The format of the file is compatibile with ImageJ version of costanza configuration file.");
         System.out.println("<stackbase> - name of the image stack files excluding numerical suffix.");
-        System.out.println("[<nfiles>] - optional number of the images from the stack to read. If not supplied all the images matching <stackbase> will be read");
+        System.out.println("[<nfiles>] - optional number of the images from the stack to read. If not supplied all the images matching <stackbase> will be read.");
+    }
+    
+    private void writeBOAIntensityTable(Case myCase, Stack stack, File f, boolean secondaryStackOption) throws Exception {
+        float xScale = myCase.getStack().getXScale();
+        float yScale = myCase.getStack().getYScale();
+        float zScale = myCase.getStack().getZScale();
+        float volumeScale = xScale * yScale * zScale;
+
+        String tab = "\t";
+        String delim = ", ";
+        String newline = "\n";
+        String header = ("#Cell id"+delim+"x"+delim+"y"+delim+"z"+delim+"Boa volume"+delim+"Mean cell intensity"+newline);
+
+         FileWriter fstream = new FileWriter(f);
+         BufferedWriter out = new BufferedWriter(fstream);
+                    
+        int id = stack.getId();
+//        if (secondaryStackOption == true) {
+//            id = secondaryStack.getId();
+//        }
+        java.util.Set<Integer> cellIds = myCase.getCellIds();
+        java.util.Iterator<Integer> iterator = cellIds.iterator();
+        out.write(header);
+        while (iterator.hasNext()) {
+            Integer i = iterator.next();
+            String line = "";
+            CellCenter cellCenter = (CellCenter) myCase.getCellData(DataId.CENTERS, i);
+            CellIntensity cellIntensity = (CellIntensity) myCase.getCellData(DataId.INTENSITIES, i);
+            //BOA cellBoa = (BOA) IJCase.getCellData(DataId.BOAS, i);
+            int cellSize = myCase.getCell(i).size();
+
+            float x = cellCenter.getX() * xScale;
+            float y = cellCenter.getY() * yScale;
+            float z = cellCenter.getZ() * zScale;
+            float volume = cellSize * volumeScale;
+            float intensity = cellIntensity.getIntensity(id + "mean") * (float) Case.COSTANZA_INTENSITY_LEVELS;
+            line = i + delim + x + delim + y + delim + z + delim + volume + delim + intensity + newline;
+            out.write(line);
+        }
+        out.close();
     }
 }
