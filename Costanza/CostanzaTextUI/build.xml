@@ -20,15 +20,13 @@
     <exec executable="pwd">
   </exec>
 
-	<javac target="1.5" 
-		source="1.5" 
-		srcdir="${src}" 
+	<javac 	srcdir="${src}" 
 		encoding="utf-8"
 		destdir="${build}"
-		debug="on"
+		debug="off"
 		deprecation="on"
-		debuglevel="lines, vars, source"
 		verbose="no"
+                includeantruntime ="false"
 		classpath="../CostanzaLib/dist/CostanzaLib.jar">
 		<compilerarg line="-Xlint:unchecked"/>
 	</javac>

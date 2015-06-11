@@ -30,9 +30,10 @@ public class PeakMerger extends Processor {
         
         R2 *= R2;
 
-        float[] scale2 = c.getStack().getScale();
-        for (int i = 0; i < scale2.length; ++i) {
-            scale2[i] *= scale2[i];
+        float[] scale = c.getStack().getScale();
+        float[] scale2 = new float[scale.length];
+        for (int i = 0; i < scale.length; ++i) {
+            scale2[i] = scale[i]*scale[i];
         }
 
         CellCenter cent[] = new CellCenter[c.sizeOfData(DataId.CENTERS)];

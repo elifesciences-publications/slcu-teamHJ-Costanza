@@ -21,38 +21,41 @@ public class ConfigurationFileManager extends JFileChooser {
     public static final String PLATAEU_MARKER_GUI = "usePlateauMarker";
     public static final String INTENSITY_LEVELS_GUI = "intensityLevelsNumber";
     public static final String MARKER_RADIUS_GUI = "markerRadius";
+    public static final String INTENSITY_CHANNELS_GUI = "intensityChannels";
     public static final String SECONDARY_STACK_GUI = "useSecondaryStack";
+    public static final String SECONDARY_INTENSITY_CHANNELS_GUI = "secondaryIntensityChannels";
     public static final String CELL_CENTERS_GUI = "markCellCenters";
     public static final String BOAS_GUI = "displayBOAs";
     public static final String INTENSITY_BOAS_GUI = "displayIntensityBOAs";
+    public static final String NORMALIZE_INTENSITIES_GUI = "NormalizeIntensities";
     public static final String WORKING_STACK_GUI = "displayWorkingStack";
     public static final String BACKGROUND_GUI = "backgroundExtraction";
     public static final String MEAN_FILTER_GUI = "meanFilter";
     public static final String MEDIAN_FILTER_GUI = "medianFilter";
-    public static final String INVERTER_GUI = "inverter";   
+    public static final String INVERTER_GUI = "inverter";
     public static final String PEAK_REMOVER_GUI = "peakRemover";
     public static final String PEAK_MERGER_GUI = "peakMerger";
     public static final String IMAGEJCALIBRATION_GUI = "useImageJCalibration";
     public static final String SCALES_GUI = "scales";
-    
+
     public static final String WRK_DIR = "./plugins/Costanza";
     public static final String LAST_FILE = WRK_DIR + "/last." + ConfigurationFileFilter.ext;
     public static final String DEFAULT_FILE = WRK_DIR + "/default." + ConfigurationFileFilter.ext;
 
     private int request;
 
-    public int getResultRequest(){
+    public int getResultRequest() {
         return request;
     }
 
     public ConfigurationFileManager(MainFrame f) {
         addChoosableFileFilter(new ConfigurationFileFilter());
         frame = f;
-        
+
         File wrkDir = new File(WRK_DIR);
         File last = new File(LAST_FILE);
         File def = new File(DEFAULT_FILE);
-        
+
         setCurrentDirectory(wrkDir);
         java.util.Properties defaults = new java.util.Properties();
         defaults.setProperty(WORKING_DIR_GUI, wrkDir.getPath());
@@ -60,34 +63,35 @@ public class ConfigurationFileManager extends JFileChooser {
         defaults.setProperty(PLATAEU_MARKER_GUI, "false");
         defaults.setProperty(INTENSITY_LEVELS_GUI, "256");
         defaults.setProperty(MARKER_RADIUS_GUI, "2");
+        defaults.setProperty(INTENSITY_CHANNELS_GUI, "true true true");
         defaults.setProperty(SECONDARY_STACK_GUI, "false");
+        defaults.setProperty(SECONDARY_INTENSITY_CHANNELS_GUI, "true true true");
         defaults.setProperty(CELL_CENTERS_GUI, "true");
         defaults.setProperty(BOAS_GUI, "false");
         defaults.setProperty(INTENSITY_BOAS_GUI, "false");
         defaults.setProperty(WORKING_STACK_GUI, "false");
-
+        defaults.setProperty(NORMALIZE_INTENSITIES_GUI, "false");
         defaults.setProperty(IMAGEJCALIBRATION_GUI, "true");
         defaults.setProperty(SCALES_GUI, "1 1 1");
-            
+
         props = new java.util.Properties(defaults);
-        
+
         props.setProperty(BACKGROUND_GUI, "50");
         props.setProperty(MEAN_FILTER_GUI, "2 2");
 
         props.setProperty(PEAK_REMOVER_GUI, "10 10");
         props.setProperty(PEAK_MERGER_GUI, "10");
-        
-        if(last.exists()){
+
+        if (last.exists()) {
 //            System.out.println("Loading last configuration");
             loadProperties(last);
-        }
-        else if(def.exists()){
+        } else if (def.exists()) {
 //            System.out.println("Loading default configuration");
             loadProperties(def);
         }
     }
 
-    public String getProperty(String p){
+    public String getProperty(String p) {
         return props.getProperty(p);
     }
 
@@ -96,14 +100,13 @@ public class ConfigurationFileManager extends JFileChooser {
 //            System.out.println(f.getPath());
             retriveGUIProperties();
             FileOutputStream input;
-            if(new ConfigurationFileFilter().getExtension(f) == null){
+            if (new ConfigurationFileFilter().getExtension(f) == null) {
                 File nf = new File(f.getPath() + "." + ConfigurationFileFilter.ext);
-                System.out.println(nf.getName());
+//                System.out.println(nf.getName());
                 input = new FileOutputStream(nf);
-            }
-                
-            else
+            } else {
                 input = new FileOutputStream(f);
+            }
             props.store(input, "Costanza configuration");
             input.close();
         } catch (IOException e) {
@@ -120,7 +123,7 @@ public class ConfigurationFileManager extends JFileChooser {
             input.close();
 //            props.list(System.out);
             setCurrentDirectory(new File(props.getProperty(WORKING_DIR_GUI)));
-            
+
             ProcessorOptionPanel pre = frame.getPreProcessorPanel();
             pre.removeAllOptions();
             ProcessorOptionPanel post = frame.getPostProcessorPanel();
@@ -128,7 +131,7 @@ public class ConfigurationFileManager extends JFileChooser {
 
             addOrderedProcessors();
             setGUIProperties();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -164,20 +167,19 @@ public class ConfigurationFileManager extends JFileChooser {
                 }
             }
         }
-        while(vec.lastElement() == null){
-            vec.setSize(vec.size()-1);
+        while (vec.lastElement() == null) {
+            vec.setSize(vec.size() - 1);
         }
 //        System.out.println(vec);
         ProcessorOptionPanel pre = frame.getPreProcessorPanel();
         ProcessorOptionPanel post = frame.getPostProcessorPanel();
-        
+
         Iterator<String> iter = vec.iterator();
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             String n = iter.next();
-            if(pre.hasOptionInMenu(n)){
+            if (pre.hasOptionInMenu(n)) {
                 pre.addOptionPanel(n);
-            }
-            else if(post.hasOptionInMenu(n)){
+            } else if (post.hasOptionInMenu(n)) {
                 post.addOptionPanel(n);
             }
         }
@@ -188,14 +190,18 @@ public class ConfigurationFileManager extends JFileChooser {
         props.clear();
         props.setProperty(WORKING_DIR_GUI, getCurrentDirectory().getPath());
         IOOptionPanel ioPanel = frame.getIOPanel();
-
         props.setProperty(EXTENDED_NEIGHBORHOOD_GUI, String.valueOf(ioPanel.getExtendedNeighborhoodOption()));
         props.setProperty(PLATAEU_MARKER_GUI, String.valueOf(ioPanel.getPlateauOption()));
         props.setProperty(MARKER_RADIUS_GUI, String.valueOf(ioPanel.getMarkerRadius()));
+        Boolean[] channels  = ioPanel.getChannelOptions();
+        props.setProperty(INTENSITY_CHANNELS_GUI, String.valueOf(channels[0]) + " " + String.valueOf(channels[1]) + " " + String.valueOf(channels[2]));
         props.setProperty(SECONDARY_STACK_GUI, String.valueOf(ioPanel.getSecondaryStackOption()));
+        Boolean[] secondaryChannels  = ioPanel.getSecondaryChannelOptions();
+        props.setProperty(SECONDARY_INTENSITY_CHANNELS_GUI, String.valueOf(secondaryChannels[0]) + " " + String.valueOf(secondaryChannels[1]) + " " + String.valueOf(secondaryChannels[2]));
         props.setProperty(CELL_CENTERS_GUI, String.valueOf((ioPanel.getResultRequest() & Costanza_Plugin.REQUEST_CELL_MARKER) != 0));
         props.setProperty(BOAS_GUI, String.valueOf((ioPanel.getResultRequest() & Costanza_Plugin.REQUEST_BOA_COLORIZER) != 0));
         props.setProperty(INTENSITY_BOAS_GUI, String.valueOf((ioPanel.getResultRequest() & Costanza_Plugin.REQUEST_BOA_INTENSITY_COLORIZER) != 0));
+        props.setProperty(NORMALIZE_INTENSITIES_GUI, String.valueOf(ioPanel.getBOAIntensityNormalize()));
         props.setProperty(WORKING_STACK_GUI, String.valueOf((ioPanel.getResultRequest() & Costanza_Plugin.REQUEST_WORKING_STACK) != 0));
 
         ProcessorOptionPanel pre = frame.getPreProcessorPanel();
@@ -241,18 +247,28 @@ public class ConfigurationFileManager extends JFileChooser {
         ioPanel.setExtendedNeighborhoodOption(Boolean.parseBoolean(props.getProperty(EXTENDED_NEIGHBORHOOD_GUI)));
         ioPanel.setPlateauOption(Boolean.parseBoolean(props.getProperty(PLATAEU_MARKER_GUI)));
         ioPanel.setMarkerRadius(Integer.parseInt(props.getProperty(MARKER_RADIUS_GUI)));
+        StringTokenizer st = new StringTokenizer(props.getProperty(INTENSITY_CHANNELS_GUI));
+        Boolean r = Boolean.parseBoolean(st.nextToken());
+        Boolean g = Boolean.parseBoolean(st.nextToken());
+        Boolean b = Boolean.parseBoolean(st.nextToken());
+        ioPanel.setIntensityChannels(r, g, b);
         ioPanel.setSecondaryStackOption(Boolean.parseBoolean(props.getProperty(SECONDARY_STACK_GUI)));
+        StringTokenizer st2 = new StringTokenizer(props.getProperty(SECONDARY_INTENSITY_CHANNELS_GUI));
+        r = Boolean.parseBoolean(st2.nextToken());
+        g = Boolean.parseBoolean(st2.nextToken());
+        b = Boolean.parseBoolean(st2.nextToken());
+        ioPanel.setSecondaryIntensityChannels(r, g, b);
         ioPanel.setCellCenterRequest(Boolean.parseBoolean(props.getProperty(CELL_CENTERS_GUI)));
         ioPanel.setBOARequest(Boolean.parseBoolean(props.getProperty(BOAS_GUI)));
         ioPanel.setBOAIntensityRequest(Boolean.parseBoolean(props.getProperty(INTENSITY_BOAS_GUI)));
+        ioPanel.setBOAIntensityNormalize(Boolean.parseBoolean(props.getProperty(NORMALIZE_INTENSITIES_GUI)));  
         ioPanel.setWorkingStackRequest(Boolean.parseBoolean(props.getProperty(WORKING_STACK_GUI)));
-
 
         ProcessorOptionPanel pre = frame.getPreProcessorPanel();
         java.util.Iterator<OptionPanel> opIter = pre.getOptionIterator();
         int c = 0;
         try {
-            
+
             while (opIter.hasNext()) {
 
                 OptionPanel optionPanel = opIter.next();
@@ -278,7 +294,7 @@ public class ConfigurationFileManager extends JFileChooser {
 
         ScaleOptionPanel scalePanel = frame.getScaleOptionPanel();
 
-        StringTokenizer st = new StringTokenizer(props.getProperty(SCALES_GUI));
+        st = new StringTokenizer(props.getProperty(SCALES_GUI));
         float x = Float.parseFloat(st.nextToken());
         float y = Float.parseFloat(st.nextToken());
         float z = Float.parseFloat(st.nextToken());
@@ -362,7 +378,7 @@ public class ConfigurationFileManager extends JFileChooser {
         }
         pOpt.setFromOptions(o);
     }
-    
+
     private MainFrame frame;
     private java.util.Properties props;
 

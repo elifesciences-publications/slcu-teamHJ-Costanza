@@ -39,12 +39,45 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveBoasFile"/>
               </Events>
             </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="read_ALT_BOA_tif">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Read BOAs from tif file"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="read_ALT_BOA_tif"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="java.awt.MenuItem" name="write_ALT_BOA_tif">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="Write BOAs to tif file"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="write_ALT_BOA_tif"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="java.awt.MenuItem" name="quitMenuItem">
               <Properties>
                 <Property name="label" type="java.lang.String" value="Quit"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="quitRequest"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
+        </Menu>
+        <Menu class="java.awt.Menu" name="viewMenu">
+          <Properties>
+            <Property name="actionCommand" type="java.lang.String" value="View"/>
+            <Property name="label" type="java.lang.String" value="View"/>
+          </Properties>
+          <SubComponents>
+            <MenuItem class="java.awt.MenuItem" name="viewResult">
+              <Properties>
+                <Property name="label" type="java.lang.String" value="View result"/>
+                <Property name="name" type="java.lang.String" value=""/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="viewResultActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -87,6 +120,7 @@
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuBar"/>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <Events>
     <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="exitForm"/>

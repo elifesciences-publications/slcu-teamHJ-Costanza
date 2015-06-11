@@ -15,6 +15,8 @@ public class Stack {
     private int width;
     /**Contains scale of image in x,y z direction.*/
     private float[] scale = {1.0f, 1.0f, 1.0f};
+    /**Contains unit description of the scale.*/
+    private String unit = "";
     /**Internal representation of the stack.*/
     private Vector<Image> images;
     /**Stores the maximal intensity in the stack*/
@@ -58,13 +60,25 @@ public class Stack {
      * 
      * @param images the array of images to create the stack from.
      */
-    public Stack(java.awt.Image[] images) throws Exception {
+//    public Stack(java.awt.Image[] images) throws Exception {
+//        this();
+//	for (int i = 0; i < images.length; ++i) {
+//            addImage(new Image(images[i]));
+//	}
+//    }
+	
+    /**Constructs a Stack from an array of AWT Images.
+     * 
+     * @param images the array of images to create the stack from.
+     * @param channels to use in reading intensity
+     */
+    public Stack(java.awt.Image[] images, Boolean[] channels) throws Exception {
         this();
 	for (int i = 0; i < images.length; ++i) {
-            addImage(new Image(images[i]));
+            addImage(new Image(images[i], channels));
 	}
     }
-	
+    
     @Override
     public Object clone() {
 	//System.out.println("clone: images.size: " + images.size());
@@ -72,6 +86,7 @@ public class Stack {
 	tmp.setXScale(scale[0]);
 	tmp.setYScale(scale[1]);
 	tmp.setZScale(scale[2]);
+        tmp.setUnit(unit);
 	Vector<Image> copy = new Vector<Image>();
 	//System.out.println("NumInStack: " + tmp.getDepth());
 	//System.out.println("NumInStack: " + images.size());
@@ -150,7 +165,14 @@ public class Stack {
     public float[] getScale() {
 	return scale;
     }
-
+/**
+     * Gets the scale unit name.
+     * @return a String
+     */
+    public String getUnit() {
+	return unit;
+    }
+    
     /**
      * Gets the maximum intensity.
      * @return the intensity maximum
@@ -251,7 +273,14 @@ public class Stack {
     public void setZScale(float s) {
 	scale[2] = s;
     }
-
+/**
+     * Sets scale unit name.
+     * @param s new scale unit name.
+     */
+    public void setUnit(String s) {
+	unit = s;
+    }
+    
     /**
      * Sets height of stack.
      * @param h new height h.

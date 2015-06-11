@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Options {
     /** Container with options. */
-    private HashMap<String, Object> options;
+    private final HashMap<String, Object> options;
 
     /** Empty constructor. */
     public Options() {

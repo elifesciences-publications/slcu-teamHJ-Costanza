@@ -16,14 +16,14 @@ import java.util.Vector;
 public class Utility {
 
     /** Create new Stack object from ij.ImagePlus object. */
-    static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus) throws Exception {
+    static public Stack createStackFromImagePlus(ij.ImagePlus imagePlus, Boolean[] channels) throws Exception {
         ij.ImageStack imageStack = imagePlus.getStack();
         int slices = imageStack.getSize();
 
         Stack stack = new Stack();
         for (int n = 1; n <= slices; ++n) {
             ij.process.ImageProcessor sliceProcessor = imageStack.getProcessor(n);
-            Image image = new Image(sliceProcessor.createImage());
+            Image image = new Image(sliceProcessor.createImage(), channels);
             stack.addImage(image);
         }
 
@@ -31,7 +31,7 @@ public class Utility {
         stack.setXScale((float) calibration.pixelWidth);
         stack.setYScale((float) calibration.pixelHeight);
         stack.setZScale((float) calibration.pixelDepth);
-
+        stack.setUnit(calibration.getUnit());
         return stack;
     }
 
@@ -52,7 +52,7 @@ public class Utility {
         calibration.pixelWidth = stack.getXScale();
         calibration.pixelHeight = stack.getYScale();
         calibration.pixelDepth = stack.getZScale();
-
+        calibration.setUnit(stack.getUnit());
         return imagePlus;
     }
 
@@ -81,10 +81,33 @@ public class Utility {
         calibration.pixelWidth = stack.getXScale();
         calibration.pixelHeight = stack.getYScale();
         calibration.pixelDepth = stack.getZScale();
-
+        calibration.setUnit(stack.getUnit());
         return imagePlus;
     }
 
+    /** Creates new ij.ImagePlus object from result images. */
+    static public ij.ImagePlus createImagePlusFromImages(java.awt.image.BufferedImage[] images, String name) throws Exception {
+
+        int depth = images.length;
+        if (depth == 0) {
+            return null;
+        }
+        int width = images[0].getWidth();
+        int height = images[0].getHeight();
+
+        ij.ImageStack imageStack = new ij.ImageStack(width, height);
+        for (int i = 0; i < depth; ++i) {
+            ij.ImagePlus ipTmp = new ij.ImagePlus(name, images[i]);
+            ij.ImageStack stackTmp = ipTmp.getImageStack();
+            if (stackTmp.getSize() != 1) {
+                throw new Exception("Unexpected error in getImagePlusFromImages().");
+            }
+            imageStack.addSlice("", stackTmp.getProcessor(1));
+        }
+
+        ij.ImagePlus imagePlus = new ij.ImagePlus(name, imageStack);
+        return imagePlus;
+    }
     /** Get ij.ImageProcessor from Image. */
     static public ij.process.ImageProcessor getImageProcessorFromImage(Image image) throws Exception {
         ij.ImagePlus ip = new ij.ImagePlus("", image.getImage());

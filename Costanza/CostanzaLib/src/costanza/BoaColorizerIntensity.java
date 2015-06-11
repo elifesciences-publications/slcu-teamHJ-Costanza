@@ -8,23 +8,27 @@ import java.awt.image.BufferedImage;
  * @see Processor
  */
 public class BoaColorizerIntensity extends Processor {
-
+public static final String STACK_OPT = "OverrideStack";
+public static final String NORMALIZE_OPT = "NormalizeIntensities";
     @Override
     @SuppressWarnings("unchecked")
     public Case process(Case c, Options options) throws Exception {
 
 //        System.out.println("BoaColorizerIntensity::process");
-        if (options != null && options.hasOption("OverrideStack")) {
-            stack = (Stack) options.getOptionValue("OverrideStack");
-
+        if (options != null && options.hasOption(STACK_OPT)) {
+            stack = (Stack) options.getOptionValue(STACK_OPT);
         } else {
             stack = c.getOriginalStack();
         }
         if (stack == null) {
             throw new Exception("No stack available");
         }
+        boolean normalize = true;
+        if (options != null && options.hasOption(NORMALIZE_OPT)) {
+            normalize = (Boolean)options.getOptionValue(NORMALIZE_OPT);
+        }
 
-        int[] boaColors = genColors(c, c.sizeOfCells());
+        int[] boaColors = genColors(c, c.sizeOfCells(), normalize);
 
         BufferedImage[] images = getImagesFromStack(stack);
         if (boaColors.length != c.sizeOfCells()) {
@@ -60,7 +64,7 @@ public class BoaColorizerIntensity extends Processor {
         return c;
     }
 
-    private int[] genColors(Case c, int size) throws Exception {
+    private int[] genColors(Case c, int size, boolean normalize) throws Exception {
 
         String stackTag = Integer.toString(stack.getId()) + "mean";
 
@@ -68,21 +72,26 @@ public class BoaColorizerIntensity extends Processor {
         java.util.Set<Integer> cellIds = c.getCellIds();
         java.util.Iterator<Integer> iterator = cellIds.iterator();
         int count = 0;
-        float min = 0.0f;
-        float max = 0.0f;
-
         int index = c.getIntensityIndex(stackTag);
         while (iterator.hasNext() && count < size) {
             Integer i = iterator.next();
             CellIntensity cellIntensity = (CellIntensity) c.getCellData(DataId.INTENSITIES, i);
             value[count] = cellIntensity.getIntensity(index);
-            if (count == 0 || value[count] < min) {
-                min = value[count];
-            }
-            if (count == 0 || value[count] > max) {
-                max = value[count];
-            }
             ++count;
+        }
+        float min = 0.0f;
+        float max = 0.0f;
+        if (normalize) {
+            for (int i = 0; i < value.length; ++i) {
+                if (i == 0 || value[i] < min) {
+                    min = value[i];
+                }
+                if (i == 0 || value[i] > max) {
+                    max = value[i];
+                }
+            }
+        } else {
+            max = 1.0f;
         }
         for (int i = 0; i < value.length; ++i) {
             double diff = max - min;

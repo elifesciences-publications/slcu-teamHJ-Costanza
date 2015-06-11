@@ -17,16 +17,16 @@
 
   <target name="compile" depends="init" description="compile the source ">
     <!-- Compile the java code from ${src} into ${build} -->
-	<javac target="1.5" 
-		source="1.5" 
+	<javac target="1.7" 
+		source="1.7" 
 		srcdir="${src}" 
 		encoding="utf-8"
 		destdir="${build}"
-		debug="on"
+		debug="off"
 		deprecation="on"
-		debuglevel="lines, vars, source"
 		verbose="no"
-		classpath="../CostanzaLib/dist/CostanzaLib.jar;../resources/ij.jar">
+                includeantruntime ="false"
+		classpath="../CostanzaLib/dist/CostanzaLib.jar; resources/ij.jar">
 		<compilerarg line="-Xlint:unchecked"/>
 	</javac>
   </target>

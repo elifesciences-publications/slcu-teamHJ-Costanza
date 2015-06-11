@@ -187,6 +187,7 @@ public class TextUI {
 //                System.out.println("extension = " + sif.getExtension(files[i]));
 //                System.out.println("number = " + sif.getNumber(files[i]));
 //                System.out.println("Opening image: " + files[i]);
+//                System.out.println("base name: " +files[i].getPath());
             Image image = readImage(files[i].getPath());
             stack.addImage(image);
         }
@@ -201,7 +202,18 @@ public class TextUI {
      * @throws java.io.IOException
      */
     private Image readImage(String baseName) throws IOException {
+        ImageIO.scanForPlugins();
         BufferedImage bi = ImageIO.read(new File(baseName));
+        if(bi == null)
+        {
+            System.out.println("No registered reader for requested image type. " + baseName);
+            System.out.println("Registered reader types are :");
+            String[] strarr = ImageIO.getWriterFileSuffixes();
+                for (int i = 0; i < strarr.length; ++i) {
+            System.out.println(strarr[i]);
+        }
+            System.exit(1);
+        }
         Image image = new Image(bi);
         return image;
     }
@@ -345,14 +357,14 @@ public class TextUI {
 
     private void printUsage() {
 
-        System.out.println("<cfgfile> <stackbase> <nfiles> [-cf <cenersfile>] [-bf <boafile>] [-bif <boaintensityfile>] [-df <datafile>]");
+        System.out.println("[-cf <cenersfile>] [-bf <boafile>] [-bif <boaintensityfile>] [-df <datafile>] <cfgfile> <stackbase> [<nfiles>] ");
         System.out.println("[-cf=<cenersfile>] - optional name of the base of the files to output the marked centers of the segmented rgions.");
         System.out.println("[-bf=<boafile>] - optional name of the base of the files to output basins of attractions of segmented regions colored with random colors.");
         System.out.println("[-bif=<boaintensityfile>] - optional name of the base of the files to output basins of attractions of segmented regions colored according to intensity of the signal in the original stack.");
         System.out.println("[-df=<datafile>] - optional name of the data file to store the table of BOA positions and average intensities in the csv format.");
         System.out.println("[-t=<extension>] - optional extension of the output image files determinig their type. The default is \"png\"");
-        System.out.println("<cfgfile> - name of the costanza configuration file. The format of the file is compatibile with ImageJ version of costanza configuration file.");
-        System.out.println("<stackbase> - name of the image stack files excluding numerical suffix.");
+        System.out.println("<cfgfile> - name of the costanza configuration file. The format of the file is compatibile with ImageJ version of costanza configuration file. This parameter is obligatory.");
+        System.out.println("<stackbase> - name of the image stack files excluding numerical suffix. This parameter is obligatory.");
         System.out.println("[<nfiles>] - optional number of the images from the stack to read. If not supplied all the images matching <stackbase> will be read.");
     }
     

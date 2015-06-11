@@ -17,15 +17,16 @@
 
   <target name="compile" depends="init" description="compile the source ">
     <!-- Compile the java code from ${src} into ${build} -->
-	<javac target="1.5" 
-		source="1.5" 
+	<javac target="1.7" 
+		source="1.7" 
 		srcdir="${src}" 
 		encoding="utf-8"
 		destdir="${build}"
-		debug="on"
+		debug="off"
 		deprecation="on"
-		debuglevel="lines, vars, source"
-		verbose="no">
+		verbose="no"
+                includeantruntime ="false"
+                classpath="resources/jai_core.jar; resources/jai_codec.jar">
 		<compilerarg line="-Xlint:unchecked"/>
 	</javac>
   </target>

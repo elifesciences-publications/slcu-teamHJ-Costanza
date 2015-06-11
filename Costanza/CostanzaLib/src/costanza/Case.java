@@ -1,6 +1,7 @@
 package costanza;
 
 import java.awt.image.BufferedImage;
+import java.util.Collection;
 
 /**
  * Case class holds Data and image Stack information that will be used by the Processor.
@@ -30,8 +31,6 @@ public class Case extends CellDataManipulator {
         //initialize pixel flag data
         PixelFlag pf = new PixelFlag(mStack.getWidth(), mStack.getHeight(), mStack.getDepth());
         attachStackData(pf);
-        //System.out.println("Case: New Stack 1: " + mStack.getDepth());
-        //System.out.println("Case: Original Stack 2: " + s.getDepth());
         resultImages = null;
         if (mStack == null) {
             throw new Exception("Clone stack is empty!");
@@ -87,9 +86,20 @@ public class Case extends CellDataManipulator {
 
     /**Set a BufferedImage as a resultImage.
      * 
-     * @param resultImage the BufferedImage you want to use as a resulting Image.
+     * @param resultImages the BufferedImage array you want to use as a resulting Image stack.
      */
     public void setResultImages(BufferedImage[] resultImages) {
         this.resultImages = resultImages;
+    }
+    
+        /**Set a BufferedImage as a resultImage.
+     * 
+     * @param images Collection of BufferedImage you want to use as a resulting Image stack.
+     */
+    public void setResultImages(Collection<BufferedImage> images) {
+        int i = 0;
+        for (BufferedImage image : images) {
+            this.resultImages[i++] = image;
+        }
     }
 }

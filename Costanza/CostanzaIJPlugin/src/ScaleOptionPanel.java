@@ -6,6 +6,8 @@ public class ScaleOptionPanel extends java.awt.Panel {
 
     public ScaleOptionPanel(MainFrame frame) {
         initComponents();
+//        if(calibration != null)
+//            setScale(calibration.pixelWidth, calibration.pixelHeight, calibration.pixelDepth);
         this.frame = frame;
     }
 
@@ -34,18 +36,17 @@ public class ScaleOptionPanel extends java.awt.Panel {
         return new Integer(intensityLevelsTextField.getText());
     }
     
-    public void setScale(float x, float y, float z) {
-        xScaleTextField.setText(Float.toString(x));
-        yScaleTextField.setText(Float.toString(y));
-        zScaleTextField.setText(Float.toString(z));
+    public void setScale(double x, double y, double z) {
+        xScaleTextField.setText(Double.toString(x));
+        yScaleTextField.setText(Double.toString(y));
+        zScaleTextField.setText(Double.toString(z));
     }
 
     void setCalibration(ij.measure.Calibration calibration) {
         this.calibration = calibration;
         if (checkbox1.getState() == true) {
-            xScaleTextField.setText(Double.toString(calibration.pixelWidth));
-            yScaleTextField.setText(Double.toString(calibration.pixelHeight));
-            zScaleTextField.setText(Double.toString(calibration.pixelDepth));
+            if(calibration != null)
+                setScale(calibration.pixelWidth, calibration.pixelHeight, calibration.pixelDepth);
         } else {
             calibration.pixelWidth = new Float(xScaleTextField.getText()).floatValue();
             calibration.pixelHeight = new Float(yScaleTextField.getText()).floatValue();
@@ -60,6 +61,8 @@ public class ScaleOptionPanel extends java.awt.Panel {
     private void setCalibrationEnable(){
             if (checkbox1.getState() == true) {
                 scalePanel.setEnabled(false);
+//                if(calibration != null)
+//                    setScale(calibration.pixelWidth, calibration.pixelHeight, calibration.pixelDepth);
             } else {
                 scalePanel.setEnabled(true);
             }
@@ -119,6 +122,7 @@ public class ScaleOptionPanel extends java.awt.Panel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         scalePanel.add(xScaleLabel, gridBagConstraints);
 
+        xScaleTextField.setPreferredSize(new java.awt.Dimension(85, 18));
         xScaleTextField.setText("1.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -135,6 +139,8 @@ public class ScaleOptionPanel extends java.awt.Panel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         scalePanel.add(yScaleLabel, gridBagConstraints);
 
+        yScaleTextField.setName(""); // NOI18N
+        yScaleTextField.setPreferredSize(new java.awt.Dimension(85, 18));
         yScaleTextField.setText("1.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -151,6 +157,7 @@ public class ScaleOptionPanel extends java.awt.Panel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         scalePanel.add(zScaleLabel, gridBagConstraints);
 
+        zScaleTextField.setPreferredSize(new java.awt.Dimension(85, 18));
         zScaleTextField.setText("1.0");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -163,7 +170,7 @@ public class ScaleOptionPanel extends java.awt.Panel {
         gridBagConstraints.gridx = 0;
         add(scalePanel, gridBagConstraints);
 
-        otherLabel.setFont(new java.awt.Font("Dialog", 1, 12));
+        otherLabel.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         otherLabel.setText("Other options:");
         otherLabel.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();

@@ -53,7 +53,7 @@ public class Queue {
                 throw exception;
             }
 	    System.out.println("Running: " + job.getProcessorId());
-            processor.process(currentCase, job.getOptions());
+            processor.process(currentCase, job.getOptions());         
         }
     }
 }

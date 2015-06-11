@@ -1,3 +1,4 @@
+
 import costanza.Case;
 import costanza.CellCenter;
 import costanza.CellIntensity;
@@ -10,8 +11,8 @@ import costanza.Processor;
 import costanza.Queue;
 import costanza.Stack;
 import costanza.BOAWriter;
+import costanza.BOAReader;
 import java.awt.EventQueue;
-import java.io.File;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -152,7 +153,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
      */
     void scaleOptionPanelContinueButtonPressed() {
         try {
-            stack = Utility.createStackFromImagePlus(imagePlus);
+            stack = Utility.createStackFromImagePlus(imagePlus, frame.getIOPanel().getChannelOptions());
             IJCase = new Case(stack);
             GUIDriver driver = new GUIDriver(new GUIQueue(jobs, frame.getProgressTextField(), this), IJCase, factory);
             driver.run();
@@ -176,7 +177,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     void secondaryStackOptionPanelContinueButtonPressed() throws Exception {
         try {
             ij.ImagePlus secondaryStackImagePlus = ij.IJ.getImage();
-            secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus);
+            secondaryStack = Utility.createStackFromImagePlus(secondaryStackImagePlus, frame.getIOPanel().getSecondaryChannelOptions());
 
             Options options = new Options();
             options.addOption("OverrideStack", secondaryStack);
@@ -242,11 +243,59 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
     public void writeBoas(File f){
         try {
 //            System.out.println("saving boas: Costanza_Plugin");
+            if(IJCase == null)
+            {
+                ij.IJ.showMessage("No BOA data to process.\n  File not written.");
+                return;
+            }
             BOAWriter bw = new BOAWriter(IJCase);
             bw.writeText(f);
         } catch (Exception e) {
             System.out.println(e.getMessage() );
-//            status = PluginStatus.EXIT_APPLICATION;
+        }
+    }
+    
+    public void readBOAsFromTiff(File f){
+        try {
+//            System.out.println("reading boas: Costanza_Plugin");
+            if(IJCase == null)
+            {
+                System.out.println("Creating new Case.");
+                IJCase = new Case(new Stack());
+            }
+            BOAReader br = new BOAReader(IJCase);
+            br.readTif(f);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() );
+        }
+    }
+    
+    public void writeBOAsToTiff(File f){
+        try {
+//            System.out.println("writing boas: Costanza_Plugin");
+            if(IJCase == null)
+            {
+                ij.IJ.showMessage("No BOA data to process.\n  File not written.");
+                return;
+            }
+            BOAWriter br = new BOAWriter(IJCase);
+            br.writeTif(f);
+        } catch (Exception e) {
+            System.out.println(e.getMessage() );
+        }
+    }
+    
+    public void viewResult( String name ) {
+        try {
+            if(IJCase == null)
+            {
+                ij.IJ.showMessage("No result data to process.\n  File not written.");
+                return;
+            }
+            ij.ImagePlus displayImagePlus = Utility.createImagePlusFromImages(IJCase.getResultImages(), name);
+            displayImagePlus.show();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
     
@@ -409,6 +458,7 @@ public class Costanza_Plugin implements ij.plugin.PlugIn {
         if ((request & REQUEST_BOA_INTENSITY_COLORIZER) == REQUEST_BOA_INTENSITY_COLORIZER && !executor.isShutdown()) {
             EventQueue.invokeLater(new RunDisplayText("task " + String.valueOf(++counter) + " out of " + String.valueOf(c) + " (display intensity boas)"));
             Options options = new Options();
+            options.addOption("NormalizeIntensities", Boolean.valueOf(getProperty(ConfigurationFileManager.NORMALIZE_INTENSITIES_GUI)));
             if (secondaryStackOption == true) {
                 options.addOption("OverrideStack", secondaryStack);
             }

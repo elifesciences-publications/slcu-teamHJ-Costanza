@@ -40,21 +40,46 @@ public class PixelFlag implements Data_t {
         ret[2] = temp - ret[1]*zDim;
         return ret;
     }
+    
     /**
-     * Construct PixelFlag of given dimensions
+     *
      * @param x_dim
      * @param y_dim
      * @param z_dim
+     * @param flag
      */
-    public PixelFlag( int x_dim, int y_dim, int z_dim){
+    public final void init(int x_dim, int y_dim, int z_dim, int flag){
         xDim = x_dim;
         yDim = y_dim;
         zDim = z_dim;
         xIncrem = yDim*zDim;
         flags = new int[ xDim * yDim * zDim ];
         for(int i = 0; i < flags.length; ++i)
-            flags[i] = UNMARKED_FLAG;
+            flags[i] = flag;
     }
+    /**
+     * Construct PixelFlag of given dimensions
+     *
+     * @param x_dim
+     * @param y_dim
+     * @param z_dim
+     */
+    public PixelFlag(int x_dim, int y_dim, int z_dim) {
+        init(x_dim, y_dim, z_dim, UNMARKED_FLAG);
+    }
+
+    /**
+     * Construct PixelFlag of given dimensions with all pixels set to flag
+     *
+     * @param x_dim
+     * @param y_dim
+     * @param z_dim
+     * @param flag
+     */
+    public PixelFlag(int x_dim, int y_dim, int z_dim, int flag) {
+        init(x_dim, y_dim, z_dim, flag);
+    }
+
     /**
      * set flag at given position to the val
      * @param x
@@ -167,9 +192,8 @@ public class PixelFlag implements Data_t {
     }
     
     /**
-     * changes all values from source to dest
-     * @param source value to be changed 
-     * @param dest new value
+     * changes all values to ones supplied in the Vector
+     * @param ind Vector containing new flag values
      */
     public void changeAll(Vector<Integer> ind) {
         for (int i = 0; i < flags.length; ++i) {
@@ -178,5 +202,28 @@ public class PixelFlag implements Data_t {
             else
                 flags[i] = PixelFlag.BACKGROUND_FLAG;
         }
+    }
+        /**
+     * Member function returning x dimension of PixelFlag.
+     * @return x dimension
+     */
+    public int getXSize() {
+	return xDim; 
+    }
+
+    /**
+     * Member function returning x dimension of PixelFlag.
+     * @return y dimension
+     */
+    public int getYSize() {
+	return yDim;
+    }
+
+    /**
+     * Member function returning x dimension of PixelFlag.
+     * @return z dimension
+     */
+    public int getZSize() {
+	return zDim;
     }
 }

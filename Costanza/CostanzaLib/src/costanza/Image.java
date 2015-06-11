@@ -6,19 +6,27 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** Container class for pixel information */
+/**
+ * Container class for pixel information
+ */
 public class Image {
 
-    /** The floats representing our grayscale image. */
+    /**
+     * The floats representing our grayscale image.
+     */
     protected float[] pixels;
-    /** The width of our image. */
+    /**
+     * The width of our image.
+     */
     private int width;
-    /** The height of our image. */
+    /**
+     * The height of our image.
+     */
     private int height;
 
-    /** Constructor for class Image.
-     * This is the constructor that should be used to create a new Image object. 
-     * It sets the width and height of the image.
+    /**
+     * Constructor for class Image. This is the constructor that should be used
+     * to create a new Image object. It sets the width and height of the image.
      */
     public Image(int width, int height) {
         this.width = width;
@@ -26,12 +34,73 @@ public class Image {
         pixels = new float[width * height];
     }
 
-    /** Constructor for class Image from an AWT Image.
-     * Note that this does NOT copy the BufferedImage! Any changes made 
-     * to Image will affect the BufferedImage as well.
+    /**
+     * Constructor for class Image from an AWT BufferedImage. Note that this
+     * does NOT copy the BufferedImage! Any changes made to Image will affect
+     * the BufferedImage as well.
+     *
      * @param image the BufferedImage to construct our Image from.
+     * @param channels to use in reading out intensity level
      */
-    public Image(java.awt.Image image) {
+    public Image(BufferedImage image, Boolean[] channels) {
+        this.width = image.getWidth(null);
+        this.height = image.getHeight(null);
+        this.pixels = new float[width * height];
+        switch (image.getType()) {
+            case BufferedImage.TYPE_BYTE_GRAY:
+                for (int i = 0; i < pixels.length; ++i) {
+                    int[] argb = null;
+                    argb = image.getRaster().getPixel(i % width, i / width, argb);
+                    pixels[i] = (float) (argb[0] / 255.0);
+                    //System.out.println("Length: " + argb.length);
+                    /*int[] argb2 = new int[4];
+                     argb2[0] = image.getColorModel().getAlpha(argb[0]);
+                     argb2[1] = image.getColorModel().getRed(argb[0]);
+                     argb2[2] = image.getColorModel().getGreen(argb[0]);
+                     argb2[3] = image.getColorModel().getBlue(argb[0]);
+                     argb = RgbToSamples(argb[0]);
+                     if (i % width == 50 && i / width == 50) {
+                     System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+                     System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb2[0] + " Red: " + argb2[1] + " Green: " + argb2[2] + " Blue: " + argb2[3]);
+                     }
+                     */
+                }
+                break;
+            case BufferedImage.TYPE_INT_RGB:
+                try {
+                    PixelGrabber pg = new PixelGrabber(image, 0, 0, width, height, false);
+                    pg.grabPixels();
+                    int[] iArray = (int[]) pg.getPixels();
+                    for (int i = 0; i < iArray.length; i++) {
+//                        int[] argb = RgbToSamples(iArray[i]);
+//                        float intens = 0.0f;
+//                        int count = 0;
+//                        for (int j = 0; j < 3; ++j) {
+//                            if (channels[j]) {
+//                                intens += argb[j];
+//                                ++count;
+//                            }
+//                        }
+//                        pixels[i] = (float) (intens / (count * 255.0)); 
+                        pixels[i] = rgbToIntensity(iArray[i], channels);
+                    }
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                break;
+            default:
+        }
+    }
+   
+        /**
+     * Constructor for class Image from an AWT Image. Note that this does NOT
+     * copy the BufferedImage! Any changes made to Image will affect the
+     * BufferedImage as well.
+     *
+     * @param image the BufferedImage to construct our Image from.
+     * @param channels to use in reading out intensity level
+     */
+    public Image(java.awt.Image image, Boolean[] channels) {
         this.width = image.getWidth(null);
         this.height = image.getHeight(null);
         this.pixels = new float[width * height];
@@ -42,68 +111,58 @@ public class Image {
         } catch (InterruptedException ex) {
             Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
         }
-        //Store the red component as a float in our pixels array
+        //Store the red, green, blue components as a float in our pixels array
         for (int i = 0; i < iArray.length; i++) {
-            pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
-        //int[] argb = RgbToSamples(iArray[i]);
-        //System.out.println("Float: " + (int) (pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+//            pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
+//            int[] argb = RgbToSamples(iArray[i]);
+//            float intens = 0.0f;
+//            int count = 0;
+//            for (int j = 0; j < 3; ++j) {
+//                if (channels[j]) {
+//                    intens += argb[j];
+//                    ++count;
+//                }
+//            }
+//            pixels[i] = (float) (intens / (count * 255.0));
+            pixels[i] = rgbToIntensity(iArray[i], channels);
+//            pixels[i] = (float) ((argb[1] + argb[2] + argb[3]) / (3.0 * 255.0));
+//        System.out.println("Float: " + (int) (pixels[i] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
         }
-    /*
-    System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
-    int[] argb = RgbToSamples(iArray[getIndex(50, 50)]);
-    System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-    argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
-    System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+        /*
+         System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
+         int[] argb = RgbToSamples(iArray[getIndex(50, 50)]);
+         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+         argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+         */
+    }
+    
+    /**
+     * Constructor for class Image from an AWT Image. Note that this does NOT
+     * copy the BufferedImage! Any changes made to Image will affect the
+     * BufferedImage as well.
+     *
+     * @param image the BufferedImage to construct our Image from.
      */
+    public Image(java.awt.Image image) {
+        this(image, new Boolean[]{true, false, false});
     }
 
-    /** Constructor for class Image from an AWT BufferedImage.
-     * Note that this does NOT copy the BufferedImage! Any changes made 
-     * to Image will affect the BufferedImage as well.
+    /**
+     * Constructor for class Image from an AWT BufferedImage. Note that this
+     * does NOT copy the BufferedImage! Any changes made to Image will affect
+     * the BufferedImage as well.
+     *
      * @param image the BufferedImage to construct our Image from.
      */
     public Image(BufferedImage image) {
-        this.width = image.getWidth(null);
-        this.height = image.getHeight(null);
-        this.pixels = new float[width * height];
-        switch (image.getType()) {
-            case BufferedImage.TYPE_BYTE_GRAY:
-                for (int i = 0; i < pixels.length; ++i) {
-                    int[] argb = null;
-                    argb = image.getRaster().getPixel(i % width, i / width, argb);
-                    pixels[i] = (float) (argb[0] / 255.0);
-                //System.out.println("Length: " + argb.length);
-                    /*int[] argb2 = new int[4];
-                argb2[0] = image.getColorModel().getAlpha(argb[0]);
-                argb2[1] = image.getColorModel().getRed(argb[0]);
-                argb2[2] = image.getColorModel().getGreen(argb[0]);
-                argb2[3] = image.getColorModel().getBlue(argb[0]);
-                argb = RgbToSamples(argb[0]);
-                if (i % width == 50 && i / width == 50) {
-                System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-                System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb2[0] + " Red: " + argb2[1] + " Green: " + argb2[2] + " Blue: " + argb2[3]);
-                }
-                 */
-                }
-                break;
-            case BufferedImage.TYPE_INT_RGB:
-                try {
-                    PixelGrabber pg = new PixelGrabber(image, 0, 0, width, height, false);
-                    pg.grabPixels();
-                    int[] iArray = (int[]) pg.getPixels();
-                    for (int i = 0; i < iArray.length; i++) {
-                        pixels[i] = (float) (RgbToSamples(iArray[i])[1] / 255.0);
-                    }
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Image.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                break;
-            default:
-        }
+        this(image, new Boolean[]{true, false, false}); 
     }
 
-    /**Implementation of the Objects clone method.
-     * Naturally this clones our Object.
+    /**
+     * Implementation of the Objects clone method. Naturally this clones our
+     * Object.
+     *
      * @return a clone of the current object.
      */
     @Override
@@ -114,26 +173,31 @@ public class Image {
         return newImage;
     }
 
-    float[] getPixels(){
+    float[] getPixels() {
         return pixels;
     }
-    
-    /** Returns the width of the image.
+
+    /**
+     * Returns the width of the image.
+     *
      * @return the width of the image.
      */
     public int getWidth() {
         return width;
     }
 
-    /** Returns the width of the image. 
+    /**
+     * Returns the width of the image.
+     *
      * @return the height of the image.
      */
     public int getHeight() {
         return height;
     }
 
-    /** Returns the intensity for pixel at position (x, y).
-     * 
+    /**
+     * Returns the intensity for pixel at position (x, y).
+     *
      * @param x the horizontal coordinate.
      * @param y the vertical coordinate.
      * @return the intensity located at (x,y).
@@ -142,8 +206,9 @@ public class Image {
         return pixels[getIndex(x, y)];
     }
 
-    /** Sets the intensity for pixel at position (x, y).
-     * 
+    /**
+     * Sets the intensity for pixel at position (x, y).
+     *
      * @param x the horizontal coordinate.
      * @param y the vertical coordinate.
      * @param value the intensity to set.
@@ -152,16 +217,18 @@ public class Image {
         pixels[getIndex(x, y)] = value;
     }
 
-    /**Sets the Vector of intPixels.
-     * 
+    /**
+     * Sets the Vector of intPixels.
+     *
      * @param pixels The float array of grayscales we want to set
      */
     private void setPixels(float[] pixels) {
         this.pixels = pixels;
     }
 
-    /** Returns the maximum intensity of the image.
-     * 
+    /**
+     * Returns the maximum intensity of the image.
+     *
      * @return the maximum intensity within this Image.
      */
     public float getMaxIntensity() {
@@ -174,8 +241,9 @@ public class Image {
         return max;
     }
 
-    /** Returns the minimum intensity of the image.
-     * 
+    /**
+     * Returns the minimum intensity of the image.
+     *
      * @return the minimum intensity within this Image.
      */
     public float getMinIntensity() {
@@ -188,7 +256,9 @@ public class Image {
         return min;
     }
 
-    /** Returns a BufferedImage representing this Image.
+    /**
+     * Returns a BufferedImage representing this Image.
+     *
      * @return a BufferedImage representation of this Image.
      */
     public BufferedImage getImage() {
@@ -199,17 +269,18 @@ public class Image {
             }
         }
         /*
-        System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
-        int[] argb = RgbToSamples(image.getRGB(50, 50));
-        System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
-        argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
-        System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+         System.out.println("Pixel(50,50): " + pixels[getIndex(50, 50)]);
+         int[] argb = RgbToSamples(image.getRGB(50, 50));
+         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
+         argb = RgbToSamples(intensityToRgb(pixels[getIndex(50, 50)]));
+         System.out.println("Float: " + (int) (pixels[getIndex(50, 50)] * 255) + " Alfa: " + argb[0] + " Red: " + argb[1] + " Green: " + argb[2] + " Blue: " + argb[3]);
          */
         return image;
     }
 
-    /** Create a new BufferedImage with the given intPixels marked.
-     * 
+    /**
+     * Create a new BufferedImage with the given intPixels marked.
+     *
      * @param r the intPixels that should be marked in red.
      * @param g the intPixels that should be marked in green.
      * @param b the intPixels that should be marked in blue.
@@ -220,8 +291,9 @@ public class Image {
         return pm.markAllPixels();
     }
 
-    /**Convert x and y coordinate to index.
-     * 
+    /**
+     * Convert x and y coordinate to index.
+     *
      * @param x the x coordinate to use.
      * @param y the y coordinate to use.
      * @return the index.
@@ -229,9 +301,29 @@ public class Image {
     private int getIndex(int x, int y) {
         return y * width + x;
     }
-
-    /** Convert the greyscale intensity to an RGB int.
+    /**
+     * Convert an RGB int to greyscale intensity using specified channels
      * 
+     * @param rgb encoded into an integer number
+     * @param channels to use.
+     * @return the intensity in range 0-1.
+     */
+    private float rgbToIntensity(int rgb, Boolean[] channels)
+    {
+        int[] argb = RgbToSamples(rgb);
+        float intens = 0.0f;
+        int count = 0;
+        for (int j = 0; j < 3; ++j) {
+            if (channels[j]) {
+                intens += argb[j];
+                ++count;
+            }
+        }
+        return (float) (intens / (count * 255.0));
+    }
+    /**
+     * Convert the greyscale intensity to an RGB int.
+     *
      * @param intensity the intensity to use.
      * @return the intensity in RGB encoding.
      */
@@ -241,8 +333,9 @@ public class Image {
         return pixel;
     }
 
-    /** Get the red green and blue components out from the packed rgb int.
-     * 
+    /**
+     * Get the red green and blue components out from the packed rgb int.
+     *
      * @param rgb the int containing the alpha, red, green and blue components.
      * @return an int array of the components.
      */
