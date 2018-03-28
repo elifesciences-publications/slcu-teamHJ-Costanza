@@ -27,7 +27,7 @@ Compile and create the Costanza.zip file from the source code provided in this r
 
 ```
 cd Costanza/Costanza/
-ant ...
+ant compile
 ./make_costanza_zip.sh
 ```
 
