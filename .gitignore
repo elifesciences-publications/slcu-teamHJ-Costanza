@@ -1,0 +1,18 @@
+# Documentation (output) files
+*.dvi
+*.log
+*.aux
+*.bbl
+*.blg
+*.fls
+*.pdf
+*.ps
+
+# Scons build files
+
+.sconsign*
+
+# Emacs temp files
+
+*~
+
