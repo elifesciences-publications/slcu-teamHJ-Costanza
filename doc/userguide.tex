@@ -33,15 +33,19 @@ Costanza assumes a greyscale stack of images as input, and return the result
 both as cells/intensities marked in images and as an ImageJ data list.
 
 \section{Installation instructions}
-In order to use Costanza you must have ImageJ
-(\url{http://rsb.info.nih.gov/ij}) installed on your system. Download the
-file Costanza.zip from
-\url{http://www.thep.lu.se/costanza} .
+%
+In order to use Costanza you must have ImageJ/Fiji
+(\url{https://fiji.sc/}) installed on your system. You can get the
+source and build the Constanza plugin from
+\url{https://gitlab.com/slcu/teamhj/costanza} following the
+instructions in the Readme file. Alternatively, follow the link to download the
+file Costanza.zip.
 Unzip the Costanza archive in the plugins directory of your ImageJ
 installation. Next time you start ImageJ the plugin will show up as Costanza
 in the Plugins drop down menu.
 
 \section{Algorithms}
+%
 The algorithms provided in Costanza can be divided into the main segmenting
 algorithm, preprocessing, and post-processing. An important feature of
 Costanza is the fact that all the algorithms operate in three dimensions
@@ -53,6 +57,7 @@ ImageJ x, y, and z scales for the stack or define custom ones. The results are
 thus displayed in real length units.
 
 \subsection{Steepest gradient ascent for segmentation}
+%
 This is the main algorithm for Costanza. It starts at each voxel in the stack
 and tries to find local intensity maximum by ``walking'' uphill in intensity landscape
 among its neighbors. All paths leading to the same maximum are saved to the
