@@ -31,7 +31,7 @@ ant compile
 ./make_costanza_zip.sh
 ```
 
-Alternatively, download [Costanza.zip](http://www.thep.lu.se/~henrik/costanza/download/Costanza.zip).
+Alternatively, download [Costanza.zip](http://www.thep.lu.se/~henrik/Costanza/download/Costanza.zip).
 
 Extract the Costanza.zip file into the Imagej plugins folder, or subfolder, restart 
 ImageJ, and there will be a new "Costanza" directory in the Plugins menu or submenu.
