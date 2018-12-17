@@ -32,7 +32,7 @@ Features
 
 An example project where the methods used are described in the paper is "Quantitative 
 analysis of auxin sensing in leaf primordia argues against proposed role in regulating 
-leaf dorsoventrality" (2018) Bhatia, Aahl, Jönsson, Heisler, and the scripts for producing
+leaf dorsoventrality" (2018) Bhatia, Åhl, Jönsson, Heisler, and the scripts for producing
 the results are given at https://gitlab.com/slcu/teamhj/publications/bhatia_et_al_2019
 
 Credits
