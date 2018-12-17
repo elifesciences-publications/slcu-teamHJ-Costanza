@@ -22,16 +22,25 @@ based on an intensity gradient.
 
 
 * Free software: GNU General Public License v3
-* Documentation: https://pycostanza.readthedocs.io.
+* Documentation: to come.
 
 
 Features
 --------
 
-* TODO 
+* TODO
+
+An example project where the methods used are described in the paper is "Quantitative 
+analysis of auxin sensing in leaf primordia argues against proposed role in regulating 
+leaf dorsoventrality" (2018) Bhatia, Aahl, Jönsson, Heisler, and the scripts for producing
+the results are given at https://gitlab.com/slcu/teamhj/publications/bhatia_et_al_2019
 
 Credits
 -------
+
+Main author is henrik.aahl@slcu.cam.ac.uk.
+
+This version was cloned from https://gitlab.com/slcu/teamhj/henrikaahl/pyCostanza 17 Dec 2018.
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
