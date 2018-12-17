@@ -3,11 +3,16 @@
 Costanza is an [ImageJ](https://imagej.nih.gov/ij/) plugin that can be used to 
 segment cells, either by marking voxels belonging to individual cells in membrane 
 marked data (mainly applied to 2D images) or by identifying cell centers in nuceli 
-data (both in 2D images and 3D stacks).
+data (both in 2D images and 3D stacks). There is also a terminal-based java implementation for 
+running batch jobs found in [Costanza/CostanzaTextUI](https://gitlab.com/slcu/teamhj/Costanza/Costanza/CostanzaTextUI).
+
+<b>pycostanza</b> is a python implementation of the Costanza segmentation algorithm
+with extended features authored by henrik.aahl@slcu.cam.ac.uk. It is found in 
+[pycostanza](https://gitlab.com/slcu/teamhj/Costanza/pyconstanza).
 
 ### Authors:
 
-Michael Green, Pawel Krupinski, Pontus Melke, Patrik Sahlin, Henrik Jönsson, 
+Henrik Åhl, Michael Green, Pawel Krupinski, Pontus Melke, Patrik Sahlin, Henrik Jönsson, 
 [Computational Biology & Biological Physics](http://cbbp.thep.lu.se), Lund University &
 [Sainsbury Laboratory](http://www.slcu.cam.ac.uk), University of Cambridge.
 
